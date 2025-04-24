@@ -1,8 +1,3 @@
-{
-  /* 
-
-  */
-}
 let sliders;
 const staging = window.location.href.includes("staging") ? true : false;
 const URLParams = new URLSearchParams(location.search);
@@ -1895,14 +1890,15 @@ const initGsap = {
       textWrap.classList.add("is-active");
     }
   },
-  initScroll() {
+  initAfterScroll() {
     gsap.timeline({
       scrollTrigger: {
         once: true,
         start: "top+=10",
         end: "+=1",
         onEnter: () => {
-          Object.values(initScroll).forEach((fn) => fn());
+          Object.values(initAfterScroll).forEach((fn) => fn());
+          document.body.classList.add("page-scrolled");
         },
       },
     });
@@ -2072,7 +2068,7 @@ const initGsapDesk = {
 };
 
 // initiliazing in gsap
-const initScroll = {
+const initAfterScroll = {
   async initSlider() {
     const sliderWrapperEls = Array.from(
       document.querySelectorAll(".swiper-component")
@@ -2187,32 +2183,3 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("load", () => {
   document.body.classList.add("page-loaded");
 });
-
-document.addEventListener("DOMContentLoaded", () => {
-  // videoScroll();
-});
-
-async function videoScroll() {
-  let videoEl = document.querySelector(".video-js");
-
-  if (!videoEl) return;
-
-  await utilities.loadStyle(
-    "https://unpkg.com/video.js@8.22.0/dist/video-js.min.css"
-  );
-  await utilities.loadScript(
-    "https://unpkg.com/video.js/dist/video.min.js",
-    true
-  );
-
-  const player = videojs("video-js-embed");
-
-  if (!player) {
-    console.log("video js not loaded");
-    return;
-  }
-
-  player.on("ended", function () {
-    player.load();
-  });
-}
