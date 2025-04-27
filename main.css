@@ -350,27 +350,12 @@ textarea {
     opacity: 1;
   }
 
-  .hero_video-component .hero_video-button-wrap {
-    position: absolute;
-    transition: opacity 0.5s ease;
-    opacity: 0;
-    transform: translate(var(--pointer-x, 0), var(--pointer-y, 0)) translateZ(0);
-    left: -4.7rem;
-    top: -4.7rem;
-  }
-
-  .hero_video-component:hover .hero_video-button-wrap {
-    opacity: 1;
-    transform: translate(var(--pointer-x, 0), var(--pointer-y, 0)) translateZ(0);
-  }
-
   .hero_video-component .hero_video-button {
-    transition: transform 0.5s ease;
-    transform: scale(0.5);
+    transition: transform 0.3s ease;
   }
 
   .hero_video-component:hover .hero_video-button {
-    transform: scale(1);
+    transform: scale(1.1);
   }
 }
 

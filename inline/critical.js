@@ -69,15 +69,6 @@ function getESLink(companySize, funding) {
   const currentPath = window.location.pathname;
   let esMeetingLink;
 
-  if (
-    !(
-      currentPath !== "/demo" ||
-      currentPath !== "/book-hiring-call" ||
-      currentPath !== "/human-data-demo"
-    )
-  )
-    return;
-
   // early stage - keep default es links
   if (
     (companySize === "Self-employed" ||

@@ -544,6 +544,7 @@ const initTracking = {
 
       const domainList = [
         "client.micro1.ai",
+        "zara.micro1.ai",
         "dev.d3tafas16ltk5f.amplifyapp.com",
         "developer.micro1.ai",
         "dev.d1y3udqq47tapp.amplifyapp.com",
@@ -1213,13 +1214,6 @@ const initForm = {
           progress.style.width = `${progressValue}%`;
           prevButton.classList.remove("hide");
         }
-        if (currentStep === allSteps.length - 1) {
-          // submitBtn.classList.remove("hide");
-          // nextButtons.classList.add("hide");
-        } else {
-          // submitBtn.classList.add("hide");
-          // nextButtons.classList.remove("hide");
-        }
       }
 
       function moveToNextStep() {
@@ -1411,12 +1405,7 @@ const initForm = {
               customTrackData.company?.funding || companyData?.funding
             );
 
-            const candidates = allFormData.get("ai-interviewer-requirement");
-
-            if (
-              companyStage === "Enterprises" ||
-              (candidates && candidates !== "10-200" && companyStage)
-            ) {
+            if (companyStage === "Enterprises") {
               redirectPath = "/zara-demo";
             }
           }
@@ -2025,24 +2014,6 @@ const initGsapDesk = {
         "--pointer-x": `${x}px`,
         "--pointer-y": `${y}px`,
         duration: 0.6,
-      });
-    });
-  },
-  videoHover() {
-    const videoWrappers = document.querySelectorAll(".hero_video-component");
-
-    videoWrappers.forEach((wrapper) => {
-      wrapper.addEventListener("mousemove", (e) => {
-        const wrapRect = wrapper.getBoundingClientRect();
-
-        const x = e.clientX - wrapRect.left;
-        const y = e.clientY - wrapRect.top;
-
-        gsap.to(wrapper, {
-          "--pointer-x": `${x}px`,
-          "--pointer-y": `${y}px`,
-          duration: 0.3,
-        });
       });
     });
   },
