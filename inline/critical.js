@@ -5,6 +5,15 @@ const customTrackData = {
   company: {},
 };
 
+function createCookie(name, data, stringify = false, expiry = 30) {
+  const expireTime = new Date();
+  expireTime.setDate(expireTime.getDate() + expiry);
+
+  document.cookie = `${name}=${encodeURIComponent(
+    stringify ? JSON.stringify(data) : data
+  )}; path=/; expires=${expireTime}`;
+}
+
 const getCookieValue = (name) =>
   document.cookie.match("(^|;)\\s*" + name + "\\s*=\\s*([^;]+)")?.pop() || "";
 
