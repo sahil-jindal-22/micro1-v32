@@ -1,5 +1,5 @@
 git add . && \
-git commit -m "Your commit message" && \
+git commit -m "" && \
 git push origin main && \
 git tag -a v2.0.4 -m "v2.0.4 release" && \
 git push origin v2.0.4 && \
