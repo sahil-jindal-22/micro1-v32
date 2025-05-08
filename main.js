@@ -1691,9 +1691,9 @@ const initForm = {
 // gsap being called in core
 const initGsap = {
   loadWidget() {
-    const reportWidget = document.querySelector("#report-widget");
+    const reportWidgets = document.querySelectorAll("#report-widget");
 
-    if (!reportWidget) return;
+    if (!reportWidgets.length) return;
 
     gsap.timeline({
       scrollTrigger: {
@@ -1701,16 +1701,18 @@ const initGsap = {
         start: "top+=10",
         end: "+=1",
         onEnter: () => {
-          const url = reportWidget.dataset.src;
+          reportWidgets.forEach((reportWidget) => {
+            const url = reportWidget.dataset.src;
 
-          if (!url) {
-            console.log("Widget URL missing");
-            return;
-          }
+            if (!url) {
+              console.log("Widget URL missing");
+              return;
+            }
 
-          reportWidget.src = url;
+            reportWidget.src = url;
 
-          console.log("added URL");
+            console.log("added URL");
+          });
         },
       },
     });
