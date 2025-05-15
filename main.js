@@ -158,6 +158,22 @@ const utilities = {
   removeClassFromEls(arr, className) {
     arr.forEach((el) => el.classList.remove(className));
   },
+  toSnakeCaseObject(originalObj) {
+    const formatToSnakeCase = (input) => {
+      return input
+        .replace(/([a-z])([A-Z])/g, "$1_$2") // camelCase to snake_case
+        .replace(/[\s-]+/g, "_") // spaces and hyphens to underscores
+        .toLowerCase(); // lowercase everything
+    };
+
+    const newObj = {};
+    for (const [key, value] of Object.entries(originalObj)) {
+      const formattedKey = formatToSnakeCase(key);
+      newObj[formattedKey] = value;
+    }
+
+    return newObj;
+  },
 };
 
 const initTracking = {
@@ -514,15 +530,6 @@ const initTracking = {
         src = "general";
       }
 
-      let talentFormSubmitted = false;
-
-      if (
-        src === "search-talent" &&
-        encodeURIComponent(getCookieValue("talentFormSubmitted"))
-      ) {
-        talentFormSubmitted = true;
-      }
-
       console.log(src);
 
       const paramsObjPortal = {
@@ -539,7 +546,9 @@ const initTracking = {
         ...(hutk && { hutk: hutk }),
         ...(customTrackData.cusRef && { ref_site: customTrackData.cusRef }),
         ...(deviceId && { deviceId }),
-        ...(talentFormSubmitted && { talentFormSubmitted: 1 }),
+        ...(encodeURIComponent(getCookieValue("formSubmitted")) && {
+          formSubmitted: true,
+        }),
       };
 
       const domainList = [
@@ -578,12 +587,18 @@ const initTracking = {
       });
 
       // Get user data from meeting form
-      if (document.querySelector(".meetings-iframe-container")) {
+      const meetingContainer = document.querySelector(
+        ".meetings-iframe-container"
+      );
+
+      if (meetingContainer) {
         window.addEventListener("message", (event) => {
           if (event.data.meetingBookSucceeded) {
-            document.querySelector(
+            meetingContainer.querySelector(
               ".meetings-iframe-container iframe"
             ).style.height = "auto";
+
+            const product = meetingContainer.dataset.product;
 
             const { firstName, lastName, email } =
               event.data.meetingsPayload.bookingResponse.postResponse.contact;
@@ -592,44 +607,38 @@ const initTracking = {
 
             utilities.createCookie("userContactInfo", userContactInfo, true);
 
-            function setRedirection(url) {
-              setTimeout(() => (window.location = url), 1500);
-            }
+            // send amplitude event
+            const amplitudeEventParams = {
+              ...(customTrackData.company && customTrackData.company),
+              ...(customTrackData.utm && customTrackData.utm),
+              ...(firstName && { first_name: firstName }),
+              ...(lastName && { last_name: lastName }),
+              ...(email && { email }),
+              ...(customTrackData["first_page"] && {
+                first_page: customTrackData["first_page"],
+              }),
+              ...(customTrackData["last_page"] && {
+                last_page: customTrackData["last_page"],
+              }),
+              ...(customTrackData["current_page"] && {
+                current_page: customTrackData["current_page"],
+              }),
+              ...(customTrackData["ref"] && {
+                ref: customTrackData["ref"],
+              }),
+              ...(customTrackData["cusRef"] && {
+                referring_site: customTrackData["cusRef"],
+              }),
+              ...(product && { product }),
+            };
 
-            if (window.location.pathname === "/demo") {
-              window.twq && twq("event", "tw-ocr68-opq75", {});
+            if (window.amplitude) {
+              window.amplitude.setUserId(amplitudeEventParams.email);
 
-              console.log("twitter code fired general");
-
-              setRedirection("/thank-you");
-            }
-            if (window.location.pathname === "/book-hiring-call") {
-              window.twq && twq("event", "tw-ocr68-oouue", {});
-
-              console.log("twitter code fired talent");
-
-              setRedirection("/search-talent");
-            }
-            if (window.location.pathname === "/zara-demo") {
-              window.twq && twq("event", "tw-ocr68-opq61", {});
-
-              console.log("twitter code fired zara");
-
-              setRedirection("/thank-you-zara");
-            }
-            if (window.location.pathname === "/book-cor-demo") {
-              window.twq && twq("event", "tw-ocr68-opq7b", {});
-
-              console.log("twitter code fired cor");
-
-              setRedirection("/onboard-talent");
-            }
-            if (window.location.pathname === "/human-data-demo") {
-              window.twq && twq("event", "tw-ocr68-opq7c", {});
-
-              console.log("twitter code fired human-data-demo");
-
-              setRedirection("/human-data-register");
+              window.amplitude.track(
+                "Static - Demo booked",
+                amplitudeEventParams
+              );
             }
 
             // set custom params
@@ -1262,6 +1271,27 @@ const initForm = {
 
         if (currentStep + 1 <= allSteps.length - 1) currentStep++;
         showStep(currentStep);
+
+        // amplitude
+        const product = formType;
+        const step = currentStep;
+        const question = formStep.querySelector(".step-title")?.textContent;
+        let answer;
+
+        if (product === "general" && step === 1) {
+          answer = formStep.querySelector(
+            ".radio-wrapper.is-checked input"
+          )?.value;
+        }
+
+        if (window.amplitude) {
+          window.amplitude.track("Static - Moved step in form", {
+            product,
+            step,
+            question,
+            ...(answer && { answer }),
+          });
+        }
       }
 
       function handleKeydown(e) {
@@ -1295,6 +1325,20 @@ const initForm = {
 
         if (!result) return;
 
+        // amplitude
+        const product = formType;
+        const step = currentStep + 1;
+        const question =
+          allSteps[currentStep]?.querySelector(".step-title")?.textContent;
+
+        if (window.amplitude) {
+          window.amplitude.track("Static - Moved step in form", {
+            product,
+            step,
+            question,
+          });
+        }
+
         console.log("ready to submit");
 
         submitBtn.textContent = "Please wait...";
@@ -1314,8 +1358,21 @@ const initForm = {
 
         const allFormData = new FormData(mainForm);
 
+        const ampFormObj = {};
+
         for (const pair of allFormData.entries()) {
-          console.log(pair[0], pair[1]);
+          const field = pair[0];
+          const answer = pair[1];
+
+          if (
+            answer &&
+            !field.includes("first-name") &&
+            !field.includes("last-name") &&
+            !field.includes("email") &&
+            !field.includes("form-type")
+          ) {
+            ampFormObj[field] = answer;
+          }
         }
 
         const userContactInfo = {
@@ -1328,20 +1385,18 @@ const initForm = {
 
         utilities.createCookie("userContactInfo", userContactInfo, true);
 
+        utilities.createCookie("formSubmitted", "1", false, 7);
+
         // Twitter conversion code
         if (formType === "talent") {
           window.twq && twq("event", "tw-ocr68-ooizv", {});
 
           console.log("twitter code fired talent");
-
-          utilities.createCookie("talentFormSubmitted", "1", false, 7);
         }
         if (formType === "human-data") {
           window.twq && twq("event", "tw-ocr68-opq5o", {});
 
           console.log("twitter code fired human-data");
-
-          utilities.createCookie("talentFormSubmitted", "1", false, 7);
         }
         if (formType === "ai-interviewer") {
           window.twq && twq("event", "tw-ocr68-opq5p", {});
@@ -1415,7 +1470,18 @@ const initForm = {
             }
           }
         }
-        await submitFormToMake();
+
+        const amplitudeEventParams = utilities.toSnakeCaseObject({
+          ...(companyData && companyData),
+          ...(userContactInfo && userContactInfo),
+          ...(ampFormObj && ampFormObj),
+          redirectPath,
+          product: formType,
+        });
+
+        console.log(amplitudeEventParams);
+
+        await submitFormToMake(amplitudeEventParams);
       }
 
       function getCompanyStage(companySize, funding) {
@@ -1472,7 +1538,7 @@ const initForm = {
       }
 
       // submit to make.com
-      async function submitFormToMake() {
+      async function submitFormToMake(amplitudeEventParams) {
         console.log("init form submit");
         try {
           const response = await fetch(
@@ -1491,6 +1557,16 @@ const initForm = {
 
             throw new Error(
               "Form not submitted! Please try again later or contact support@micro1.ai"
+            );
+          }
+
+          // send amplitude event
+          if (window.amplitude) {
+            window.amplitude.setUserId(amplitudeEventParams.email);
+
+            window.amplitude.track(
+              "Static - Form submitted",
+              amplitudeEventParams
             );
           }
 
