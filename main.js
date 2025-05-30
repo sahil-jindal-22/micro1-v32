@@ -1009,14 +1009,16 @@ const initForm = {
         "[form-element='message-close']"
       );
 
-      messageCloseEls.forEach((closeEl) =>
-        closeEl.addEventListener("click", () => {
-          messageWrapEl?.style.opacity = 0;
-          setTimeout(() => {
-            messageWrapEl?.style.display = "none";
-          }, 200);
-        })
-      );
+      if (messageWrapEl) {
+        messageCloseEls.forEach((closeEl) =>
+          closeEl.addEventListener("click", () => {
+            messageWrapEl.style.opacity = 0;
+            setTimeout(() => {
+              messageWrapEl.style.display = "none";
+            }, 200);
+          })
+        );
+      }
 
       // init progress bar
       progressBar.style.position = "relative";
@@ -1288,7 +1290,8 @@ const initForm = {
 
         const emailInput = formStep.querySelector("[type='email']");
 
-        if ( messageWrapEl && 
+        if (
+          messageWrapEl &&
           emailInput &&
           (emailInput.value.includes("gmail") ||
             emailInput.value.includes("yahoo") ||
