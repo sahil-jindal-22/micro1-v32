@@ -1,5 +1,5 @@
 let sliders;
-const staging = window.location.href.includes("staging") ? true : false;
+const staging = window.location.href.includes("webflow.io") ? true : false;
 const URLParams = new URLSearchParams(location.search);
 
 const utilities = {
@@ -1002,7 +1002,21 @@ const initForm = {
       const submitBtn = mainForm.querySelector("[form-element='submit-btn']");
       const realSubmitBtn = mainForm.querySelector(`input[type='submit']`);
       let redirectPath = mainForm.dataset.formRedirectPath;
-      const formType = form.closest(".popup-form").dataset.formBlock;
+      const formWrap = form.closest(".popup-form");
+      const formType = formWrap.dataset.formBlock;
+      const messageWrapEl = formWrap.querySelector(".form_message");
+      const messageCloseEls = formWrap.querySelectorAll(
+        "[form-element='message-close']"
+      );
+
+      messageCloseEls.forEach((closeEl) =>
+        closeEl.addEventListener("click", () => {
+          messageWrapEl.style.opacity = 0;
+          setTimeout(() => {
+            messageWrapEl.style.display = "none";
+          }, 200);
+        })
+      );
 
       // init progress bar
       progressBar.style.position = "relative";
@@ -1271,6 +1285,20 @@ const initForm = {
 
         if (currentStep + 1 <= allSteps.length - 1) currentStep++;
         showStep(currentStep);
+
+        const emailInput = formStep.querySelector("[type='email']");
+
+        if (
+          emailInput &&
+          (emailInput.value.includes("gmail") ||
+            emailInput.value.includes("yahoo") ||
+            emailInput.value.includes("icloud"))
+        ) {
+          messageWrapEl.style.display = "flex";
+          requestAnimationFrame(() => {
+            messageWrapEl.style.opacity = 1;
+          });
+        }
 
         // amplitude
         const product = formType;

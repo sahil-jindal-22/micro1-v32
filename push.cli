@@ -6,3 +6,10 @@ git push origin v2.0.4 && \
 gh release create v2.0.4 --generate-notes
 
 
+git add . && \
+git commit -m "added form validation" && \
+git push origin main && \
+git tag -a v2.0.6 -m "v2.0.6 release" && \
+git push origin v2.0.6 && \
+gh release create v2.0.6 --generate-notes
+
