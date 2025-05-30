@@ -1011,9 +1011,9 @@ const initForm = {
 
       messageCloseEls.forEach((closeEl) =>
         closeEl.addEventListener("click", () => {
-          messageWrapEl.style.opacity = 0;
+          messageWrapEl?.style.opacity = 0;
           setTimeout(() => {
-            messageWrapEl.style.display = "none";
+            messageWrapEl?.style.display = "none";
           }, 200);
         })
       );
@@ -1288,7 +1288,7 @@ const initForm = {
 
         const emailInput = formStep.querySelector("[type='email']");
 
-        if (
+        if ( messageWrapEl && 
           emailInput &&
           (emailInput.value.includes("gmail") ||
             emailInput.value.includes("yahoo") ||
