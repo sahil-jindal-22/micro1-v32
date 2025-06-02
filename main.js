@@ -555,7 +555,7 @@ const initTracking = {
         "client.micro1.ai",
         "zara.micro1.ai",
         "dev.d3tafas16ltk5f.amplifyapp.com",
-        "developer.micro1.ai",
+        "talent.micro1.ai",
         "dev.d1y3udqq47tapp.amplifyapp.com",
         "feat-zara-dashboard.d1y3udqq47tapp.amplifyapp.com",
       ];
@@ -576,7 +576,7 @@ const initTracking = {
             "dev.d1y3udqq47tapp.amplifyapp.com"
           );
           link.href = link.href.replace(
-            "www.developer.micro1.ai",
+            "www.talent.micro1.ai",
             "dev.d3tafas16ltk5f.amplifyapp.com"
           );
           link.href = link.href.replace(

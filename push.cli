@@ -7,3 +7,9 @@ gh release create v2.0.4 --generate-notes
 
 
 
+git add . && \
+git commit -m "updated talent staging link" && \
+git push origin main && \
+git tag -a v2.0.9 -m "v2.0.9 release" && \
+git push origin v2.0.9 && \
+gh release create v2.0.9 --generate-notes
