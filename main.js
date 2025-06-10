@@ -36,6 +36,34 @@ const utilities = {
     });
   },
   async getCompanySize(userContactInfo) {
+    function fetchWithTimeout(url, timeout = 7500) {
+      return new Promise((resolve, reject) => {
+        const timer = setTimeout(() => {
+          reject(new Error(`Timeout after ${timeout}ms: ${url}`));
+        }, timeout);
+
+        fetch(url)
+          .then((res) => {
+            clearTimeout(timer);
+            if (!res.ok) {
+              throw new Error(`HTTP error ${res.status} from ${url}`);
+            }
+            return res.json();
+          })
+          .then((data) => {
+            if (data.message === "no-company-found") {
+              resolve(null); // Return null instead of throwing error
+            } else {
+              resolve(data);
+            }
+          })
+          .catch((err) => {
+            clearTimeout(timer);
+            reject(err);
+          });
+      });
+    }
+
     try {
       const domain = userContactInfo.email.split("@")[1];
 
@@ -77,42 +105,41 @@ const utilities = {
 
       if (freeDomains.includes(domain)) return;
 
-      // Create a timeout promise
-      const timeout = new Promise((_, reject) => {
-        setTimeout(
-          () => reject(new Error("Request timed out after 5 seconds")),
-          7500
-        );
-      });
+      const personApiUrl = `https://hook.us1.make.com/lxholkn672i1jsfsgrs82geyxn641a0u?email=${userContactInfo.email}`;
+      const domainApiUrl = `https://hook.us1.make.com/ax4r7raw56xdx5aemjmsoxuwgbfxhu6y?domain=${domain}`;
 
-      // Race between the fetch and the timeout
-      const response = await Promise.race([
-        fetch(
-          `https://hook.us1.make.com/cj7goh64t32yq1goknq5d1f8gysulijm/?domain=${domain}`,
-          {
-            method: "GET",
-            header: {
-              Accept: "application/json",
-            },
-          }
-        ),
-        timeout,
-      ]);
+      // Start both requests in parallel
+      const personRequest = fetchWithTimeout(personApiUrl, 7500);
+      const domainRequest = fetchWithTimeout(domainApiUrl, 7500);
 
-      const data = await response.json();
+      let data;
+      try {
+        // Try person API first
+        data = await personRequest;
+        if (!data) {
+          // If person API returns null (no company found), try domain API
+          console.log("Person API returned no company, trying domain API");
+          data = await domainRequest;
+        }
+      } catch (personError) {
+        console.log("Person API failed, trying domain API");
+        try {
+          // Fall back to domain API if person API fails
+          data = await domainRequest;
+        } catch (domainError) {
+          throw new Error("Both APIs failed");
+        }
+      }
+
+      // If both APIs returned null or failed
+      if (!data) {
+        throw new Error("No company data found from either API");
+      }
 
       console.log(data);
 
-      if (data.message === "no-company-found") {
-        utilities.updateInput(
-          document.querySelectorAll(".input_company-size"),
-          "not found"
-        );
-        console.log(data.message);
-        return;
-      }
-
       utilities.createCookie("companyInfo", data, true);
+
       utilities.updateInput(
         document.querySelectorAll(".input_company-size"),
         data.size
@@ -125,17 +152,18 @@ const utilities = {
         document.querySelectorAll(".input_company-funding"),
         this.roundCurrency(data.funding)
       );
+
       customTrackData.company = data;
 
       return data;
     } catch (error) {
       console.error(error.message);
-      console.log("took longer");
+      console.log("couldn't enrich");
       utilities.updateInput(
         document.querySelectorAll(".input_company-size"),
-        "took longer to fetch"
+        "couldn't enrich"
       );
-      return; // Return early if there's an error or timeout
+      return;
     }
   },
   loadStyle(href) {
