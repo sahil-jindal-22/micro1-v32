@@ -36,7 +36,7 @@ const utilities = {
     });
   },
   async getCompanySize(userContactInfo) {
-    function fetchWithTimeout(url, timeout = 7500) {
+    function fetchWithTimeout(url, timeout = 5000) {
       return new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
           reject(new Error(`Timeout after ${timeout}ms: ${url}`));
@@ -45,14 +45,26 @@ const utilities = {
         fetch(url)
           .then((res) => {
             clearTimeout(timer);
+            console.log(res);
             if (!res.ok) {
-              throw new Error(`HTTP error ${res.status} from ${url}`);
+              reject(new Error(`HTTP error ${res.status} from ${url}`));
             }
-            return res.json();
+            // Check content type before parsing
+            const contentType = res.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+              return res.json();
+            } else {
+              // If not JSON, return the text
+              return res.text().then((text) => {
+                if (text) {
+                  return null;
+                }
+              });
+            }
           })
           .then((data) => {
-            if (data.message === "no-company-found") {
-              resolve(null); // Return null instead of throwing error
+            if (data?.message === "no-company-found") {
+              resolve(null);
             } else {
               resolve(data);
             }
@@ -105,30 +117,31 @@ const utilities = {
 
       if (freeDomains.includes(domain)) return;
 
-      const personApiUrl = `https://hook.us1.make.com/lxholkn672i1jsfsgrs82geyxn641a0u?email=${userContactInfo.email}`;
-      const domainApiUrl = `https://hook.us1.make.com/ax4r7raw56xdx5aemjmsoxuwgbfxhu6y?domain=${domain}`;
+      const personApiUrl = `https://hook.us1.make.com/lxholkn672i1jsfsgrs82geyxn641a0u?email=${encodeURIComponent(
+        userContactInfo.email
+      )}`;
+      const domainApiUrl = `https://hook.us1.make.com/ax4r7raw56xdx5aemjmsoxuwgbfxhu6y?domain=${encodeURIComponent(
+        domain
+      )}`;
 
       // Start both requests in parallel
-      const personRequest = fetchWithTimeout(personApiUrl, 7500);
-      const domainRequest = fetchWithTimeout(domainApiUrl, 7500);
+      const personRequest = fetchWithTimeout(personApiUrl);
+      const domainRequest = fetchWithTimeout(domainApiUrl);
 
       let data;
+
       try {
         // Try person API first
         data = await personRequest;
         if (!data) {
-          // If person API returns null (no company found), try domain API
+          // If person API returns null, try domain API
           console.log("Person API returned no company, trying domain API");
           data = await domainRequest;
         }
-      } catch (personError) {
+      } catch (error) {
+        // If person API fails, try domain API
         console.log("Person API failed, trying domain API");
-        try {
-          // Fall back to domain API if person API fails
-          data = await domainRequest;
-        } catch (domainError) {
-          throw new Error("Both APIs failed");
-        }
+        data = await domainRequest;
       }
 
       // If both APIs returned null or failed
@@ -163,7 +176,7 @@ const utilities = {
         document.querySelectorAll(".input_company-size"),
         "couldn't enrich"
       );
-      return;
+      return null;
     }
   },
   loadStyle(href) {
@@ -1484,7 +1497,8 @@ const initForm = {
           90
         );
 
-        const companyData = await utilities.getCompanySize(userContactInfo);
+        const companyData =
+          (await utilities.getCompanySize(userContactInfo)) || {};
 
         // if general form
         const leadType = allFormData.get("general-requirement");
@@ -2296,3 +2310,21 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("load", () => {
   document.body.classList.add("page-loaded");
 });
+
+// async function test(email) {
+//   const result = await utilities.getCompanySize({
+//     email,
+//   });
+
+//   console.log(result);
+// }
+
+// test("s.tadibouna@partner.sea.samsung.com");
+// test("antonio.aguilar@farmersinsurance.com");
+// test("kav.patel@bgo.com");
+// test("sridhar.k@nrconsulting.com");
+// test("mattlane@rocket.com");
+// test("test@tessssssst.com");
+
+// test if person api fails
+// test if company api fails

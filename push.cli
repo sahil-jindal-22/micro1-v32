@@ -7,9 +7,3 @@ gh release create v2.0.4 --generate-notes
 
 
 
-git add . && \
-git commit -m "updated enrichment function" && \
-git push origin main && \
-git tag -a v2.1.0 -m "v2.1.0 release" && \
-git push origin v2.1.0 && \
-gh release create v2.1.0 --generate-notes
