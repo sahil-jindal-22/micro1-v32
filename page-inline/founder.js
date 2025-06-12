@@ -6,6 +6,42 @@ function roundCurrency(value) {
 }
 
 async function getCompanySize(userContactInfo) {
+  function fetchWithTimeout(url, timeout = 5000) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        reject(new Error(`Timeout after ${timeout}ms: ${url}`));
+      }, timeout);
+
+      fetch(url)
+        .then((res) => {
+          clearTimeout(timer);
+          console.log(res);
+          if (!res.ok) {
+            reject(new Error(`HTTP error ${res.status} from ${url}`));
+          }
+          // Check content type before parsing
+          const contentType = res.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            return res.json();
+          } else {
+            // If not JSON, return null
+            return null;
+          }
+        })
+        .then((data) => {
+          if (!data || data?.message === "no-company-found") {
+            resolve(null);
+          } else {
+            resolve(data);
+          }
+        })
+        .catch((err) => {
+          clearTimeout(timer);
+          reject(err);
+        });
+    });
+  }
+
   try {
     const domain = userContactInfo.email.split("@")[1];
 
@@ -47,62 +83,66 @@ async function getCompanySize(userContactInfo) {
 
     if (freeDomains.includes(domain)) return;
 
-    // Create a timeout promise
-    const timeout = new Promise((_, reject) => {
-      setTimeout(
-        () => reject(new Error("Request timed out after 5 seconds")),
-        7500
-      );
-    });
+    const personApiUrl = `https://hook.us1.make.com/lxholkn672i1jsfsgrs82geyxn641a0u?email=${encodeURIComponent(
+      userContactInfo.email
+    )}`;
+    const domainApiUrl = `https://hook.us1.make.com/ax4r7raw56xdx5aemjmsoxuwgbfxhu6y?domain=${encodeURIComponent(
+      domain
+    )}`;
 
-    // Race between the fetch and the timeout
-    const response = await Promise.race([
-      fetch(
-        `https://hook.us1.make.com/cj7goh64t32yq1goknq5d1f8gysulijm/?domain=${domain}`,
-        {
-          method: "GET",
-          header: {
-            Accept: "application/json",
-          },
-        }
-      ),
-      timeout,
-    ]);
+    // Start both requests in parallel
+    const personRequest = fetchWithTimeout(personApiUrl);
+    const domainRequest = fetchWithTimeout(domainApiUrl);
 
-    const data = await response.json();
+    let data;
+
+    try {
+      // Try person API first
+      data = await personRequest;
+      if (!data) {
+        // If person API returns null, try domain API
+        console.log("Person API returned no company, trying domain API");
+        data = await domainRequest;
+      }
+    } catch (error) {
+      // If person API fails, try domain API
+      console.log("Person API failed, trying domain API");
+      data = await domainRequest;
+    }
+
+    // If both APIs returned null or failed
+    if (!data) {
+      throw new Error("No company data found from either API");
+    }
 
     console.log(data);
 
-    if (data.message === "no-company-found") {
-      updateInput(
-        document.querySelectorAll(".input_company-size"),
-        "not found"
-      );
-      console.log(data.message);
-      return;
-    }
+    utilities.createCookie("companyInfo", data, true);
 
-    createCookie("companyInfo", data, true);
-    updateInput(document.querySelectorAll(".input_company-size"), data.size);
-    updateInput(
+    utilities.updateInput(
+      document.querySelectorAll(".input_company-size"),
+      data.size
+    );
+    utilities.updateInput(
       document.querySelectorAll(".input_company-linkedin"),
       data.linkedin
     );
-    updateInput(
+    utilities.updateInput(
       document.querySelectorAll(".input_company-funding"),
-      roundCurrency(data.funding)
+      this.roundCurrency(data.funding)
     );
+
     customTrackData.company = data;
 
     return data;
   } catch (error) {
     console.error(error.message);
-    console.log("took longer");
-    updateInput(
+    console.log("couldn't enrich");
+    utilities.updateInput(
       document.querySelectorAll(".input_company-size"),
-      "took longer to fetch"
+      "couldn't enrich"
     );
-    return; // Return early if there's an error or timeout
+    return null;
   }
 }
 

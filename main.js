@@ -54,16 +54,12 @@ const utilities = {
             if (contentType && contentType.includes("application/json")) {
               return res.json();
             } else {
-              // If not JSON, return the text
-              return res.text().then((text) => {
-                if (text) {
-                  return null;
-                }
-              });
+              // If not JSON, return null
+              return null;
             }
           })
           .then((data) => {
-            if (data?.message === "no-company-found") {
+            if (!data || data?.message === "no-company-found") {
               resolve(null);
             } else {
               resolve(data);
@@ -1562,7 +1558,7 @@ const initForm = {
 
         if (!companySize && !funding) return companyStage;
 
-        // early stage, keep default - Ruben & Jess
+        // early stage, keep default
         if (
           (companySize === "Self-employed" ||
             companySize === "1 employee" ||
@@ -1579,7 +1575,7 @@ const initForm = {
           return companyStage;
         }
 
-        // growth - Maria & Jess
+        // growth
         if (
           (companySize === "Self-employed" ||
             companySize === "1 employee" ||
@@ -1592,10 +1588,8 @@ const initForm = {
             companySize === "201-500 employees" ||
             companySize === "51-200" ||
             companySize === "201-500" ||
-            companySize === "501-1,000 employees" ||
-            companySize === "501-1000" ||
             !companySize) &&
-          (funding <= 50000000 || !funding)
+          (funding <= 30000000 || !funding)
         ) {
           console.log("growth");
           companyStage = "Growth";
@@ -1603,7 +1597,7 @@ const initForm = {
           return companyStage;
         }
 
-        // enterprise - Maria only
+        // enterprise
         console.log("enterprise");
         companyStage = "Enterprises";
 
@@ -2310,21 +2304,3 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addEventListener("load", () => {
   document.body.classList.add("page-loaded");
 });
-
-// async function test(email) {
-//   const result = await utilities.getCompanySize({
-//     email,
-//   });
-
-//   console.log(result);
-// }
-
-// test("s.tadibouna@partner.sea.samsung.com");
-// test("antonio.aguilar@farmersinsurance.com");
-// test("kav.patel@bgo.com");
-// test("sridhar.k@nrconsulting.com");
-// test("mattlane@rocket.com");
-// test("test@tessssssst.com");
-
-// test if person api fails
-// test if company api fails
