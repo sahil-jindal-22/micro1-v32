@@ -107,10 +107,8 @@ function getESLink(companySize, funding) {
       companySize === "201-500 employees" ||
       companySize === "51-200" ||
       companySize === "201-500" ||
-      companySize === "501-1,000 employees" ||
-      companySize === "501-1000" ||
       !companySize) &&
-    (funding <= 50000000 || !funding)
+    (funding <= 30000000 || !funding)
   ) {
     console.log("growth");
     switch (currentPath) {

@@ -1504,41 +1504,44 @@ const initForm = {
           }
 
           if (leadType === "Interview your own candidates") {
-            const companyStage = getCompanyStage(
-              customTrackData.company?.size || companyData?.size,
-              customTrackData.company?.funding || companyData?.funding
-            );
+            redirectPath = "/zara-demo";
+            // prev logic below to send only ent to demo
+            // const companyStage = getCompanyStage(
+            //   customTrackData.company?.size || companyData?.size,
+            //   customTrackData.company?.funding || companyData?.funding
+            // );
 
-            if (
-              companyStage === "ES" ||
-              companyStage === "Growth" ||
-              !companyStage
-            ) {
-              redirectPath = "/zara-register";
-            } else {
-              redirectPath = "/zara-demo";
-            }
+            // if (
+            //   companyStage === "ES" ||
+            //   companyStage === "Growth" ||
+            //   !companyStage
+            // ) {
+            //   redirectPath = "/zara-register";
+            // } else {
+            //   redirectPath = "/zara-demo";
+            // }
           }
         }
 
         // if ai-interviewer form
-        if (formType === "ai-interviewer") {
-          if (
-            customTrackData.company?.size ||
-            customTrackData.company?.funding ||
-            companyData?.size ||
-            companyData?.funding
-          ) {
-            const companyStage = getCompanyStage(
-              customTrackData.company?.size || companyData?.size,
-              customTrackData.company?.funding || companyData?.funding
-            );
+        // prev logic below to send only ent to demo
+        // if (formType === "ai-interviewer") {
+        //   if (
+        //     customTrackData.company?.size ||
+        //     customTrackData.company?.funding ||
+        //     companyData?.size ||
+        //     companyData?.funding
+        //   ) {
+        //     const companyStage = getCompanyStage(
+        //       customTrackData.company?.size || companyData?.size,
+        //       customTrackData.company?.funding || companyData?.funding
+        //     );
 
-            if (companyStage === "Enterprises") {
-              redirectPath = "/zara-demo";
-            }
-          }
-        }
+        //     if (companyStage === "Enterprises") {
+        //       redirectPath = "/zara-demo";
+        //     }
+        //   }
+        // }
 
         const amplitudeEventParams = utilities.toSnakeCaseObject({
           ...(companyData && companyData),
