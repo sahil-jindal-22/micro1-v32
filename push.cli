@@ -1,13 +1,7 @@
 git add . && \
 git commit -m "" && \
 git push origin main && \
-git tag -a v30.1.3 -m "v30.1.3 release" && \
+git tag -a v30.1.4 -m "v30.1.4 release" && \
 git push origin v30.1.3 && \
 gh release create v30.1.3 --generate-notes
 
-git add . && \
-git commit -m "allowed all users to book demo for Zara" && \
-git push origin main && \
-git tag -a v30.1.3 -m "v30.1.3 release" && \
-git push origin v30.1.3 && \
-gh release create v30.1.3 --generate-notes

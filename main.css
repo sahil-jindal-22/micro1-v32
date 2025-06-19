@@ -370,8 +370,8 @@ textarea {
 }
 
 .is-visible .wo_line {
-  stroke-dasharray: 8139;
-  stroke-dashoffset: 1250;
+  stroke-dasharray: 7691;
+  stroke-dashoffset: 1000;
   animation: 2s linear forwards woDash;
   transform-box: content-box;
   transform-origin: top;
