@@ -1991,7 +1991,7 @@ const initGsap = {
         duration: 1,
         ease: "none",
       }).from(
-        ".wi_line_fill",
+        ".wi_line_fill, .wi_line_blur",
         {
           height: 0,
           duration: 1,
