@@ -998,6 +998,71 @@ const initCore = {
       document.head.appendChild(style);
     }
   },
+  autoplayVideos() {
+    const containers = document.querySelectorAll(".wi_video-wrap");
+
+    containers.forEach((container) => {
+      const video = container.querySelector("video");
+      const button = container.querySelector(".wi_video-button");
+      const playIcon = button.querySelector(".is-play");
+      const pauseIcon = button.querySelector(".is-pause");
+
+      let hasUserInteracted = false;
+
+      video.removeAttribute("controls");
+
+      const tryPlay = () => {
+        video
+          .play()
+          .then(() => {
+            playIcon.style.opacity = 0;
+            pauseIcon.style.opacity = 1;
+            container.classList.remove("show-controls");
+          })
+          .catch(() => container.classList.add("show-controls"));
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              tryPlay();
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+
+      observer.observe(video);
+
+      // Play/pause logic
+      button.addEventListener("click", () => {
+        if (video.paused) {
+          video.play();
+          playIcon.style.opacity = 0;
+          pauseIcon.style.opacity = 1;
+          container.classList.remove("show-controls");
+        } else {
+          video.pause();
+          playIcon.style.opacity = 1;
+          pauseIcon.style.opacity = 0;
+          container.classList.add("show-controls");
+        }
+      });
+
+      // Mobile: show controls on tap
+      video.addEventListener("touchstart", () => {
+        if (!hasUserInteracted) {
+          hasUserInteracted = true;
+          container.classList.add("show-controls");
+          setTimeout(() => {
+            container.classList.remove("show-controls");
+            hasUserInteracted = false;
+          }, 3000);
+        }
+      });
+    });
+  },
 };
 
 const initForm = {

@@ -731,3 +731,37 @@ textarea {
 .is-visible .card_bg-circ-2 {
   animation-play-state: running;
 }
+
+.wi_video-button-embed {
+  transition: opacity 0.3s ease;
+}
+
+.wi_video-button {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wi_video-wrap.show-controls .wi_video-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Desktop hover-based controls */
+@media (hover: hover) and (pointer: fine) {
+  .wi_video-wrap:hover .wi_video-button {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.wi_video-wrap video::-webkit-media-controls {
+  display: none !important;
+}
+
+.wi_video-wrap video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+.wi_video-wrap video::-webkit-media-controls-panel {
+  display: none !important;
+}

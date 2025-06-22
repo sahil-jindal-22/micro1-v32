@@ -107,7 +107,6 @@ function calcCompanyStage(size, funding) {
   }
 
   // if not ES or Growth, it is enterprise
-
   return "Enterprise";
 }
 
