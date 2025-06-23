@@ -714,6 +714,100 @@ const initTracking = {
       }
     })();
   },
+  trackScrollDepth() {
+    const scrollPercents = [25, 50, 75, 100];
+    const triggered = new Set();
+
+    // Prevent duplicates if script runs multiple times
+    if (document.querySelector(".scroll-depth-marker")) return;
+
+    scrollPercents.forEach((percent) => {
+      const marker = document.createElement("div");
+      marker.style.position = "absolute";
+      marker.style.top = `${
+        (percent / 100) * document.documentElement.scrollHeight
+      }px`;
+      marker.style.left = "0";
+      marker.style.width = "1px";
+      marker.style.height = "1px";
+      marker.style.pointerEvents = "none";
+      marker.style.opacity = "0";
+      marker.dataset.percent = percent;
+      marker.classList.add("scroll-depth-marker");
+      document.body.appendChild(marker);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const percent = entry.target.dataset.percent;
+            if (!triggered.has(percent)) {
+              triggered.add(percent);
+              amplitude?.track("Scroll Depth", {
+                percent: Number(percent),
+                "[Amplitude] Page Path": window.location.pathname,
+                "[Amplitude] Page Domain": window.location.host,
+              });
+            }
+          }
+        });
+      },
+      {
+        root: null,
+        threshold: 0.01,
+      }
+    );
+
+    document.querySelectorAll(".scroll-depth-marker").forEach((marker) => {
+      observer.observe(marker);
+    });
+  },
+  initCTATracking() {
+    const links = [...document.querySelectorAll("a")];
+    const page = window.location.pathname;
+    const host = window.location.host;
+
+    const paths = [
+      "/demo",
+      "/zara-demo",
+      "/book-hiring-call",
+      "/book-cor-demo",
+      "/human-data-demo",
+      "/thank-you-zara",
+      "/thank-you",
+      "/onboard-talent",
+      "/search-talent",
+      "/zara-register",
+      "/human-data-register",
+      "/pricing",
+    ];
+
+    const domainList = [
+      "client.micro1.ai",
+      "zara.micro1.ai",
+      "dev.d1y3udqq47tapp.amplifyapp.com",
+      "feat-zara-dashboard.d1y3udqq47tapp.amplifyapp.com",
+    ];
+
+    const selectedLinks = links.filter(
+      (link) =>
+        link.dataset.formCta ||
+        paths.some((str) => link.href.includes(str)) ||
+        domainList.some((str) => link.href.includes(str))
+    );
+
+    selectedLinks.forEach((link) => {
+      link.addEventListener("click", () => {
+        amplitude?.track("CTA Clicked", {
+          "[Amplitude] Element Text": link.textContent,
+          "[Amplitude] Page Path": page,
+          "[Amplitude] Page Domain": host,
+          "[Amplitude] Element Href": link.href,
+        });
+      });
+    });
+  },
 };
 
 const initCore = {
