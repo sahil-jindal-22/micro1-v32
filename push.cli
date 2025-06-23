@@ -1,9 +1,15 @@
 git add . && \
 git commit -m "" && \
 git push origin main && \
-git tag -a v30.1.7 -m "v30.1.7 release" && \
-git push origin v30.1.7 && \
-gh release create v30.1.7 --generate-notes
+git tag -a v30.1.8 -m "v30.1.8 release" && \
+git push origin v30.1.8 && \
+gh release create v30.1.8 --generate-notes
+
+
+
+
+
+
 
 
 

@@ -715,27 +715,39 @@ const initTracking = {
     })();
   },
   trackScrollDepth() {
+    if (window.__scrollDepthTrackingInitialized) return;
+    window.__scrollDepthTrackingInitialized = true;
+
     const scrollPercents = [25, 50, 75, 100];
     const triggered = new Set();
+    const markers = {};
 
-    // Prevent duplicates if script runs multiple times
-    if (document.querySelector(".scroll-depth-marker")) return;
+    function createOrUpdateMarkers() {
+      const scrollHeight = document.documentElement.scrollHeight;
 
-    scrollPercents.forEach((percent) => {
-      const marker = document.createElement("div");
-      marker.style.position = "absolute";
-      marker.style.top = `${
-        (percent / 100) * document.documentElement.scrollHeight
-      }px`;
-      marker.style.left = "0";
-      marker.style.width = "1px";
-      marker.style.height = "1px";
-      marker.style.pointerEvents = "none";
-      marker.style.opacity = "0";
-      marker.dataset.percent = percent;
-      marker.classList.add("scroll-depth-marker");
-      document.body.appendChild(marker);
-    });
+      scrollPercents.forEach((percent) => {
+        let marker = markers[percent];
+
+        if (!marker) {
+          marker = document.createElement("div");
+          marker.style.position = "absolute";
+          marker.style.left = "0";
+          marker.style.width = "1px";
+          marker.style.height = "1px";
+          marker.style.pointerEvents = "none";
+          marker.style.opacity = "0";
+          marker.dataset.percent = percent;
+          marker.classList.add("scroll-depth-marker");
+          document.body.appendChild(marker);
+          markers[percent] = marker;
+          observer.observe(marker);
+        }
+        const position = (percent / 100) * scrollHeight;
+        console.log(position, percent === 100, percent);
+
+        marker.style.top = `${percent === 100 ? position - 150 : position}px`;
+      });
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -759,9 +771,18 @@ const initTracking = {
       }
     );
 
-    document.querySelectorAll(".scroll-depth-marker").forEach((marker) => {
-      observer.observe(marker);
+    // Initial marker placement
+    createOrUpdateMarkers();
+
+    // Recalculate on content resize
+    let resizeTimeout;
+    const resizeObserver = new ResizeObserver(() => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        createOrUpdateMarkers();
+      }, 500); // Wait 500ms after last resize
     });
+    resizeObserver.observe(document.body);
   },
   initCTATracking() {
     const links = [...document.querySelectorAll("a")];
