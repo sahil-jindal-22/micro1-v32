@@ -1166,16 +1166,20 @@ const initCore = {
       });
 
       // Mobile: show controls on tap
-      video.addEventListener("touchstart", () => {
-        if (!hasUserInteracted) {
-          hasUserInteracted = true;
-          container.classList.add("show-controls");
-          setTimeout(() => {
-            container.classList.remove("show-controls");
-            hasUserInteracted = false;
-          }, 3000);
-        }
-      });
+      video.addEventListener(
+        "touchstart",
+        () => {
+          if (!hasUserInteracted) {
+            hasUserInteracted = true;
+            container.classList.add("show-controls");
+            setTimeout(() => {
+              container.classList.remove("show-controls");
+              hasUserInteracted = false;
+            }, 3000);
+          }
+        },
+        { passive: true }
+      );
     });
   },
 };
