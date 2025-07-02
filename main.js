@@ -825,6 +825,7 @@ const initTracking = {
           "[Amplitude] Page Path": page,
           "[Amplitude] Page Domain": host,
           "[Amplitude] Element Href": link.href,
+          ...(link.dataset.widget && { widget: link.dataset.widget }),
         });
       });
     });
