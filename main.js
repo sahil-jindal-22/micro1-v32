@@ -215,13 +215,16 @@ const utilities = {
 
 const initTracking = {
   initWidgetCta() {
+    const realLink = document.getElementById("clientRegister");
     window.addEventListener("message", (event) => {
       if (
         event.data.type === "clientRegistration" ||
         event.data.type === "clientRegistrationInterviewer"
       ) {
-        console.log("Go to self-signup");
-        document.getElementById("clientRegister")?.click();
+        if (event.data.cta) {
+          realLink.dataset.text = event.data.cta;
+        }
+        realLink?.click();
       }
     });
   },
@@ -743,7 +746,7 @@ const initTracking = {
           observer.observe(marker);
         }
         const position = (percent / 100) * scrollHeight;
-        console.log(position, percent === 100, percent);
+        // console.log(position, percent === 100, percent);
 
         marker.style.top = `${percent === 100 ? position - 150 : position}px`;
       });
@@ -821,7 +824,7 @@ const initTracking = {
     selectedLinks.forEach((link) => {
       link.addEventListener("click", () => {
         amplitude?.track("CTA Clicked", {
-          "[Amplitude] Element Text": link.textContent,
+          "[Amplitude] Element Text": link.textContent || link.dataset.text,
           "[Amplitude] Page Path": page,
           "[Amplitude] Page Domain": host,
           "[Amplitude] Element Href": link.href,
@@ -984,7 +987,7 @@ const initCore = {
       ),
     ]);
 
-    console.log("GSAP + plugins loaded");
+    // console.log("GSAP + plugins loaded");
 
     gsap.registerPlugin(ScrollTrigger);
 
