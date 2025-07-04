@@ -1,11 +1,14 @@
 git add . && \
-git commit -m "" && \
+git commit -m "cl" && \
 git push origin main && \
-git tag -a v30.2.2 -m "v30.2.2 release" && \
-git push origin v30.2.2 && \
-gh release create v30.2.2 --generate-notes
+git tag -a v30.2.3 -m "v30.2.3 release" && \
+git push origin v30.2.3 && \
+gh release create v30.2.3 --generate-notes
 
-
+<!-- Non-critical CSS/JS -->
+<link rel="stylesheet" href="http://127.0.0.1:5500/main.css" media="print" onload="this.media='all'">
+<script defer src="http://127.0.0.1:5500/main.js"></script>
+<script defer src="http://127.0.0.1:5500/staging.js"></script>
 
 
 

@@ -217,6 +217,7 @@ const initTracking = {
   initWidgetCta() {
     const realLink = document.getElementById("clientRegister");
     window.addEventListener("message", (event) => {
+      console.log(event.data);
       if (
         event.data.type === "clientRegistration" ||
         event.data.type === "clientRegistrationInterviewer"
