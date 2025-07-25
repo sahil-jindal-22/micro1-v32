@@ -1,9 +1,16 @@
 git add . && \
-git commit -m "cl" && \
+git commit -m "" && \
 git push origin main && \
-git tag -a v30.2.3 -m "v30.2.3 release" && \
-git push origin v30.2.3 && \
-gh release create v30.2.3 --generate-notes
+git tag -a v31 -m "v31 release" && \
+git push origin v31 && \
+gh release create v31 --generate-notes
+
+git add . && \
+git commit -m "updated dropdown" && \
+git push origin main && \
+git tag -a v31 -m "v31 release" && \
+git push origin v31 && \
+gh release create v31 --generate-notes
 
 <!-- Non-critical CSS/JS -->
 <link rel="stylesheet" href="http://127.0.0.1:5500/main.css" media="print" onload="this.media='all'">

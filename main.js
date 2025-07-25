@@ -2360,23 +2360,27 @@ const initGsapDesk = {
     });
   },
   useCaseDropdown() {
-    const links = document.querySelectorAll(".nav_dd_p-item");
-    const lists = document.querySelectorAll(".nav_dd_c-list");
-    const listContainer = document.querySelector(".nav_dd_c-col");
+    const wrappers = document.querySelectorAll(".nav_dd_list");
 
-    if (!(window.innerWidth > 991) || !links.length) return;
+    wrappers.forEach((wrapper) => {
+      const links = wrapper.querySelectorAll(".nav_dd_p-item");
+      const lists = wrapper.querySelectorAll(".nav_dd_c-list");
+      const listContainer = wrapper.querySelector(".nav_dd_c-col");
 
-    links.forEach((link, i) =>
-      link.addEventListener("mouseenter", () => {
-        utilities.removeClassFromEls(links, "is-selected");
-        link.classList.add("is-selected");
-        listContainer.innerHTML = "";
-        listContainer.insertAdjacentElement("afterbegin", lists[i]);
-      })
-    );
+      if (!(window.innerWidth > 991) || !links.length) return;
 
-    links[0].classList.add("is-selected");
-    listContainer.insertAdjacentElement("afterbegin", lists[0]);
+      links.forEach((link, i) =>
+        link.addEventListener("mouseenter", () => {
+          utilities.removeClassFromEls(links, "is-selected");
+          link.classList.add("is-selected");
+          listContainer.innerHTML = "";
+          listContainer.insertAdjacentElement("afterbegin", lists[i]);
+        })
+      );
+
+      links[0].classList.add("is-selected");
+      listContainer.insertAdjacentElement("afterbegin", lists[0]);
+    });
   },
 };
 
