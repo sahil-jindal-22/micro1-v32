@@ -718,76 +718,76 @@ const initTracking = {
       }
     })();
   },
-  trackScrollDepth() {
-    if (window.__scrollDepthTrackingInitialized) return;
-    window.__scrollDepthTrackingInitialized = true;
+  // trackScrollDepth() {
+  //   if (window.__scrollDepthTrackingInitialized) return;
+  //   window.__scrollDepthTrackingInitialized = true;
 
-    const scrollPercents = [25, 50, 75, 100];
-    const triggered = new Set();
-    const markers = {};
+  //   const scrollPercents = [25, 50, 75, 100];
+  //   const triggered = new Set();
+  //   const markers = {};
 
-    function createOrUpdateMarkers() {
-      const scrollHeight = document.documentElement.scrollHeight;
+  //   function createOrUpdateMarkers() {
+  //     const scrollHeight = document.documentElement.scrollHeight;
 
-      scrollPercents.forEach((percent) => {
-        let marker = markers[percent];
+  //     scrollPercents.forEach((percent) => {
+  //       let marker = markers[percent];
 
-        if (!marker) {
-          marker = document.createElement("div");
-          marker.style.position = "absolute";
-          marker.style.left = "0";
-          marker.style.width = "1px";
-          marker.style.height = "1px";
-          marker.style.pointerEvents = "none";
-          marker.style.opacity = "0";
-          marker.dataset.percent = percent;
-          marker.classList.add("scroll-depth-marker");
-          document.body.appendChild(marker);
-          markers[percent] = marker;
-          observer.observe(marker);
-        }
-        const position = (percent / 100) * scrollHeight;
-        // console.log(position, percent === 100, percent);
+  //       if (!marker) {
+  //         marker = document.createElement("div");
+  //         marker.style.position = "absolute";
+  //         marker.style.left = "0";
+  //         marker.style.width = "1px";
+  //         marker.style.height = "1px";
+  //         marker.style.pointerEvents = "none";
+  //         marker.style.opacity = "0";
+  //         marker.dataset.percent = percent;
+  //         marker.classList.add("scroll-depth-marker");
+  //         document.body.appendChild(marker);
+  //         markers[percent] = marker;
+  //         observer.observe(marker);
+  //       }
+  //       const position = (percent / 100) * scrollHeight;
+  //       // console.log(position, percent === 100, percent);
 
-        marker.style.top = `${percent === 100 ? position - 150 : position}px`;
-      });
-    }
+  //       marker.style.top = `${percent === 100 ? position - 150 : position}px`;
+  //     });
+  //   }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const percent = entry.target.dataset.percent;
-            if (!triggered.has(percent)) {
-              triggered.add(percent);
-              amplitude?.track("Scroll Depth", {
-                percent: Number(percent),
-                "[Amplitude] Page Path": window.location.pathname,
-                "[Amplitude] Page Domain": window.location.host,
-              });
-            }
-          }
-        });
-      },
-      {
-        root: null,
-        threshold: 0.01,
-      }
-    );
+  //   const observer = new IntersectionObserver(
+  //     (entries) => {
+  //       entries.forEach((entry) => {
+  //         if (entry.isIntersecting) {
+  //           const percent = entry.target.dataset.percent;
+  //           if (!triggered.has(percent)) {
+  //             triggered.add(percent);
+  //             amplitude?.track("Scroll Depth", {
+  //               percent: Number(percent),
+  //               "[Amplitude] Page Path": window.location.pathname,
+  //               "[Amplitude] Page Domain": window.location.host,
+  //             });
+  //           }
+  //         }
+  //       });
+  //     },
+  //     {
+  //       root: null,
+  //       threshold: 0.01,
+  //     }
+  //   );
 
-    // Initial marker placement
-    createOrUpdateMarkers();
+  //   // Initial marker placement
+  //   createOrUpdateMarkers();
 
-    // Recalculate on content resize
-    let resizeTimeout;
-    const resizeObserver = new ResizeObserver(() => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        createOrUpdateMarkers();
-      }, 500); // Wait 500ms after last resize
-    });
-    resizeObserver.observe(document.body);
-  },
+  //   // Recalculate on content resize
+  //   let resizeTimeout;
+  //   const resizeObserver = new ResizeObserver(() => {
+  //     clearTimeout(resizeTimeout);
+  //     resizeTimeout = setTimeout(() => {
+  //       createOrUpdateMarkers();
+  //     }, 500); // Wait 500ms after last resize
+  //   });
+  //   resizeObserver.observe(document.body);
+  // },
   initCTATracking() {
     const links = [...document.querySelectorAll("a")];
     const page = window.location.pathname;
