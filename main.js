@@ -45,7 +45,7 @@ const utilities = {
         fetch(url)
           .then((res) => {
             clearTimeout(timer);
-            console.log(res);
+            // console.log(res);
             if (!res.ok) {
               reject(new Error(`HTTP error ${res.status} from ${url}`));
             }
@@ -109,6 +109,7 @@ const utilities = {
         "naver.com",
         "daum.net",
         "rediffmail.com",
+        "pm.me",
       ];
 
       if (freeDomains.includes(domain)) return;
@@ -145,7 +146,7 @@ const utilities = {
         throw new Error("No company data found from either API");
       }
 
-      console.log(data);
+      // console.log(data);
 
       utilities.createCookie("companyInfo", data, true);
 
@@ -217,7 +218,7 @@ const initTracking = {
   initWidgetCta() {
     const realLink = document.getElementById("clientRegister");
     window.addEventListener("message", (event) => {
-      console.log(event.data);
+      // console.log(event.data);
       if (
         event.data.type === "clientRegistration" ||
         event.data.type === "clientRegistrationInterviewer"
@@ -908,7 +909,7 @@ const initCore = {
 
       setInterval(() => {
         if (wrap.classList.contains("is-visible")) showNext();
-      }, 2000);
+      }, 2500);
 
       showNext();
     });
