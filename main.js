@@ -1245,6 +1245,25 @@ const initForm = {
             }, 200);
           })
         );
+
+        const messageNextEl = formWrap.querySelector(".from_message-next");
+        const messageSteps =
+          messageWrapEl.querySelectorAll(".form_message-step");
+
+        messageNextEl.addEventListener("click", () => {
+          messageSteps[0].style.opacity = 0;
+          messageSteps[0].style.transform = "translateY(-10px)";
+          setTimeout(() => {
+            messageSteps[0].style.display = "none";
+
+            messageSteps[1].style.display = "block";
+            messageSteps[1].style.transform = "translateY(10px)";
+            requestAnimationFrame(() => {
+              messageSteps[1].style.opacity = 1;
+              messageSteps[1].style.transform = "translateY(0px)";
+            });
+          }, 200);
+        });
       }
 
       // init progress bar
