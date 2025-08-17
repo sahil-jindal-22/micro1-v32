@@ -227,7 +227,7 @@ const initTracking = {
           realLink.dataset.text = event.data.cta;
         }
 
-        if (event.widget) {
+        if (event.data.widget) {
           realLink.dataset.widget = event.widget;
         }
 
@@ -2523,15 +2523,18 @@ const initAfterScroll = {
         return;
       }
 
-      let params = customTrackData.portalParams;
+      let params = customTrackData.portalParams || "";
 
       if (!params.includes("hutk")) {
         const hutk = customTrackData.hutk;
 
-        if (!hutk) return;
-
-        if (!params.endsWith("&")) params += `&hutk=${hutk}`;
-        else params += `hutk=${hutk}`;
+        if (hutk) {
+          if (params && params.length > 0) {
+            params += `&hutk=${hutk}`;
+          } else {
+            params = `hutk=${hutk}`;
+          }
+        }
       }
 
       widget.src = `${url}?${params}`;

@@ -1,9 +1,9 @@
 git add . && \
-git commit -m "commented log" && \
+git commit -m "fixed bugs" && \
 git push origin main && \
-git tag -a v31.5 -m "v31.5 release" && \
-git push origin v31.5 && \
-gh release create v31.5 --generate-notes
+git tag -a v31.6 -m "v31.6 release" && \
+git push origin v31.6 && \
+gh release create v31.6 --generate-notes
 
 
 
