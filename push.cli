@@ -1,26 +1,17 @@
 git add . && \
 git commit -m "" && \
 git push origin main && \
-git tag -a v31.3 -m "v31.3 release" && \
-git push origin v31.3 && \
-gh release create v31.3 --generate-notes
+git tag -a v31.4 -m "v31.4 release" && \
+git push origin v31.4 && \
+gh release create v31.4 --generate-notes
 
-git add . && \
-git commit -m "updated free email message" && \
-git push origin main && \
-git tag -a v31.3 -m "v31.3 release" && \
-git push origin v31.3 && \
-gh release create v31.3 --generate-notes
+
 
 <!-- Non-critical CSS/JS 
 <link rel="stylesheet" href="http://127.0.0.1:5500/main.css" media="print" onload="this.media='all'">
 <script defer src="http://127.0.0.1:5500/main.js"></script>
 <script defer src="http://127.0.0.1:5500/staging.js"></script>
 -->
-
-
-
-
 
 
 

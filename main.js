@@ -218,7 +218,7 @@ const initTracking = {
   initWidgetCta() {
     const realLink = document.getElementById("clientRegister");
     window.addEventListener("message", (event) => {
-      // console.log(event.data);
+      console.log(event.data);
       if (
         event.data.type === "clientRegistration" ||
         event.data.type === "clientRegistrationInterviewer"
@@ -226,6 +226,11 @@ const initTracking = {
         if (event.data.cta) {
           realLink.dataset.text = event.data.cta;
         }
+
+        if (event.widget) {
+          realLink.dataset.widget = event.widget;
+        }
+
         realLink?.click();
       }
     });
@@ -264,6 +269,8 @@ const initTracking = {
       }
 
       utilities.updateInput(document.querySelectorAll(".hutk_input"), hutk);
+
+      customTrackData.hutk = hutk;
     });
   },
   organicSocialRef() {
@@ -2504,6 +2511,33 @@ const initAfterScroll = {
     }
 
     console.log(sliders);
+  },
+  async initDemoWidget() {
+    const widgets = document.querySelectorAll("#interview-widget");
+
+    widgets.forEach((widget) => {
+      const url = widget.dataset.src;
+
+      if (!url) {
+        console.log("Widget URL missing");
+        return;
+      }
+
+      let params = customTrackData.portalParams;
+
+      if (!params.includes("hutk")) {
+        const hutk = customTrackData.hutk;
+
+        if (!hutk) return;
+
+        if (!params.endsWith("&")) params += `&hutk=${hutk}`;
+        else params += `hutk=${hutk}`;
+      }
+
+      widget.src = `${url}?${params}`;
+
+      console.log("added URL");
+    });
   },
 };
 
