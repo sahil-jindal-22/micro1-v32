@@ -228,7 +228,7 @@ const initTracking = {
         }
 
         if (event.data.widget) {
-          realLink.dataset.widget = event.widget;
+          realLink.dataset.widget = event.data.widget;
         }
 
         realLink?.click();
