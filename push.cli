@@ -1,9 +1,12 @@
 git add . && \
-git commit -m "fixed another bug" && \
+git commit -m "updated SaaS form redirection" && \
 git push origin main && \
-git tag -a v31.7 -m "v31.7 release" && \
-git push origin v31.7 && \
-gh release create v31.7 --generate-notes
+git tag -a v31.8 -m "v31.8 release" && \
+git push origin v31.8 && \
+gh release create v31.8 --generate-notes
+
+
+
 
 
 
