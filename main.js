@@ -1720,7 +1720,7 @@ const initForm = {
           }
 
           if (leadType === "Interview your own candidates") {
-            redirectPath = "/zara-demo";
+            // redirectPath = "/zara-demo";
             // prev logic below to send only ent to demo
             const companyStage = getCompanyStage(
               customTrackData.company?.size || companyData?.size,
