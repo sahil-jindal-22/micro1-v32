@@ -564,17 +564,13 @@ const initTracking = {
       ) {
         src = "ai-interviewer";
       } else if (
-        currentPath.includes("cor") ||
-        currentPath.includes("onboard")
-      ) {
-        src = "cor";
-      } else if (
         currentPath.includes("talent") ||
         currentPath.includes("/tech/") ||
-        currentPath.includes("human-data") ||
         currentPath.includes("vetting")
       ) {
         src = "search-talent";
+      } else if (currentPath.includes("human-data")) {
+        src = "human-data";
       } else {
         src = "general";
       }
