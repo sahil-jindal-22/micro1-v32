@@ -1,9 +1,9 @@
 git add . && \
-git commit -m "added steps to general form" && \
+git commit -m "added steps to general form - bugs" && \
 git push origin main && \
-git tag -a v32.1 -m "v32.1 release" && \
-git push origin v32.1 && \
-gh release create v32.1 --generate-notes
+git tag -a v32.2 -m "v32.2 release" && \
+git push origin v32.2 && \
+gh release create v32.2 --generate-notes
 
 
 

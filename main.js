@@ -1355,7 +1355,6 @@ const initForm = {
           checkboxes.forEach((cb) => {
             if (cb.checked) {
               result = true;
-              console.log(true);
               if (
                 cb.parentElement.querySelector("span[data-other-input]") &&
                 cb
@@ -1472,14 +1471,14 @@ const initForm = {
           currStep?.classList.remove("active");
           currStep?.classList.add("prev");
 
-          // nextStep?.classList.remove("next");
+          nextStep?.classList.remove("next");
           nextStep?.classList.add("active");
         } else {
           const currStep = allSteps[number + 1];
           const prevStep = allSteps[number];
 
           currStep?.classList.remove("active");
-          // currStep?.classList.add("next");
+          currStep?.classList.add("next");
 
           prevStep?.classList.remove("prev");
           prevStep?.classList.add("active");
@@ -1543,24 +1542,10 @@ const initForm = {
             "Interview your own candidates"
           ) {
             console.log("enable");
-            form
-              .querySelectorAll(".form-step-wrap[data-step-disabled=true]")
-              .forEach((step) => {
-                step.dataset.stepDisabled = "";
-                step.offsetHeight;
-              });
 
-            allSteps = form.querySelectorAll(
-              ".form-step-wrap:not([data-step-disabled=true])"
-            );
+            allSteps = form.querySelectorAll(".form-step-wrap");
           } else {
             console.log("disable");
-            form
-              .querySelectorAll(".form-step-wrap[data-step-disabled]")
-              .forEach((step) => {
-                step.dataset.stepDisabled = "true";
-                step.offsetHeight;
-              });
 
             allSteps = form.querySelectorAll(
               ".form-step-wrap:not([data-step-disabled=true])"
