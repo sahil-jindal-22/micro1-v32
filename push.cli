@@ -1,9 +1,9 @@
 git add . && \
-git commit -m "add src for human-data" && \
+git commit -m "added steps to general form" && \
 git push origin main && \
-git tag -a v32 -m "v32 release" && \
-git push origin v32 && \
-gh release create v32 --generate-notes
+git tag -a v32.1 -m "v32.1 release" && \
+git push origin v32.1 && \
+gh release create v32.1 --generate-notes
 
 
 

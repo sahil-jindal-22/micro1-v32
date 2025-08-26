@@ -1223,7 +1223,9 @@ const initForm = {
 
       let currentStep = 0;
       const mainForm = form.closest("form");
-      const allSteps = form.querySelectorAll(".form-step-wrap");
+      let allSteps = form.querySelectorAll(
+        ".form-step-wrap:not([data-step-disabled=true])"
+      );
       const prevButton = mainForm.querySelector("[form-element='prev-btn']");
       const nextButtons = mainForm.querySelectorAll(
         "[form-element='next-btn']"
@@ -1311,7 +1313,7 @@ const initForm = {
 
       mainForm
         .querySelectorAll(
-          `input[type="text"][required], input[type="number"][required], input[type="email"][required],  input[type="tel"][required], textarea[required], .other-field-wrap input[type="text"]`
+          `input[type="text"][required], input[type="number"][required], input[type="email"][required],  input[type="tel"][required], textarea[required], .other-field-wrap input[type="text"], textarea[data-required='true']`
         )
         .forEach((input) =>
           input.addEventListener("input", () => {
@@ -1353,6 +1355,7 @@ const initForm = {
           checkboxes.forEach((cb) => {
             if (cb.checked) {
               result = true;
+              console.log(true);
               if (
                 cb.parentElement.querySelector("span[data-other-input]") &&
                 cb
@@ -1375,7 +1378,7 @@ const initForm = {
         }
 
         const allInputFields = formStep.querySelectorAll(
-          `input[type="text"][required], input[type="number"][required], input[type="email"][required],  input[type="tel"][required], textarea[required], input[type="file"][required]`
+          `input[type="text"][required], input[type="number"][required], input[type="email"][required],  input[type="tel"][required], textarea[required], input[type="file"][required], textarea[data-required='true']`
         );
         console.log(allInputFields);
         if (allInputFields.length > 0) {
@@ -1469,14 +1472,14 @@ const initForm = {
           currStep?.classList.remove("active");
           currStep?.classList.add("prev");
 
-          nextStep?.classList.remove("next");
+          // nextStep?.classList.remove("next");
           nextStep?.classList.add("active");
         } else {
           const currStep = allSteps[number + 1];
           const prevStep = allSteps[number];
 
           currStep?.classList.remove("active");
-          currStep?.classList.add("next");
+          // currStep?.classList.add("next");
 
           prevStep?.classList.remove("prev");
           prevStep?.classList.add("active");
@@ -1532,6 +1535,37 @@ const initForm = {
         const result = verifyStepFields();
         if (!result) {
           return;
+        }
+
+        if (allSteps[currentStep].dataset.stepCheckPoint) {
+          if (
+            formStep.querySelector(".w-radio.is-checked input")?.value ===
+            "Interview your own candidates"
+          ) {
+            console.log("enable");
+            form
+              .querySelectorAll(".form-step-wrap[data-step-disabled=true]")
+              .forEach((step) => {
+                step.dataset.stepDisabled = "";
+                step.offsetHeight;
+              });
+
+            allSteps = form.querySelectorAll(
+              ".form-step-wrap:not([data-step-disabled=true])"
+            );
+          } else {
+            console.log("disable");
+            form
+              .querySelectorAll(".form-step-wrap[data-step-disabled]")
+              .forEach((step) => {
+                step.dataset.stepDisabled = "true";
+                step.offsetHeight;
+              });
+
+            allSteps = form.querySelectorAll(
+              ".form-step-wrap:not([data-step-disabled=true])"
+            );
+          }
         }
 
         if (currentStep + 1 <= allSteps.length - 1) currentStep++;
