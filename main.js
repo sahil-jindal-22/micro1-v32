@@ -1191,6 +1191,15 @@ const initCore = {
       );
     });
   },
+  setTargetBlank() {
+    document
+      .querySelectorAll(
+        '[data-button-target="blank"] a, a[data-button-target="blank"]'
+      )
+      .forEach((link) => {
+        link.setAttribute("target", "_blank");
+      });
+  },
 };
 
 const initForm = {
