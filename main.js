@@ -1091,7 +1091,7 @@ const initCore = {
     });
   },
   initFAQMore() {
-    const button = document.querySelector(".faq_load-wrap .button");
+    const button = document.querySelector(".faq_load-wrap button");
     if (button) {
       button.addEventListener("click", () => {
         window.scrollTo({

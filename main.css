@@ -216,12 +216,12 @@ textarea {
 }
 
 .process_text.is-active {
-  color: #000;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .process_text.is-active .process_icon {
-  background-color: #3444da;
-  color: white;
+  background-color: #fff;
+  color: #000;
 }
 
 .swiper-component.is-cs .swiper-slide {
