@@ -243,8 +243,7 @@ textarea {
 }
 
 .swiper-pagination-bullet {
-  background: rgba(52, 68, 218, 0.1) !important;
-  border: 1px solid rgba(52, 68, 218, 0.8);
+  background: rgb(255 255 255 / 20%) !important;
   opacity: 1 !important;
   width: 8px !important;
   height: 8px !important;
@@ -255,8 +254,7 @@ textarea {
 
 .swiper-pagination-bullet.swiper-pagination-bullet-active {
   opacity: 1 !important;
-  border-color: #3444da;
-  background-color: #3444da !important;
+  background-color: rgb(255 255 255 / 70%) !important;
 }
 
 .swipe_arrow_circle {
@@ -329,7 +327,7 @@ textarea {
 }
 
 .nav_dd_p-item.is-selected {
-  border-color: var(--base-color-brand--primary);
+  border-color: rgba(255, 255, 255, 0.06);
 }
 
 .w--nav-dropdown-open {
@@ -361,16 +359,16 @@ textarea {
 
 /* v28 */
 .wi_text.is-active {
-  color: #000;
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .wi_text.is-active .process_icon {
-  background-color: #000;
-  color: white;
+  background-color: #fff;
+  color: #000;
 }
 
 .is-visible .wo_line {
-  stroke-dasharray: 7691;
+  stroke-dasharray: 8199;
   stroke-dashoffset: 1000;
   animation: 2s linear forwards woDash;
   transform-box: content-box;
@@ -393,71 +391,9 @@ textarea {
   }
 }
 
-.nav_component.is-scrolled .nav_bg-hover {
-  opacity: 1;
-}
-
 .nav_component.is-scrolled {
-  border-color: transparent;
-}
-
-.nav_component.is-scrolled[data-wf--nav--variant="light"] {
-  color: #000 !important;
-}
-
-.nav_component.is-scrolled[data-wf--nav--variant="light"]
-  [data-wf--button--variant="tertiary_small"]
-  .button-wrap {
-  background-color: #3444da1a;
-  box-shadow: inset 0 0 0 1px #3444da33;
-  color: #000;
-}
-
-@media screen and (min-width: 992px) {
-  .nav_component.is-scrolled[data-wf--nav--variant="light"]
-    [data-wf--button--variant="tertiary_small"]
-    .button-wrap:hover {
-    background-color: #3444da33;
-  }
-
-  .nav_component.is-scrolled[data-wf--nav--variant="light"]
-    .nav_dd_menu-link:hover,
-  .nav_component.is-scrolled[data-wf--nav--variant="light"]
-    .nav_menu-link.is-right:hover {
-    background-color: #3444da1a !important;
-  }
-}
-@media screen and (max-width: 992px) {
-  .nav_component.is-scrolled {
-    background: rgba(255, 255, 255, 0.8);
-    border-bottom-color: #3444da1a;
-    backdrop-filter: blur(15px);
-  }
-
-  .nav_component.is-scrolled[data-wf--nav--variant="light"] .nav_logo-link {
-    color: #000;
-  }
-
-  .nav_component[data-wf--nav--variant="light"]
-    .w-nav-button.w--open
-    .nav_button-icon,
-  .nav_component.is-scrolled[data-wf--nav--variant="light"] .nav_button-icon {
-    filter: invert(1);
-  }
-
-  .nav_component[data-wf--nav--variant="light"]
-    [data-wf--button--variant="tertiary_small"]
-    .button-wrap {
-    background-color: #3444da1a;
-    box-shadow: inset 0 0 0 1px #3444da33;
-    color: #000;
-  }
-
-  .nav_component[data-wf--nav--variant="light"]
-    [data-wf--button--variant="tertiary_small"]
-    .button-wrap:hover {
-    background-color: #3444da33;
-  }
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(15px);
 }
 
 /* globe card */
