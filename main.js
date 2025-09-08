@@ -2287,9 +2287,9 @@ const initGsap = {
         start: "top+=200",
         end: "+=1",
         onEnter: () => {
-          Object.values(initAfterScroll).forEach((fn) => fn());
           document.body.classList.add("page-scrolled-200");
         },
+        onLeaveBack: () => nav.classList.remove("page-scrolled-200"),
       },
     });
   },
