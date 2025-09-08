@@ -2117,8 +2117,8 @@ const initGsap = {
       scrollTrigger: {
         start: "top+=200",
         end: "+=1",
-        onEnter: () => nav.classList.add("is-scrolled-200"),
-        onLeaveBack: () => nav.classList.remove("is-scrolled-200"),
+        onEnter: () => nav.classList.add("is-scrolled-500"),
+        onLeaveBack: () => nav.classList.remove("is-scrolled-500"),
       },
     });
   },
