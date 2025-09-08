@@ -1,9 +1,9 @@
 git add . && \
 git commit -m "added nav scroll bug" && \
 git push origin main && \
-git tag -a v32.2.7 -m "v32.2.7 release" && \
-git push origin v32.2.7 && \
-gh release create v32.2.7 --generate-notes
+git tag -a v32.2.8 -m "v32.2.8 release" && \
+git push origin v32.2.8 && \
+gh release create v32.2.8 --generate-notes
 
 
 

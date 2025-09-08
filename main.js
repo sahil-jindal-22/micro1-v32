@@ -2115,7 +2115,7 @@ const initGsap = {
 
     gsap.timeline({
       scrollTrigger: {
-        start: "top+=200",
+        start: "top+=500",
         end: "+=1",
         onEnter: () => nav.classList.add("is-scrolled-500"),
         onLeaveBack: () => nav.classList.remove("is-scrolled-500"),
