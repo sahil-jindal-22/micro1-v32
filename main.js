@@ -2317,8 +2317,8 @@ const initGsap = {
       ScrollTrigger.create({
         animation: mainTimeline,
         trigger: wrapper,
-        start: "top -10%",
-        end: "bottom 110%",
+        start: "top 0",
+        end: "bottom 100%",
         scrub: 0.5,
       });
     });

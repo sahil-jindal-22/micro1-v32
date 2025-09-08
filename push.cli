@@ -1,9 +1,9 @@
 git add . && \
 git commit -m "added scroll animations" && \
 git push origin main && \
-git tag -a v32.2.91 -m "v32.2.91 release" && \
-git push origin v32.2.91 && \
-gh release create v32.2.91 --generate-notes
+git tag -a v32.2.92 -m "v32.2.92 release" && \
+git push origin v32.2.92 && \
+gh release create v32.2.92 --generate-notes
 
 
 
