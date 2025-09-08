@@ -2319,7 +2319,7 @@ const initGsap = {
         trigger: wrapper,
         start: "top -10%",
         end: "bottom 110%",
-        scrub: 0.8,
+        scrub: 0.5,
       });
     });
   },
