@@ -6,7 +6,5 @@
 }
 
 .nav_scroll_wrap {
-  opacity: 0;
-  transform: translateY(-100%);
   transition: all 400ms ease-in-out;
 }

@@ -2112,6 +2112,15 @@ const initGsap = {
         onLeaveBack: () => nav.classList.remove("is-scrolled"),
       },
     });
+
+    gsap.timeline({
+      scrollTrigger: {
+        start: "top+=200",
+        end: "+=1",
+        onEnter: () => nav.classList.add("is-scrolled-200"),
+        onLeaveBack: () => nav.classList.remove("is-scrolled-200"),
+      },
+    });
   },
   textScroll() {
     const textEl = document.querySelectorAll("[data-animation='split-text']");
@@ -2278,18 +2287,6 @@ const initGsap = {
           Object.values(initAfterScroll).forEach((fn) => fn());
           document.body.classList.add("page-scrolled");
         },
-      },
-    });
-
-    gsap.timeline({
-      scrollTrigger: {
-        once: true,
-        start: "top+=200",
-        end: "+=1",
-        onEnter: () => {
-          document.body.classList.add("page-scrolled-200");
-        },
-        onLeaveBack: () => nav.classList.remove("page-scrolled-200"),
       },
     });
   },
