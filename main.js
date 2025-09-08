@@ -2290,6 +2290,39 @@ const initGsap = {
       },
     });
   },
+  stickyTextScroll() {
+    const wrappers = document.querySelectorAll(
+      "[data-sticky-text-scroll='track']"
+    );
+
+    if (wrappers.length === 0) return;
+
+    wrappers.forEach((wrapper) => {
+      const list = wrapper.querySelector("[data-sticky-text-scroll='target']");
+
+      const items = wrapper.querySelectorAll(
+        "[data-sticky-text-scroll='item']"
+      );
+
+      console.log(list);
+
+      const mainTimeline = gsap.timeline({});
+
+      mainTimeline.to(list, {
+        y: -list.offsetHeight + items[0].offsetHeight,
+        duration: 1,
+        ease: "none",
+      });
+
+      ScrollTrigger.create({
+        animation: mainTimeline,
+        trigger: wrapper,
+        start: "top -10%",
+        end: "bottom 110%",
+        scrub: 0.8,
+      });
+    });
+  },
 };
 const initGsapMob = {
   handleBackButton() {
