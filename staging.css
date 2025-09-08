@@ -1,0 +1,12 @@
+@media screen and (min-width: 992px) {
+  .nav_component.is-scrolled-200 .nav_scroll_wrap {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.nav_scroll_wrap {
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: all 400ms ease-in-out;
+}

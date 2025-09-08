@@ -1,9 +1,9 @@
 git add . && \
-git commit -m "global updates" && \
+git commit -m "added nav scroll" && \
 git push origin main && \
-git tag -a v32.2.3 -m "v32.2.3 release" && \
-git push origin v32.2.3 && \
-gh release create v32.2.3 --generate-notes
+git tag -a v32.2.4 -m "v32.2.4 release" && \
+git push origin v32.2.4 && \
+gh release create v32.2.4 --generate-notes
 
 
 

@@ -2280,6 +2280,18 @@ const initGsap = {
         },
       },
     });
+
+    gsap.timeline({
+      scrollTrigger: {
+        once: true,
+        start: "top+=200",
+        end: "+=1",
+        onEnter: () => {
+          Object.values(initAfterScroll).forEach((fn) => fn());
+          document.body.classList.add("page-scrolled-200");
+        },
+      },
+    });
   },
 };
 const initGsapMob = {
