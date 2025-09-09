@@ -141,18 +141,19 @@ textarea {
   margin-top: 10px;
 }
 
-/* checkbox, radio input hover */
+/* checkbox, radio input hover 
 @media screen and (min-width: 992px) {
   .radio-wrapper:hover,
   .checkbox-wrapper:hover {
     border-color: #3444da;
   }
-}
+}*/
 
 /* checked input */
 .radio-wrapper.is-checked,
 .checkbox-wrapper.is-checked {
-  border-color: #3444da;
+  border-color: rgba(255, 255, 255, 0.9);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* checked icon  */
