@@ -1,9 +1,9 @@
 git add . && \
-git commit -m "updated form css" && \
+git commit -m "updated form code" && \
 git push origin main && \
-git tag -a v32.2.93 -m "v32.2.93 release" && \
-git push origin v32.2.93 && \
-gh release create v32.2.93 --generate-notes
+git tag -a v32.2.94 -m "v32.2.94 release" && \
+git push origin v32.2.94 && \
+gh release create v32.2.94 --generate-notes
 
 
 

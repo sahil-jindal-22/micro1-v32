@@ -1260,7 +1260,9 @@ const initForm = {
           })
         );
 
-        const messageNextEl = formWrap.querySelector(".from_message-next");
+        const messageNextEl = formWrap.querySelector(
+          "[form-element='message-next']"
+        );
         const messageSteps =
           messageWrapEl.querySelectorAll(".form_message-step");
 
@@ -1550,14 +1552,21 @@ const initForm = {
             formStep.querySelector(".w-radio.is-checked input")?.value ===
             "Interview your own candidates"
           ) {
-            console.log("enable");
-
-            allSteps = form.querySelectorAll(".form-step-wrap");
-          } else {
-            console.log("disable");
+            console.log("enable zara");
 
             allSteps = form.querySelectorAll(
-              ".form-step-wrap:not([data-step-disabled=true])"
+              ".form-step-wrap:not([data-step-type=human-data])"
+            );
+          }
+
+          if (
+            formStep.querySelector(".w-radio.is-checked input")?.value ===
+            "Explore human data"
+          ) {
+            console.log("enable hd");
+
+            allSteps = form.querySelectorAll(
+              ".form-step-wrap:not([data-step-type=zara])"
             );
           }
         }
@@ -1649,7 +1658,7 @@ const initForm = {
 
         console.log("ready to submit");
 
-        submitBtn.textContent = "Please wait...";
+        submitBtn.querySelector("div").textContent = "Please wait...";
         submitBtn.classList.add("disabled");
 
         mainForm
