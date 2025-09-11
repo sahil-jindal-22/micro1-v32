@@ -714,3 +714,11 @@ textarea {
 .nav_scroll_wrap {
   transition: all 400ms ease-in-out;
 }
+
+.cs_logo_item {
+  opacity: 0;
+}
+
+.popup-form .cta_icon-embed-wrap {
+  transform: translate3d(0%, 0px, 0px) !important;
+}

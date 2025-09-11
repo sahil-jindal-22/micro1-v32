@@ -1289,7 +1289,7 @@ const initForm = {
       progress.style.position = "absolute";
       progress.style.width = 0;
       progress.style.height = "100%";
-      progress.style.backgroundColor = "#009C20";
+      progress.style.backgroundColor = "rgb(255, 255, 255, 0.8)";
       progress.style.transition = "all 300ms";
       progressBar.appendChild(progress);
 
@@ -2627,4 +2627,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 window.addEventListener("load", () => {
   document.body.classList.add("page-loaded");
+
+  setTimeout(() => {
+    const video = document.getElementById("researchVideo");
+
+    if (video) {
+      const sourceWebm = document.createElement("source");
+      sourceWebm.src =
+        "https://micro1-portal-data.s3.us-east-1.amazonaws.com/assets/videos/low.webm";
+      sourceWebm.type = "video/webm";
+      const sourceMp4 = document.createElement("source");
+      sourceMp4.src =
+        "https://micro1-portal-data.s3.us-east-1.amazonaws.com/assets/1757558823030-b09456b0-0ca4-4174-b8fa-daff38dd9341-micro1-video-11sept.mp4";
+      sourceMp4.type = "video/mp4";
+      video.appendChild(sourceMp4);
+      video.appendChild(sourceWebm);
+      video.setAttribute("autoplay", ""); // Add autoplay dynamically
+      video.load(); // Start loading immediately
+      video.play(); // Start playback if needed
+    }
+  }, 1000);
 });
