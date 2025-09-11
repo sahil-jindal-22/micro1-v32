@@ -722,78 +722,8 @@ const initTracking = {
       }
     })();
   },
-  // trackScrollDepth() {
-  //   if (window.__scrollDepthTrackingInitialized) return;
-  //   window.__scrollDepthTrackingInitialized = true;
-
-  //   const scrollPercents = [25, 50, 75, 100];
-  //   const triggered = new Set();
-  //   const markers = {};
-
-  //   function createOrUpdateMarkers() {
-  //     const scrollHeight = document.documentElement.scrollHeight;
-
-  //     scrollPercents.forEach((percent) => {
-  //       let marker = markers[percent];
-
-  //       if (!marker) {
-  //         marker = document.createElement("div");
-  //         marker.style.position = "absolute";
-  //         marker.style.left = "0";
-  //         marker.style.width = "1px";
-  //         marker.style.height = "1px";
-  //         marker.style.pointerEvents = "none";
-  //         marker.style.opacity = "0";
-  //         marker.dataset.percent = percent;
-  //         marker.classList.add("scroll-depth-marker");
-  //         document.body.appendChild(marker);
-  //         markers[percent] = marker;
-  //         observer.observe(marker);
-  //       }
-  //       const position = (percent / 100) * scrollHeight;
-  //       // console.log(position, percent === 100, percent);
-
-  //       marker.style.top = `${percent === 100 ? position - 150 : position}px`;
-  //     });
-  //   }
-
-  //   const observer = new IntersectionObserver(
-  //     (entries) => {
-  //       entries.forEach((entry) => {
-  //         if (entry.isIntersecting) {
-  //           const percent = entry.target.dataset.percent;
-  //           if (!triggered.has(percent)) {
-  //             triggered.add(percent);
-  //             amplitude?.track("Scroll Depth", {
-  //               percent: Number(percent),
-  //               "[Amplitude] Page Path": window.location.pathname,
-  //               "[Amplitude] Page Domain": window.location.host,
-  //             });
-  //           }
-  //         }
-  //       });
-  //     },
-  //     {
-  //       root: null,
-  //       threshold: 0.01,
-  //     }
-  //   );
-
-  //   // Initial marker placement
-  //   createOrUpdateMarkers();
-
-  //   // Recalculate on content resize
-  //   let resizeTimeout;
-  //   const resizeObserver = new ResizeObserver(() => {
-  //     clearTimeout(resizeTimeout);
-  //     resizeTimeout = setTimeout(() => {
-  //       createOrUpdateMarkers();
-  //     }, 500); // Wait 500ms after last resize
-  //   });
-  //   resizeObserver.observe(document.body);
-  // },
   initCTATracking() {
-    const links = [...document.querySelectorAll("a")];
+    const links = [...document.querySelectorAll("a, button")];
     const page = window.location.pathname;
     const host = window.location.host;
 
@@ -822,8 +752,8 @@ const initTracking = {
     const selectedLinks = links.filter(
       (link) =>
         link.dataset.formCta ||
-        paths.some((str) => link.href.includes(str)) ||
-        domainList.some((str) => link.href.includes(str))
+        paths.some((str) => link.href?.includes(str)) ||
+        domainList.some((str) => link.href?.includes(str))
     );
 
     selectedLinks.forEach((link) => {
@@ -833,6 +763,7 @@ const initTracking = {
           "[Amplitude] Page Path": page,
           "[Amplitude] Page Domain": host,
           "[Amplitude] Element Href": link.href,
+          ...(link.dataset.formCta && { form: link.dataset.formCta }),
           ...(link.dataset.widget && { widget: link.dataset.widget }),
         });
       });
@@ -916,37 +847,6 @@ const initCore = {
 
       showNext();
     });
-  },
-  hideSignupCta() {
-    try {
-      const URLParams = new URLSearchParams(window.location.search);
-
-      if (
-        URLParams.get("utm_medium") !== "paid-social" &&
-        !sessionStorage.getItem("utm_medium")
-      )
-        return;
-
-      console.log("hide");
-
-      sessionStorage.setItem("utm_medium", "paid-social");
-
-      const buttons = [
-        ...document.querySelectorAll(
-          '[data-wf--button_register--variant="tertiary"] a, [data-wf--button_register--variant="sec"] a, [data-wf--button--variant="sec"] a, [data-wf--button--variant="tertiary"] a'
-        ),
-      ].filter(
-        (link) =>
-          link.href.includes("client.micro1.ai") ||
-          link.href.includes("d1y3udqq47tapp.amplifyapp.com")
-      );
-
-      buttons.forEach((btn) => btn.remove());
-
-      console.log("removed btns", buttons);
-    } catch {
-      console.log("Error in hiding sec CTA");
-    }
   },
   hideOverflow() {
     document

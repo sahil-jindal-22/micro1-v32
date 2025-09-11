@@ -1,9 +1,9 @@
 git add . && \
-git commit -m "updated animation code" && \
+git commit -m "fixed some bugs" && \
 git push origin main && \
-git tag -a v32.2.95 -m "v32.2.95 release" && \
-git push origin v32.2.95 && \
-gh release create v32.2.95 --generate-notes
+git tag -a v32.2.96 -m "v32.2.96 release" && \
+git push origin v32.2.96 && \
+gh release create v32.2.96 --generate-notes
 
 
 
