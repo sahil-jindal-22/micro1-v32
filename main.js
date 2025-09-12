@@ -2221,7 +2221,9 @@ const initGsap = {
       const mainTimeline = gsap.timeline({});
 
       mainTimeline.to(list, {
-        y: -list.offsetHeight + items[0].offsetHeight,
+        yPercent:
+          -((list.offsetHeight - items[0].offsetHeight) / list.offsetHeight) *
+          100,
         duration: 1,
         ease: "none",
       });
@@ -2229,9 +2231,9 @@ const initGsap = {
       ScrollTrigger.create({
         animation: mainTimeline,
         trigger: wrapper,
-        start: "top 0",
-        end: "bottom 100%",
-        scrub: 0.5,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
       });
     });
   },

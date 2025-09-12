@@ -1,9 +1,9 @@
 git add . && \
-git commit -m "human data src fix" && \
+git commit -m "scroll fix" && \
 git push origin main && \
-git tag -a v32.2.97 -m "v32.2.97 release" && \
-git push origin v32.2.97 && \
-gh release create v32.2.97 --generate-notes
+git tag -a v32.2.98 -m "v32.2.98 release" && \
+git push origin v32.2.98 && \
+gh release create v32.2.98 --generate-notes
 
 
 
