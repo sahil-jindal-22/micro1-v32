@@ -722,8 +722,3 @@ textarea {
 .popup-form .cta_icon-embed-wrap {
   transform: translate3d(0%, 0px, 0px) !important;
 }
-
-[data-sticky-text-scroll="target"] {
-  will-change: transform;
-  transform: translateZ(0);
-}
