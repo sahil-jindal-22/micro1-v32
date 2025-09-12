@@ -569,7 +569,10 @@ const initTracking = {
         currentPath.includes("vetting")
       ) {
         src = "search-talent";
-      } else if (currentPath.includes("human-data")) {
+      } else if (
+        currentPath.includes("data-engine") ||
+        currentPath.includes("human-data")
+      ) {
         src = "human-data";
       } else {
         src = "general";
