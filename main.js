@@ -1648,46 +1648,44 @@ const initForm = {
         const companyData =
           (await utilities.getCompanySize(userContactInfo)) || {};
 
+        const companyStage = getCompanyStage(
+          customTrackData.company?.size || companyData?.size,
+          customTrackData.company?.funding || companyData?.funding
+        );
+
+        const isEnt = companyStage && companyStage === "Enterprises";
+
         // if general form
         const leadType = allFormData.get("general-requirement");
         if (leadType) {
-          if (leadType === "Hire pre-vetted talent") {
-            redirectPath = "/book-hiring-call";
+          if (leadType === "Explore human data") {
+            if (isEnt) {
+              redirectPath = "/human-data-demo";
+            } else {
+              redirectPath = "/human-data-register";
+            }
           }
 
           if (leadType === "Interview your own candidates") {
-            // redirectPath = "/zara-demo";
-            // prev logic below to send only ent to demo
-            const companyStage = getCompanyStage(
-              customTrackData.company?.size || companyData?.size,
-              customTrackData.company?.funding || companyData?.funding
-            );
-
-            if (companyStage === "ES" || !companyStage) {
-              redirectPath = "/zara-register";
-            } else {
+            if (isEnt) {
               redirectPath = "/zara-demo";
+            } else {
+              redirectPath = "/zara-register";
             }
           }
         }
 
         // if ai-interviewer form
-        // prev logic below to send only ent to demo
-        if (formType === "ai-interviewer") {
-          if (
-            customTrackData.company?.size ||
-            customTrackData.company?.funding ||
-            companyData?.size ||
-            companyData?.funding
-          ) {
-            const companyStage = getCompanyStage(
-              customTrackData.company?.size || companyData?.size,
-              customTrackData.company?.funding || companyData?.funding
-            );
+        if (formType === "ai-interviewer" && isEnt) {
+          {
+            redirectPath = "/zara-demo";
+          }
+        }
 
-            if (companyStage !== "ES" && companyStage) {
-              redirectPath = "/zara-demo";
-            }
+        // if human data form
+        if (formType === "human-data" && isEnt) {
+          {
+            redirectPath = "/human-data-demo";
           }
         }
 
