@@ -3,6 +3,42 @@ const staging = window.location.href.includes("webflow.io") ? true : false;
 const URLParams = new URLSearchParams(location.search);
 
 const utilities = {
+  freeDomains: [
+    "gmail.com",
+    "googlemail.com",
+    "yahoo.com",
+    "yahoo.co.uk",
+    "yahoo.co.in",
+    "yahoo.fr",
+    "yahoo.de",
+    "yahoo.it",
+    "yahoo.es",
+    "yahoo.ca",
+    "hotmail.com",
+    "outlook.com",
+    "live.com",
+    "msn.com",
+    "icloud.com",
+    "me.com",
+    "mac.com",
+    "aol.com",
+    "protonmail.com",
+    "proton.me",
+    "zoho.com",
+    "yandex.com",
+    "yandex.ru",
+    "mail.ru",
+    "gmx.com",
+    "gmx.de",
+    "web.de",
+    "qq.com",
+    "163.com",
+    "126.com",
+    "naver.com",
+    "daum.net",
+    "rediffmail.com",
+    "pm.me",
+  ],
   roundCurrency(value) {
     if (value >= 1e9) return `$${Math.round(value / 1e9)}B`;
     if (value >= 1e6) return `$${Math.round(value / 1e6)}M`;
@@ -75,44 +111,7 @@ const utilities = {
     try {
       const domain = userContactInfo.email.split("@")[1];
 
-      const freeDomains = [
-        "gmail.com",
-        "googlemail.com",
-        "yahoo.com",
-        "yahoo.co.uk",
-        "yahoo.co.in",
-        "yahoo.fr",
-        "yahoo.de",
-        "yahoo.it",
-        "yahoo.es",
-        "yahoo.ca",
-        "hotmail.com",
-        "outlook.com",
-        "live.com",
-        "msn.com",
-        "icloud.com",
-        "me.com",
-        "mac.com",
-        "aol.com",
-        "protonmail.com",
-        "proton.me",
-        "zoho.com",
-        "yandex.com",
-        "yandex.ru",
-        "mail.ru",
-        "gmx.com",
-        "gmx.de",
-        "web.de",
-        "qq.com",
-        "163.com",
-        "126.com",
-        "naver.com",
-        "daum.net",
-        "rediffmail.com",
-        "pm.me",
-      ];
-
-      if (freeDomains.includes(domain)) return;
+      if (utilities.freeDomains.includes(domain)) return;
 
       const personApiUrl = `https://hook.us1.make.com/lxholkn672i1jsfsgrs82geyxn641a0u?email=${encodeURIComponent(
         userContactInfo.email
@@ -1107,13 +1106,6 @@ const initCore = {
 
 const initForm = {
   formLogic() {
-    const validateEmail = (email) => {
-      return String(email)
-        .toLowerCase()
-        .match(
-          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        );
-    };
     const validatePhone = (phoneObj) => {
       if (phoneObj) {
         return phoneObj.isValidNumber();
@@ -1127,7 +1119,6 @@ const initForm = {
           .match(/^[0-9-+s()]*$/) && String(input).length < 25
       );
     };
-
     document.querySelectorAll(".forms-steps-wrapper").forEach((form) => {
       form
         .querySelectorAll(".w-condition-invisible")
@@ -1148,42 +1139,50 @@ const initForm = {
       let redirectPath = mainForm.dataset.formRedirectPath;
       const formWrap = form.closest(".popup-form");
       const formType = formWrap.dataset.formBlock;
-      const messageWrapEl = formWrap.querySelector(".form_message");
-      const messageCloseEls = formWrap.querySelectorAll(
-        "[form-element='message-close']"
-      );
 
-      if (messageWrapEl) {
-        messageCloseEls.forEach((closeEl) =>
-          closeEl.addEventListener("click", () => {
-            messageWrapEl.style.opacity = 0;
-            setTimeout(() => {
-              messageWrapEl.style.display = "none";
-            }, 200);
-          })
+      const successWrapEl = formWrap.querySelector(".w-form-done");
+
+      const validateEmailAPI = async (email) => {
+        try {
+          const nextButton = allSteps[currentStep].querySelector(
+            "[form-element='next-btn']"
+          );
+
+          nextButton.classList.add("disabled");
+
+          const response = await fetch(
+            `https://api.zerobounce.net/v2/validate?api_key=e23a5efbbbab4b28a4df85ec1e41676d&email=${email}&timeout=3`
+          );
+
+          if (!response.ok) {
+            console.error(`HTTP error! status: ${response.status}`);
+            nextButton.classList.remove("disabled");
+            return true;
+          }
+
+          const data = await response.json();
+
+          console.log(data.status);
+          nextButton.classList.remove("disabled");
+
+          return data.status !== "invalid";
+        } catch (error) {
+          console.error("Error validating email:", error);
+          nextButton.classList.remove("disabled");
+          return true;
+        }
+      };
+      const validateEmail = async (email) => {
+        return (
+          String(email)
+            .toLowerCase()
+            .match(
+              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            ) &&
+          !utilities.freeDomains.includes(email.split("@")[1]) &&
+          (await validateEmailAPI(email))
         );
-
-        const messageNextEl = formWrap.querySelector(
-          "[form-element='message-next']"
-        );
-        const messageSteps =
-          messageWrapEl.querySelectorAll(".form_message-step");
-
-        messageNextEl.addEventListener("click", () => {
-          messageSteps[0].style.opacity = 0;
-          messageSteps[0].style.transform = "translateY(-10px)";
-          setTimeout(() => {
-            messageSteps[0].style.display = "none";
-
-            messageSteps[1].style.display = "block";
-            messageSteps[1].style.transform = "translateY(10px)";
-            requestAnimationFrame(() => {
-              messageSteps[1].style.opacity = 1;
-              messageSteps[1].style.transform = "translateY(0px)";
-            });
-          }, 200);
-        });
-      }
+      };
 
       // init progress bar
       progressBar.style.position = "relative";
@@ -1252,7 +1251,7 @@ const initForm = {
           })
         );
 
-      function verifyStepFields() {
+      async function verifyStepFields() {
         let result = false;
 
         const formStep = allSteps[currentStep].querySelector("div");
@@ -1310,13 +1309,13 @@ const initForm = {
 
               break;
             } else if (allInputFields[i].type === "email") {
-              if (!validateEmail(allInputFields[i].value)) {
+              if (!(await validateEmail(allInputFields[i].value))) {
                 showError.querySelector(".error-text").innerText =
-                  "Please enter a valid email address.";
+                  "Please enter a valid company email address.";
                 result = false;
               } else {
                 showError.querySelector(".error-text").innerText =
-                  "Please enter your email.";
+                  "Please enter your company email address.";
                 result = true;
               }
             } else if (allInputFields[i].type === "number") {
@@ -1411,7 +1410,7 @@ const initForm = {
         }
       }
 
-      function moveToNextStep() {
+      async function moveToNextStep() {
         let onlyCheckboxes;
         const formStep = allSteps[currentStep].querySelector("div");
         const hasOtherOption = formStep.dataset?.hasOtherOption;
@@ -1445,7 +1444,7 @@ const initForm = {
 
         jQuery(formStep).find(".hidden-input").attr("value", checkValues);
 
-        const result = verifyStepFields();
+        const result = await verifyStepFields();
         if (!result) {
           return;
         }
@@ -1478,19 +1477,6 @@ const initForm = {
         showStep(currentStep);
 
         const emailInput = formStep.querySelector("[type='email']");
-
-        if (
-          messageWrapEl &&
-          emailInput &&
-          (emailInput.value.includes("gmail") ||
-            emailInput.value.includes("yahoo") ||
-            emailInput.value.includes("icloud"))
-        ) {
-          messageWrapEl.style.display = "flex";
-          requestAnimationFrame(() => {
-            messageWrapEl.style.opacity = 1;
-          });
-        }
 
         // amplitude
         const product = formType;
@@ -1541,7 +1527,7 @@ const initForm = {
       }
 
       async function submitForm() {
-        const result = verifyStepFields();
+        const result = await verifyStepFields();
 
         if (!result) return;
 
@@ -1659,33 +1645,7 @@ const initForm = {
         const leadType = allFormData.get("general-requirement");
         if (leadType) {
           if (leadType === "Explore human data") {
-            if (isEnt) {
-              redirectPath = "/human-data-demo";
-            } else {
-              redirectPath = "/human-data-register";
-            }
-          }
-
-          if (leadType === "Interview your own candidates") {
-            if (isEnt) {
-              redirectPath = "/zara-demo";
-            } else {
-              redirectPath = "/zara-register";
-            }
-          }
-        }
-
-        // if ai-interviewer form
-        if (formType === "ai-interviewer" && isEnt) {
-          {
-            redirectPath = "/zara-demo";
-          }
-        }
-
-        // if human data form
-        if (formType === "human-data" && isEnt) {
-          {
-            redirectPath = "/human-data-demo";
+            redirectPath = undefined;
           }
         }
 
@@ -1788,7 +1748,16 @@ const initForm = {
 
           // redirect
           console.log("form submitted successfully, redirecting!");
-          document.location.href = `${redirectPath}`;
+
+          console.log(redirectPath);
+          if (redirectPath) {
+            console.log("1");
+            document.location.href = `${redirectPath}`;
+          } else {
+            console.log("2");
+            mainForm.style.display = "none";
+            successWrapEl.style.display = "block";
+          }
         } catch (error) {
           console.error(error);
 
