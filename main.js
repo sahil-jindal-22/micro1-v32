@@ -1631,16 +1631,6 @@ const initForm = {
           90
         );
 
-        const companyData =
-          (await utilities.getCompanySize(userContactInfo)) || {};
-
-        const companyStage = getCompanyStage(
-          customTrackData.company?.size || companyData?.size,
-          customTrackData.company?.funding || companyData?.funding
-        );
-
-        const isEnt = companyStage && companyStage === "Enterprises";
-
         // if general form
         const leadType = allFormData.get("general-requirement");
         if (leadType) {
@@ -1650,7 +1640,6 @@ const initForm = {
         }
 
         const amplitudeEventParams = utilities.toSnakeCaseObject({
-          ...(companyData && companyData),
           ...(userContactInfo && userContactInfo),
           ...(ampFormObj && ampFormObj),
           redirectPath,
@@ -1660,57 +1649,6 @@ const initForm = {
         console.log(amplitudeEventParams);
 
         await submitFormToMake(amplitudeEventParams);
-      }
-
-      function getCompanyStage(companySize, funding) {
-        let companyStage;
-
-        if (!companySize && !funding) return companyStage;
-
-        // early stage, keep default
-        if (
-          (companySize === "Self-employed" ||
-            companySize === "1 employee" ||
-            companySize === "1-10 employees" ||
-            companySize === "2-10 employees" ||
-            companySize === "11-50 employees" ||
-            companySize === "1-10" ||
-            companySize === "11-50" ||
-            !companySize) &&
-          (!funding || funding <= 5000000)
-        ) {
-          console.log("early stage");
-          companyStage = "ES";
-          return companyStage;
-        }
-
-        // growth
-        if (
-          (companySize === "Self-employed" ||
-            companySize === "1 employee" ||
-            companySize === "1-10 employees" ||
-            companySize === "2-10 employees" ||
-            companySize === "11-50 employees" ||
-            companySize === "1-10" ||
-            companySize === "11-50" ||
-            companySize === "51-200 employees" ||
-            companySize === "201-500 employees" ||
-            companySize === "51-200" ||
-            companySize === "201-500" ||
-            !companySize) &&
-          (funding <= 30000000 || !funding)
-        ) {
-          console.log("growth");
-          companyStage = "Growth";
-
-          return companyStage;
-        }
-
-        // enterprise
-        console.log("enterprise");
-        companyStage = "Enterprises";
-
-        return companyStage;
       }
 
       // submit to make.com
