@@ -1165,7 +1165,7 @@ const initForm = {
           console.log(data.status);
           nextButton.classList.remove("disabled");
 
-          return data.status !== "invalid";
+          return !data.status || data.status !== "invalid";
         } catch (error) {
           console.error("Error validating email:", error);
           nextButton.classList.remove("disabled");
