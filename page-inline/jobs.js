@@ -259,7 +259,18 @@ function createJobEl(job) {
   }
 
   const defaultLogo =
-    "https://cdn.prod.website-files.com/67e70f741502e57481aa429d/680a6b0b7b80d6406249d4b2_Default.webp";
+    "https://cdn.prod.website-files.com/68b095121300aebde21ab3f4/68d1b0bfb4d9544f62f81232_micro1%20icon%20(1).webp";
+  const micro1Logo =
+    "https://cdn.prod.website-files.com/68b095121300aebde21ab3f4/68d1b0c145c1e24606f22f37_micro1%20icon.webp";
+
+  let logo = job.company_logo;
+
+  if (logo) {
+    if (logo.includes("micro1-single-logo.png")) logo = micro1Logo;
+    if (logo.includes("default-company-icon.png")) logo = defaultLogo;
+  } else {
+    logo = defaultLogo;
+  }
 
   const location = job.location_type
     ? job.location_type.charAt(0).toUpperCase() + job.location_type.slice(1)
@@ -270,21 +281,12 @@ function createJobEl(job) {
   }" class="jobs_item w-inline-block"
     ><div class="jobs_top-wrap">
       <div class="jobs_logo-wrap">
-        ${
-          job.company_logo
-            ? `<img
-          src="${job.company_logo}"
+        <img
+          src="${logo}"
           loading="lazy"
           alt=""
           class="jobs_logo"
-        />`
-            : `<img
-          src="${defaultLogo}"
-          loading="lazy"
-          alt=""
-          class="jobs_logo"
-        />`
-        }
+        />
         <div class="jobs_date">${date}</div>
       </div>
       <div>

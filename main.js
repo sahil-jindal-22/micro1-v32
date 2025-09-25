@@ -584,11 +584,6 @@ const initTracking = {
         ...(user.first_name && { first_name: user.first_name }),
         ...(user.last_name && { last_name: user.last_name }),
         ...(user.email && { email: user.email }),
-        ...((currentPath.includes("search-talent") ||
-          currentPath.includes("thank") ||
-          currentPath.includes("register")) && {
-          meeting: "booked",
-        }),
         src,
         ...(hutk && { hutk: hutk }),
         ...(customTrackData.cusRef && { ref_site: customTrackData.cusRef }),
