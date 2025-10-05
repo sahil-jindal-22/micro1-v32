@@ -1881,6 +1881,16 @@ const initForm = {
           form.style.display = "none";
         }, 300);
       }
+
+      // Check for openForm=1 in URL search params
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("openForm") === "1") {
+        // Find and open the first available form
+        const firstForm = document.querySelector("[data-form-block]");
+        if (firstForm) {
+          showForm(firstForm);
+        }
+      }
     })();
   },
 };
