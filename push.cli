@@ -1,9 +1,9 @@
 git add . && \
-git commit -m "open form param" && \
+git commit -m "update form email" && \
 git push origin main && \
-git tag -a v32.3.08 -m "v32.3.08 release" && \
-git push origin v32.3.08 && \
-gh release create v32.3.08 --generate-notes
+git tag -a v32.3.09 -m "v32.3.09 release" && \
+git push origin v32.3.09 && \
+gh release create v32.3.09 --generate-notes
 
 
 

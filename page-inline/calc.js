@@ -446,8 +446,10 @@ function Detail({ traditional, ai, savings, inputTime, hideCalculations }) {
               <div className="c_cost-title">Zara cost</div>
               <div className="c_cost-group">
                 <div className="c_cost-list">
-                  <div className="z_cost-label">
-                    <div>Resume screening</div>
+                  <div className="c_cost-item">
+                    <div className="c_cost-text">
+                      <div className="z_cost-label">Resume screening</div>
+                    </div>
                     <div>0 hr</div>
                   </div>
                   <div className="c_cost-pipeline">
@@ -478,8 +480,7 @@ function Detail({ traditional, ai, savings, inputTime, hideCalculations }) {
                   </div>
                   <div className="c_cost-item">
                     <div className="c_cost-text">
-                      <div className="z_cost-label">Reviewing AI reports
-                        <div/>
+                      <div className="z_cost-label">Reviewing AI reports</div>
                       <Popover>2 minutes per candidate</Popover>
                     </div>
                     <div>
@@ -502,18 +503,21 @@ function Detail({ traditional, ai, savings, inputTime, hideCalculations }) {
                     <div>${CONSTANTS.RECRUITER_PER_HOUR}/hr</div>
                   </div>
                   <div className="c_cost-item">
-                    <div className="z_cost-label"S>Avg cost per interview</div>
+                    <div className="z_cost-label" S>
+                      Avg cost per interview
+                    </div>
                     <div>${CONSTANTS.AI.INTERVIEW_COST_PER_APP}/interview</div>
                   </div>
-                </div>
-                <div className="c_cost-list">
-                  <div className="c_cost-divider"></div>
-                  <div className="c_cost-item">
-                    <div>Total cost</div>
-                    <div className="c_cost-total text-color-green">
-                      {hideCalculations
-                        ? "-"
-                        : `$${formatters.amount(ai.totalCost)}`}
+
+                  <div className="c_cost-list">
+                    <div className="c_cost-divider"></div>
+                    <div className="c_cost-item">
+                      <div>Total cost</div>
+                      <div className="c_cost-total text-color-green">
+                        {hideCalculations
+                          ? "-"
+                          : `$${formatters.amount(ai.totalCost)}`}
+                      </div>
                     </div>
                   </div>
                 </div>
