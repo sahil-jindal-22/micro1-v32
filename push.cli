@@ -1,0 +1,6 @@
+git add . && \
+git commit -m "update form email" && \
+git push origin main && \
+git tag -a v32.4.00 -m "v32.4.00 release" && \
+git push origin v32.4.00 && \
+gh release create v32.4.00 --generate-notes

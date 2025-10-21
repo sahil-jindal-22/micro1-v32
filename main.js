@@ -2460,6 +2460,7 @@ const initAfterScroll = {
 document.addEventListener("DOMContentLoaded", () => {
   document.body.classList.add("dom-loaded");
 
+  // yo
   Object.values(initTracking).forEach((fn) => fn());
   Object.values(initCore).forEach((fn) => fn());
   Object.values(initForm).forEach((fn) => fn());
