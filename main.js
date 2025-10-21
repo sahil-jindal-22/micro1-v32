@@ -2148,6 +2148,32 @@ const initGsap = {
       });
     });
   },
+  async countUp() {
+    const els = document.querySelectorAll("[data-count-el='target']");
+
+    if (!els.length) return;
+
+    await utilities.loadScript(
+      "https://cdn.jsdelivr.net/npm/countup@1.8.2/countUp.js"
+    );
+
+    els.forEach((el) => {
+      const decimal = +el.dataset.countDecimal;
+      const endVal = +el.dataset.countEndVal;
+      const startVal = +el.textContent;
+
+      let counter = new CountUp(el, startVal, endVal, decimal, 2);
+
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top bottom",
+        end: "bottom top",
+        onEnter: () => {
+          counter?.start();
+        },
+      });
+    });
+  },
 };
 const initGsapMob = {
   handleBackButton() {
