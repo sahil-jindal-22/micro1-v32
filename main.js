@@ -2111,14 +2111,21 @@ const initGsap = {
       const playIcon = button.querySelector(".is-play");
       const pauseIcon = button.querySelector(".is-pause");
 
-      video
-        .play()
-        .then(() => {
-          playIcon.style.opacity = 0;
-          pauseIcon.style.opacity = 1;
-          container.classList.remove("show-controls");
-        })
-        .catch(() => container.classList.add("show-controls"));
+      tryplay(() => {
+        video
+          .play()
+          .then(() => {
+            playIcon.style.opacity = 0;
+            pauseIcon.style.opacity = 1;
+            container.classList.remove("show-controls");
+          })
+          .catch(() => {
+            container.classList.add("show-controls");
+            setTimeout(tryplay, 1000);
+          });
+      });
+
+      tryPlay();
     }
 
     const containers = document.querySelectorAll(".wi_video-wrap");
