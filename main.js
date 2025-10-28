@@ -2167,7 +2167,7 @@ const initGsap = {
       });
 
       // Mobile: show controls on tap
-      video.adgitgdEventListener(
+      video.addEventListener(
         "touchstart",
         () => {
           if (!hasUserInteracted) {
