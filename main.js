@@ -1019,77 +1019,6 @@ const initCore = {
       document.head.appendChild(style);
     }
   },
-  autoplayVideosMob() {
-    return;
-
-    const containers = document.querySelectorAll(".wi_video-wrap");
-
-    containers.forEach((container) => {
-      const video = container.querySelector("video");
-      const button = container.querySelector(".wi_video-button");
-      const playIcon = button.querySelector(".is-play");
-      const pauseIcon = button.querySelector(".is-pause");
-
-      let hasUserInteracted = false;
-
-      video.removeAttribute("controls");
-
-      const tryPlay = () => {
-        video
-          .play()
-          .then(() => {
-            playIcon.style.opacity = 0;
-            pauseIcon.style.opacity = 1;
-            container.classList.remove("show-controls");
-          })
-          .catch(() => container.classList.add("show-controls"));
-      };
-
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              tryPlay();
-            }
-          });
-        },
-        { threshold: 0.5 }
-      );
-
-      observer.observe(video);
-
-      // Play/pause logic
-      button.addEventListener("click", () => {
-        if (video.paused) {
-          video.play();
-          playIcon.style.opacity = 0;
-          pauseIcon.style.opacity = 1;
-          container.classList.remove("show-controls");
-        } else {
-          video.pause();
-          playIcon.style.opacity = 1;
-          pauseIcon.style.opacity = 0;
-          container.classList.add("show-controls");
-        }
-      });
-
-      // Mobile: show controls on tap
-      video.addEventListener(
-        "touchstart",
-        () => {
-          if (!hasUserInteracted) {
-            hasUserInteracted = true;
-            container.classList.add("show-controls");
-            setTimeout(() => {
-              container.classList.remove("show-controls");
-              hasUserInteracted = false;
-            }, 3000);
-          }
-        },
-        { passive: true }
-      );
-    });
-  },
   setTargetBlank() {
     document
       .querySelectorAll(
@@ -2104,28 +2033,23 @@ const initGsap = {
   //     textWrap.classList.add("is-active");
   //   }
   // },
-  processScrollv3() {
+  processScrollVideo() {
     function forcePlayVideo(container) {
       const video = container.querySelector("video");
       const button = container.querySelector(".wi_video-button");
       const playIcon = button.querySelector(".is-play");
       const pauseIcon = button.querySelector(".is-pause");
 
-      tryplay(() => {
-        video
-          .play()
-          .then(() => {
-            playIcon.style.opacity = 0;
-            pauseIcon.style.opacity = 1;
-            container.classList.remove("show-controls");
-          })
-          .catch(() => {
-            container.classList.add("show-controls");
-            setTimeout(tryplay, 1000);
-          });
-      });
-
-      tryPlay();
+      video
+        .play()
+        .then(() => {
+          playIcon.style.opacity = 0;
+          pauseIcon.style.opacity = 1;
+          container.classList.remove("show-controls");
+        })
+        .catch(() => {
+          container.classList.add("show-controls");
+        });
     }
 
     const containers = document.querySelectorAll(".wi_video-wrap");
@@ -2266,6 +2190,75 @@ const initGsap = {
       });
 
       forcePlayVideo(imgWrap.querySelector(".wi_video-wrap"));
+    }
+  },
+  processScrollImg() {
+    // desktop scroll effect
+    if (window.innerWidth < 992) return;
+
+    let mm = gsap.matchMedia();
+
+    const component = document.querySelector(".section_wi.is-img");
+
+    if (!component) {
+      return;
+    }
+
+    const textList = [...component.querySelectorAll(".wi_text-p")];
+    const imgList = gsap.utils.toArray(".wi_img-wrapper");
+    const textListWrap = component.querySelector(".wi_text-list");
+
+    let activeElement;
+
+    mm.add("(min-width: 992px)", () => {
+      imgList[0].classList.add("is-active");
+
+      const t1 = gsap.timeline({});
+
+      t1.to(textListWrap, {
+        y: -textListWrap.offsetHeight + textList[0].offsetHeight,
+        duration: 1,
+        ease: "none",
+      }).from(
+        ".wi_line_fill, .wi_line_blur",
+        {
+          height: 0,
+          duration: 1,
+          ease: "none",
+        },
+        "<"
+      );
+
+      ScrollTrigger.create({
+        animation: t1,
+        trigger: component,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: 0.5,
+        onUpdate: (self) => {
+          const segments = textList.length;
+          const progress = self.progress.toFixed(1);
+
+          const segmentSize = 1 / segments;
+          const currentSegment = Math.floor(progress / segmentSize);
+
+          const segmentIndex = Math.min(currentSegment, segments - 1);
+
+          if (activeElement === segmentIndex) return;
+
+          updateActiveText(segmentIndex);
+
+          activeElement = segmentIndex;
+        },
+      });
+    });
+
+    function updateActiveText(index) {
+      imgList.forEach((text) => text.classList.remove("is-active"));
+
+      const imgWrap = imgList[index];
+
+      imgWrap.classList.add("is-active");
     }
   },
   initAfterScroll() {

@@ -1,6 +1,6 @@
 git add . && \
-git commit -m "zara animations update" && \
+git commit -m "careers animations" && \
 git push origin main && \
-git tag -a v32.4.03 -m "v32.4.03 release" && \
-git push origin v32.4.03 && \
-gh release create v32.4.03 --generate-notes
+git tag -a v32.4.04 -m "v32.4.04 release" && \
+git push origin v32.4.04 && \
+gh release create v32.4.04 --generate-notes
