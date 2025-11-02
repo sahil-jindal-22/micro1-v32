@@ -1,6 +1,6 @@
 git add . && \
-git commit -m "careers animations" && \
+git commit -m "signup domain update" && \
 git push origin main && \
-git tag -a v32.4.05 -m "v32.4.05 release" && \
-git push origin v32.4.05 && \
-gh release create v32.4.05 --generate-notes
+git tag -a v32.4.06 -m "v32.4.06 release" && \
+git push origin v32.4.06 && \
+gh release create v32.4.06 --generate-notes

@@ -615,7 +615,8 @@ const initTracking = {
         if (window.location.host.includes("webflow.io")) {
           link.href = link.href.replace(
             "www.client.micro1.ai",
-            "dev.d1y3udqq47tapp.amplifyapp.com"
+            // "dev.d1y3udqq47tapp.amplifyapp.com"
+            "dev.d3sjbnpw30inwu.amplifyapp.com"
           );
           link.href = link.href.replace(
             "www.talent.micro1.ai",
