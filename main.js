@@ -840,7 +840,7 @@ const initCore = {
 
       setInterval(() => {
         if (wrap.classList.contains("is-visible")) showNext();
-      }, 2500);
+      }, 2000);
 
       showNext();
     });
