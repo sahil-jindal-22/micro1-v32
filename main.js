@@ -596,10 +596,9 @@ const initTracking = {
       const domainList = [
         "client.micro1.ai",
         "zara.micro1.ai",
-        "dev.d3tafas16ltk5f.amplifyapp.com",
+        "new-stage.client.micro1.ai",
         "talent.micro1.ai",
-        "dev.d1y3udqq47tapp.amplifyapp.com",
-        "feat-zara-dashboard.d1y3udqq47tapp.amplifyapp.com",
+        "new-stage.client.micro1.ai",
       ];
 
       const portalLinks = addParamsToURLs(paramsObjPortal, domainList);
