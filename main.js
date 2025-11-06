@@ -615,16 +615,11 @@ const initTracking = {
         if (window.location.host.includes("webflow.io")) {
           link.href = link.href.replace(
             "www.client.micro1.ai",
-            // "dev.d1y3udqq47tapp.amplifyapp.com"
-            "dev.d3sjbnpw30inwu.amplifyapp.com"
+            "new-stage.client.micro1.ai"
           );
           link.href = link.href.replace(
             "www.talent.micro1.ai",
-            "dev.d3tafas16ltk5f.amplifyapp.com"
-          );
-          link.href = link.href.replace(
-            "www.zara.micro1.ai",
-            "feat-zara-dashboard.d1y3udqq47tapp.amplifyapp.com"
+            "new-stage.talent.micro1.ai"
           );
         }
       });
