@@ -596,7 +596,7 @@ const initTracking = {
       const domainList = [
         "client.micro1.ai",
         "zara.micro1.ai",
-        "new-stage.client.micro1.ai",
+        "new-stage.talent.micro1.ai",
         "talent.micro1.ai",
         "new-stage.client.micro1.ai",
       ];

@@ -1,6 +1,6 @@
 git add . && \
 git commit -m "update staging links" && \
 git push origin main && \
-git tag -a v32.4.08 -m "v32.4.08 release" && \
-git push origin v32.4.08 && \
-gh release create v32.4.08 --generate-notes
+git tag -a v32.4.09 -m "v32.4.09 release" && \
+git push origin v32.4.09 && \
+gh release create v32.4.09 --generate-notes
