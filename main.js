@@ -1906,6 +1906,75 @@ const initGsap = {
       });
     });
   },
+  autoplayVideosMob() {
+    const containers = document.querySelectorAll(".wi_video-wrap");
+
+    containers.forEach((container) => {
+      const video = container.querySelector("video");
+      const button = container.querySelector(".wi_video-button");
+      const playIcon = button.querySelector(".is-play");
+      const pauseIcon = button.querySelector(".is-pause");
+
+      let hasUserInteracted = false;
+
+      video.removeAttribute("controls");
+
+      const tryPlay = () => {
+        video
+          .play()
+          .then(() => {
+            playIcon.style.opacity = 0;
+            pauseIcon.style.opacity = 1;
+            container.classList.remove("show-controls");
+          })
+          .catch(() => container.classList.add("show-controls"));
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              tryPlay();
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+
+      observer.observe(video);
+
+      // Play/pause logic
+      button.addEventListener("click", () => {
+        if (video.paused) {
+          video.play();
+          playIcon.style.opacity = 0;
+          pauseIcon.style.opacity = 1;
+          container.classList.remove("show-controls");
+        } else {
+          video.pause();
+          playIcon.style.opacity = 1;
+          pauseIcon.style.opacity = 0;
+          container.classList.add("show-controls");
+        }
+      });
+
+      // Mobile: show controls on tap
+      video.addEventListener(
+        "touchstart",
+        () => {
+          if (!hasUserInteracted) {
+            hasUserInteracted = true;
+            container.classList.add("show-controls");
+            setTimeout(() => {
+              container.classList.remove("show-controls");
+              hasUserInteracted = false;
+            }, 3000);
+          }
+        },
+        { passive: true }
+      );
+    });
+  },
   processScroll() {
     let mm = gsap.matchMedia();
     const component = document.querySelector(".section_process");
@@ -1962,177 +2031,28 @@ const initGsap = {
       textWrap.classList.add("is-active");
     }
   },
-  // processScrollv2() {
-  //   let mm = gsap.matchMedia();
-  //   const component = document.querySelector(".section_wi");
-
-  //   if (!component) {
-  //     return;
-  //   }
-
-  //   const wrapper = component.querySelector(".wi_wrapper");
-  //   const imgListWrap = component.querySelector(".wi_img-list");
-  //   const textList = [...component.querySelectorAll(".wi_text")];
-  //   const imgList = gsap.utils.toArray(".wi_img-wrapper");
-
-  //   let activeElement;
-
-  //   mm.add("(min-width: 992px)", () => {
-  //     textList[0].classList.add("is-active");
-
-  //     const t1 = gsap.timeline({});
-
-  //     t1.to(imgListWrap, {
-  //       y: -imgListWrap.offsetHeight + imgList[0].offsetHeight,
-  //       duration: 1,
-  //       ease: "none",
-  //     }).from(
-  //       ".wi_line_fill, .wi_line_blur",
-  //       {
-  //         height: 0,
-  //         duration: 1,
-  //         ease: "none",
-  //       },
-  //       "<"
-  //     );
-
-  //     ScrollTrigger.create({
-  //       animation: t1,
-  //       trigger: component,
-  //       start: "top top",
-  //       end: "bottom bottom",
-  //       scrub: true,
-  //       onUpdate: (self) => {
-  //         const segments = textList.length;
-  //         const progress = self.progress.toFixed(1);
-
-  //         const segmentSize = 1 / segments;
-  //         const currentSegment = Math.floor(progress / segmentSize);
-
-  //         const segmentIndex = Math.min(currentSegment, segments - 1);
-
-  //         if (activeElement === segmentIndex) return;
-
-  //         updateActiveText(segmentIndex);
-
-  //         activeElement = segmentIndex;
-  //       },
-  //     });
-  //   });
-
-  //   function updateActiveText(index) {
-  //     textList.forEach((text) => text.classList.remove("is-active"));
-
-  //     const textWrap = textList[index];
-
-  //     textWrap.classList.add("is-active");
-  //   }
-  // },
-  processScrollVideo() {
-    function forcePlayVideo(container) {
-      const video = container.querySelector("video");
-      const button = container.querySelector(".wi_video-button");
-      const playIcon = button.querySelector(".is-play");
-      const pauseIcon = button.querySelector(".is-pause");
-
-      video
-        .play()
-        .then(() => {
-          playIcon.style.opacity = 0;
-          pauseIcon.style.opacity = 1;
-          container.classList.remove("show-controls");
-        })
-        .catch(() => {
-          container.classList.add("show-controls");
-        });
-    }
-
-    const containers = document.querySelectorAll(".wi_video-wrap");
-
-    if (!containers.length) return;
-
-    containers.forEach((container, i) => {
-      const video = container.querySelector("video");
-      const button = container.querySelector(".wi_video-button");
-      const playIcon = button.querySelector(".is-play");
-      const pauseIcon = button.querySelector(".is-pause");
-
-      let hasUserInteracted = false;
-
-      video.removeAttribute("controls");
-
-      if (i == 0 || window.innerWidth < 992) {
-        console.log("index", i);
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                forcePlayVideo(container);
-              }
-            });
-          },
-          { threshold: 0.5 }
-        );
-
-        observer.observe(video);
-      }
-
-      // Play/pause logic
-      button.addEventListener("click", () => {
-        if (video.paused) {
-          video.play();
-          playIcon.style.opacity = 0;
-          pauseIcon.style.opacity = 1;
-          container.classList.remove("show-controls");
-        } else {
-          video.pause();
-          playIcon.style.opacity = 1;
-          pauseIcon.style.opacity = 0;
-          container.classList.add("show-controls");
-        }
-      });
-
-      // Mobile: show controls on tap
-      video.addEventListener(
-        "touchstart",
-        () => {
-          if (!hasUserInteracted) {
-            hasUserInteracted = true;
-            container.classList.add("show-controls");
-            setTimeout(() => {
-              container.classList.remove("show-controls");
-              hasUserInteracted = false;
-            }, 3000);
-          }
-        },
-        { passive: true }
-      );
-    });
-
-    // desktop scroll effect
-    if (window.innerWidth < 992) return;
-
+  processScrollv2() {
     let mm = gsap.matchMedia();
-
     const component = document.querySelector(".section_wi");
 
     if (!component) {
       return;
     }
 
-    const textList = [...component.querySelectorAll(".wi_text-p")];
+    const wrapper = component.querySelector(".wi_wrapper");
+    const imgListWrap = component.querySelector(".wi_img-list");
+    const textList = [...component.querySelectorAll(".wi_text")];
     const imgList = gsap.utils.toArray(".wi_img-wrapper");
-    const textListWrap = component.querySelector(".wi_text-list");
 
     let activeElement;
 
     mm.add("(min-width: 992px)", () => {
-      imgList[0].classList.add("is-active");
+      textList[0].classList.add("is-active");
 
       const t1 = gsap.timeline({});
 
-      t1.to(textListWrap, {
-        y: -textListWrap.offsetHeight + textList[0].offsetHeight,
+      t1.to(imgListWrap, {
+        y: -imgListWrap.offsetHeight + imgList[0].offsetHeight,
         duration: 1,
         ease: "none",
       }).from(
@@ -2150,7 +2070,7 @@ const initGsap = {
         trigger: component,
         start: "top top",
         end: "bottom bottom",
-        scrub: 0.5,
+        scrub: true,
         onUpdate: (self) => {
           const segments = textList.length;
           const progress = self.progress.toFixed(1);
@@ -2170,21 +2090,11 @@ const initGsap = {
     });
 
     function updateActiveText(index) {
-      imgList.forEach((text) => text.classList.remove("is-active"));
+      textList.forEach((text) => text.classList.remove("is-active"));
 
-      const imgWrap = imgList[index];
+      const textWrap = textList[index];
 
-      imgWrap.classList.add("is-active");
-
-      containers.forEach((container) => {
-        const video = container.querySelector("video");
-
-        if (!video.paused) {
-          video.pause();
-        }
-      });
-
-      forcePlayVideo(imgWrap.querySelector(".wi_video-wrap"));
+      textWrap.classList.add("is-active");
     }
   },
   processScrollImg() {
@@ -2199,19 +2109,22 @@ const initGsap = {
       return;
     }
 
-    const textList = [...component.querySelectorAll(".wi_text-p")];
+    const textList = [...component.querySelectorAll(".wi_text")];
     const imgList = gsap.utils.toArray(".wi_img-wrapper");
-    const textListWrap = component.querySelector(".wi_text-list");
+    const imgListWrap = component.querySelector(".wi_img-list");
+    const imgContainer = component.querySelector(".wi_img-container");
+
+    imgContainer.style.height = imgList[0].offsetHeight + "px";
 
     let activeElement;
 
     mm.add("(min-width: 992px)", () => {
-      imgList[0].classList.add("is-active");
+      textList[0].classList.add("is-active");
 
       const t1 = gsap.timeline({});
 
-      t1.to(textListWrap, {
-        y: -textListWrap.offsetHeight + textList[0].offsetHeight,
+      t1.to(imgListWrap, {
+        y: -imgListWrap.offsetHeight + imgList[0].offsetHeight,
         duration: 1,
         ease: "none",
       }).from(
@@ -2249,11 +2162,11 @@ const initGsap = {
     });
 
     function updateActiveText(index) {
-      imgList.forEach((text) => text.classList.remove("is-active"));
+      textList.forEach((text) => text.classList.remove("is-active"));
 
-      const imgWrap = imgList[index];
+      const textWrap = textList[index];
 
-      imgWrap.classList.add("is-active");
+      textWrap.classList.add("is-active");
     }
   },
   initAfterScroll() {

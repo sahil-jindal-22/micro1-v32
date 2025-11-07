@@ -723,15 +723,6 @@ textarea {
   transform: translate3d(0%, 0px, 0px) !important;
 }
 
-.wi_img-wrapper.is-active {
-  opacity: 1;
-  z-index: 100;
-}
-
-.wi_img-wrapper {
-  transition: 0.5s opacity ease-in-out;
-}
-
 /* zara */
 @media (min-width: 992px) and (max-width: 1320px) {
   .z_hero_intro_wrap {
@@ -740,11 +731,5 @@ textarea {
 
   .z_hero_intro-path {
     transform: translate(-20%, 100%) rotateY(180deg);
-  }
-}
-
-@media (min-width: 992px) {
-  .wi_img-wrapper {
-    opacity: 0;
   }
 }
