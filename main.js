@@ -1975,7 +1975,7 @@ const initGsap = {
       );
     });
   },
-  processScroll() {
+  processScrollOld() {
     let mm = gsap.matchMedia();
     const component = document.querySelector(".section_process");
 
@@ -2031,9 +2031,9 @@ const initGsap = {
       textWrap.classList.add("is-active");
     }
   },
-  processScrollv2() {
+  processScrollVid() {
     let mm = gsap.matchMedia();
-    const component = document.querySelector(".section_wi");
+    const component = document.querySelector(".section_wi.is-vid");
 
     if (!component) {
       return;
