@@ -1657,7 +1657,8 @@ const initForm = {
       submitBtn.addEventListener("click", submitForm);
       realSubmitBtn.addEventListener("click", (e) => {
         e.preventDefault();
-        submitForm();
+
+        currentStep === allSteps.length - 1 ? submitForm() : moveToNextStep();
       });
       nextButtons.forEach((btn) =>
         btn.addEventListener("click", moveToNextStep)
