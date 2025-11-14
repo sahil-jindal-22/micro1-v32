@@ -1047,9 +1047,10 @@ const initForm = {
 
       let currentStep = 0;
       const mainForm = form.closest("form");
-      let allSteps = form.querySelectorAll(
-        ".form-step-wrap:not([data-step-disabled=true])"
-      );
+      // let allSteps = form.querySelectorAll(
+      //   ".form-step-wrap:not([data-step-type=zara],[data-step-type=human-data])"
+      // );
+      let allSteps = form.querySelectorAll(".form-step-wrap");
       const prevButton = mainForm.querySelector("[form-element='prev-btn']");
       const nextButtons = mainForm.querySelectorAll(
         "[form-element='next-btn']"
@@ -1153,11 +1154,13 @@ const initForm = {
           input.addEventListener("input", () => {
             input.style.borderColor = "";
 
-            const inputs =
-              input.parentElement.querySelectorAll(".primary-field");
+            const inputs = [
+              ...input.parentElement.querySelectorAll(".primary-field"),
+            ];
 
             if (inputs.length > 1) {
-              if (inputs[0].value && inputs[1].value) {
+              console.log(inputs.every((input) => input.value));
+              if (inputs.every((input) => input.value)) {
                 const errorView = input
                   .closest(".form-step-wrap")
                   .querySelector(".error-view");
@@ -1181,10 +1184,14 @@ const initForm = {
         const skip = formStep.dataset?.skip;
 
         const showError = formStep.querySelector(".error-view");
+        const errorTextEl = showError?.querySelector(".error-text");
+        let errorText =
+          showError?.dataset.defaultText || errorTextEl?.innerText;
 
         const checkboxes = formStep.querySelectorAll(
           `[type="checkbox"], [type="radio"]`
         );
+
         if (checkboxes.length > 0) {
           checkboxes.forEach((cb) => {
             if (cb.checked) {
@@ -1196,8 +1203,7 @@ const initForm = {
                   .querySelector(".other-field-wrap input").value === "" &&
                 !skip
               ) {
-                showError.querySelector(".error-text").innerText =
-                  "This field is required.";
+                errorText = "This field is required.";
                 result = false;
                 const extraInput = cb
                   .closest(".step-input-wrapper")
@@ -1228,35 +1234,45 @@ const initForm = {
                 }
               }
 
+              if (allInputFields[2] && allInputFields[2].value == "") {
+                allInputFields[2].style.borderColor = "#f86567";
+                if (
+                  allInputFields[i].value !== "" &&
+                  allInputFields[1].value !== ""
+                ) {
+                  allInputFields[2].focus();
+                }
+              }
+
               break;
             } else if (allInputFields[i].type === "email") {
               if (!(await validateEmail(allInputFields[i].value))) {
-                showError.querySelector(".error-text").innerText =
-                  "Please enter a valid company email address.";
+                allInputFields[i].style.borderColor = "#f86567";
+                allInputFields[i].focus();
+                errorText = "Please enter a valid company email address.";
                 result = false;
               } else {
-                showError.querySelector(".error-text").innerText =
-                  "Please enter your company email address.";
+                errorText = "Please enter your contact details.";
                 result = true;
               }
             } else if (allInputFields[i].type === "number") {
               if (!validateNumber(allInputFields[i].value)) {
-                showError.querySelector(".error-text").innerText =
-                  "Please enter a valid integer value.";
+                allInputFields[i].style.borderColor = "#f86567";
+                allInputFields[i].focus();
+                errorText = "Please enter a valid integer value.";
                 result = false;
               } else {
-                showError.querySelector(".error-text").innerText =
-                  "Please enter the value in number";
+                errorText = "Please enter the value in number";
                 result = true;
               }
             } else if (allInputFields[i].type === "tel") {
               if (!validatePhone(phoneObj)) {
-                showError.querySelector(".error-text").innerText =
-                  "Please enter a valid phone number.";
+                allInputFields[i].style.borderColor = "#f86567";
+                allInputFields[i].focus();
+                errorText = "Please enter a valid phone number.";
                 result = false;
               } else {
-                showError.querySelector(".error-text").innerText =
-                  "Please enter your phone number.";
+                errorText = "Please enter your phone number.";
                 result = true;
               }
             } else if (allInputFields[i].dataset?.url) {
@@ -1266,8 +1282,9 @@ const initForm = {
                 if (validURL) result = true;
               } catch (error) {
                 result = false;
-                showError.querySelector(".error-text").innerText =
-                  "Please enter a valid URL.";
+                allInputFields[i].style.borderColor = "#f86567";
+                allInputFields[i].focus();
+                errorText = "Please enter a valid URL.";
               }
             } else result = true;
           }
@@ -1291,7 +1308,10 @@ const initForm = {
             result = false;
         }
 
-        if (!result && showError) showError.style.display = "block";
+        if (!result && showError) {
+          errorTextEl.innerText = errorText;
+          showError.style.display = "block";
+        }
         if (result && showError) showError.style.display = "none";
 
         return result;
@@ -1332,11 +1352,10 @@ const initForm = {
       }
 
       async function moveToNextStep() {
-        let onlyCheckboxes;
         const formStep = allSteps[currentStep].querySelector("div");
         const hasOtherOption = formStep.dataset?.hasOtherOption;
 
-        onlyCheckboxes = formStep.querySelectorAll(`[type="checkbox"]`);
+        const onlyCheckboxes = formStep.querySelectorAll(`[type="checkbox"]`);
         let checkValues = "";
         if (onlyCheckboxes.length > 0) {
           onlyCheckboxes.forEach((cb) => {
@@ -1397,15 +1416,13 @@ const initForm = {
         if (currentStep + 1 <= allSteps.length - 1) currentStep++;
         showStep(currentStep);
 
-        const emailInput = formStep.querySelector("[type='email']");
-
         // amplitude
         const product = formType;
         const step = currentStep;
         const question = formStep.querySelector(".step-title")?.textContent;
         let answer;
-
-        if (product === "general" && step === 1) {
+        console.log(step);
+        if (product === "general" && step === 2) {
           answer = formStep.querySelector(
             ".radio-wrapper.is-checked input"
           )?.value;

@@ -1,6 +1,7 @@
 git add . && \
-git commit -m "update process animation" && \
+git commit -m "updated form" && \
 git push origin main && \
-git tag -a v32.4.11 -m "v32.4.11 release" && \
-git push origin v32.4.11 && \
-gh release create v32.4.11 --generate-notes
+git tag -a v32.4.12 -m "v32.4.12 release" && \
+git push origin v32.4.12 && \
+gh release create v32.4.12 --generate-notes
+
