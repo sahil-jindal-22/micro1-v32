@@ -1064,6 +1064,12 @@ const initForm = {
 
       const successWrapEl = formWrap.querySelector(".w-form-done");
 
+      // prevent default submit
+      mainForm.addEventListener("submit", (e) => {
+        console.log("prevent");
+        e.preventDefault();
+      });
+
       const validateEmailAPI = async (email) => {
         try {
           const nextButton = allSteps[currentStep].querySelector(
@@ -1649,6 +1655,10 @@ const initForm = {
       }
 
       submitBtn.addEventListener("click", submitForm);
+      realSubmitBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        submitForm();
+      });
       nextButtons.forEach((btn) =>
         btn.addEventListener("click", moveToNextStep)
       );
