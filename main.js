@@ -613,11 +613,11 @@ const initTracking = {
 
         if (window.location.host.includes("webflow.io")) {
           link.href = link.href.replace(
-            "www.client.micro1.ai",
+            "zara.micro1.ai",
             "new-stage.client.micro1.ai"
           );
           link.href = link.href.replace(
-            "www.talent.micro1.ai",
+            "talent.micro1.ai",
             "new-stage.talent.micro1.ai"
           );
         }
