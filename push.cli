@@ -1,7 +1,7 @@
 git add . && \
-git commit -m "update client portal links" && \
+git commit -m "update intelli portal links" && \
 git push origin main && \
-git tag -a v32.4.15 -m "v32.4.15 release" && \
-git push origin v32.4.15 && \
-gh release create v32.4.15 --generate-notes
+git tag -a v32.4.16 -m "v32.4.16 release" && \
+git push origin v32.4.16 && \
+gh release create v32.4.16 --generate-notes
 

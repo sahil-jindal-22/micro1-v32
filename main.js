@@ -595,6 +595,8 @@ const initTracking = {
 
       const domainList = [
         "client.micro1.ai",
+        "intelligence.micro1.ai",
+        "new-stage.intelligence.micro1.ai",
         "zara.micro1.ai",
         "new-stage.talent.micro1.ai",
         "talent.micro1.ai",
@@ -619,6 +621,10 @@ const initTracking = {
           link.href = link.href.replace(
             "talent.micro1.ai",
             "new-stage.talent.micro1.ai"
+          );
+          link.href = link.href.replace(
+            "intelligence.micro1.ai",
+            "new-stage.intelligence.micro1.ai"
           );
         }
       });
@@ -737,6 +743,8 @@ const initTracking = {
     const domainList = [
       "client.micro1.ai",
       "zara.micro1.ai",
+      "intelligence.micro1.ai",
+      "new-stage.intelligence.micro1.ai",
       "dev.d1y3udqq47tapp.amplifyapp.com",
       "feat-zara-dashboard.d1y3udqq47tapp.amplifyapp.com",
     ];
