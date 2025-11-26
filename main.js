@@ -932,7 +932,10 @@ const initCore = {
         utilities.createCookie("consent", options, true, 180);
 
         configWrap.style.opacity = 0;
-        setTimeout(() => configWrap.remove(), 300);
+        setTimeout(() => {
+          configWrap.remove();
+          window.location.reload();
+        }, 300);
       });
 
       // on close
