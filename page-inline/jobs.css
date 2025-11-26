@@ -1,0 +1,7 @@
+[dataset-popover="wrapper"].show-popover [dataset-popover="item"] {
+  display: block;
+}
+
+[dataset-popover="item"] {
+  display: none;
+}

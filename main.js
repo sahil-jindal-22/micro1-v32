@@ -758,7 +758,7 @@ const initTracking = {
 
     selectedLinks.forEach((link) => {
       link.addEventListener("click", () => {
-        amplitude?.track("CTA Clicked", {
+        window.amplitude?.track("CTA Clicked", {
           "[Amplitude] Element Text": link.textContent || link.dataset.text,
           "[Amplitude] Page Path": page,
           "[Amplitude] Page Domain": host,
@@ -861,23 +861,99 @@ const initCore = {
     const consent = getCookieValue("consent");
     if (consent) return;
 
-    const cookieHTML = `<div class="cookie_bar-wrapper" style="display: flex;opacity:0"><div class="cookie_bar-text">by using micro1.ai, you accept our <a href="/cookie-policy" class="hyperlink is-cookie">cookie policy</a></div><a href="#" class="button cookie_bar-btn w-button">Accept</a></div>`;
+    const cookieHTML = `<div class="cookie_bar-wrapper" style="display: flex;opacity:0"><div class="cookie_bar-text">by using micro1.ai, you accept our <a href="/cookie-policy" class="hyperlink is-cookie">cookie policy</a></div><button class="cookie_bar-btn-config"><div class="cookie_bar-icon-embed w-embed"><svg width="100%" height="100%" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_39346_4883)">
+<path d="M7.5 9.84375C8.79442 9.84375 9.84375 8.79442 9.84375 7.5C9.84375 6.20558 8.79442 5.15625 7.5 5.15625C6.20558 5.15625 5.15625 6.20558 5.15625 7.5C5.15625 8.79442 6.20558 9.84375 7.5 9.84375Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M2.42598 10.435C2.16698 9.98887 1.96855 9.51025 1.83594 9.01174L2.81914 7.78127C2.80801 7.59316 2.80801 7.40455 2.81914 7.21643L1.83652 5.98596C1.96891 5.48738 2.16693 5.00858 2.42539 4.56213L3.99043 4.38635C4.11541 4.24555 4.24865 4.11231 4.38945 3.98733L4.56523 2.42288C5.01104 2.16565 5.48905 1.96881 5.98672 1.83752L7.21719 2.82073C7.4053 2.80959 7.59391 2.80959 7.78203 2.82073L9.0125 1.83811C9.51109 1.9705 9.98988 2.16852 10.4363 2.42698L10.6121 3.99202C10.7529 4.11699 10.8862 4.25024 11.0111 4.39104L12.5756 4.56682C12.8346 5.01293 13.033 5.49156 13.1656 5.99006L12.1824 7.22053C12.1936 7.40865 12.1936 7.59726 12.1824 7.78538L13.165 9.01584C13.0336 9.51429 12.8365 9.99308 12.5791 10.4397L11.0141 10.6155C10.8891 10.7563 10.7558 10.8895 10.615 11.0145L10.4393 12.5789C9.99315 12.8379 9.51452 13.0364 9.01601 13.169L7.78555 12.1858C7.59743 12.1969 7.40882 12.1969 7.2207 12.1858L5.99023 13.1684C5.49179 13.0369 5.013 12.8399 4.56641 12.5824L4.39062 11.0174C4.24982 10.8924 4.11658 10.7592 3.9916 10.6184L2.42598 10.435Z" stroke="white" stroke-linecap="round" stroke-linejoin="round"></path>
+</g>
+<defs>
+<clipPath id="clip0_39346_4883">
+<rect width="15" height="15" fill="white"></rect>
+</clipPath>
+</defs>
+</svg></div></button><a href="#" class="button cookie_bar-btn w-button">Accept</a></div>`;
 
     document.body.insertAdjacentHTML("beforeend", cookieHTML);
 
     const cookieEl = document.querySelector(".cookie_bar-wrapper");
     const acceptBtn = cookieEl.querySelector(".cookie_bar-btn");
 
-    acceptBtn.addEventListener("click", () => {
+    function acceptAll() {
+      console.log("accept all and hide bar");
       cookieEl.style.opacity = 0;
       setTimeout(() => cookieEl.remove(), 300);
 
-      utilities.createCookie("consent", "true", false, 180);
-    });
+      utilities.createCookie(
+        "consent",
+        {
+          essentials: true,
+          marketing: true,
+          analytics: true,
+        },
+        true,
+        180
+      );
+    }
+
+    acceptBtn.addEventListener("click", acceptAll);
 
     setTimeout(() => {
       cookieEl.style.opacity = 1;
     }, 100);
+
+    // config
+    const configBtn = cookieEl.querySelector(".cookie_bar-btn-config");
+
+    configBtn.addEventListener("click", () => {
+      const html = `<div class="cookie_bar-popup" style="opacity: 0;"><div class="cookie_bar-close-bg"></div><div class="cookie_bar-pref"><p class="cookie_bar-title">Manage Consent Preferences</p><div class="w-form"><form id="email-form" name="email-form" data-name="Email Form" method="get" class="cookie_bar-list" data-wf-page-id="692614efa2b230f16f4263a4" data-wf-element-id="62f36d7a-b36c-0ea8-3a2e-caf5fff74b1f" aria-label="Email Form"><div class="cookie_bar-item"><div class="cookie_bar-name">Essentials <span class="cookie_bar-active">Always active</span></div><div class="cookie_bar-desc">Necessary for the site to function. Always on.</div></div><div class="cookie_bar-item"><label class="w-checkbox cookie_bar-check"><div class="w-checkbox-input w-checkbox-input--inputType-custom cookie_bar-check-icon w--redirected-checked"></div><input type="checkbox" id="cookie-type-marketing" name="cookie-type-marketing" data-name="cookie-type-marketing" checked style="opacity:0;position:absolute;z-index:-1"><span class="cookie_bar-type w-form-label" for="cookie-type-marketing">Marketing</span></label><div class="cookie_bar-desc">Used for targeted advertising</div></div><div class="cookie_bar-item"><label class="w-checkbox cookie_bar-check"><div class="w-checkbox-input w-checkbox-input--inputType-custom cookie_bar-check-icon w--redirected-checked"></div><input type="checkbox" id="cookie-type-analytics" name="cookie-type-analytics" data-name="cookie-type-analytics" checked style="opacity:0;position:absolute;z-index:-1"><span class="cookie_bar-type w-form-label" for="cookie-type-analytics">Analytics</span></label><div class="cookie_bar-desc">Measures usage and improves your experience</div></div></form><div class="w-form-done" tabindex="-1" role="region" aria-label="Email Form success"><div>Thank you! Your submission has been received!</div></div><div class="w-form-fail" tabindex="-1" role="region" aria-label="Email Form failure"><div>Oops! Something went wrong while submitting the form.</div></div></div><button data-wf--button--variant="primary---medium" data-form-cta="" form-element="cookie-save" class="cta_component w-variant-a47bb17b-75b6-5916-e4cd-5332ea7f8f30"><div>Save</div><div class="cta_icon-outer-wrap w-variant-a47bb17b-75b6-5916-e4cd-5332ea7f8f30"><div class="cta_icon-wrap w-variant-a47bb17b-75b6-5916-e4cd-5332ea7f8f30"><div class="cta_icon-embed-wrap" style="transform: translate3d(0%, 0px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg); transform-style: preserve-3d;"><div class="cta_icon-embed w-embed"><svg width="100%" height="100%" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_34956_2655)"> <path d="M7.98828 4.48372L14.2085 11.0002L7.98828 17.5166" stroke="currentColor" stroke-opacity="0.9" stroke-width="1.89569" stroke-linecap="round" stroke-linejoin="round"></path> </g><defs><clipPath id="clip0_34956_2655"><rect width="20.8526" height="20.8526" fill="currentColor" transform="translate(0.523926 21.4263) rotate(-90)"></rect></clipPath></defs></svg></div><div class="cta_icon-embed w-embed"><svg width="100%" height="100%" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#clip0_34956_2655)"><path d="M7.98828 4.48372L14.2085 11.0002L7.98828 17.5166" stroke="currentColor" stroke-opacity="0.9" stroke-width="1.89569" stroke-linecap="round" stroke-linejoin="round"></path></g><defs><clipPath id="clip0_34956_2655"><rect width="20.8526" height="20.8526" fill="currentColor" transform="translate(0.523926 21.4263) rotate(-90)"></rect></clipPath></defs></svg></div></div><div class="cta_icon-embed-shadow"></div><div class="cta_icon-embed-shadow is-alt"></div></div></div></button><div class="cookie_bar-close"><img src="https://cdn.prod.website-files.com/68b095121300aebde21ab3f4/6926f75667ac34b3e0cf9eba_x%20(2).svg" loading="lazy" alt="" class="cookie_bar-close-icon"></div></div></div>`;
+
+      document.body.insertAdjacentHTML("beforeend", html);
+
+      // select els
+      const configWrap = document.querySelector(".cookie_bar-popup");
+      const marketingEl = configWrap.querySelector(
+        '[type="checkbox"][name="cookie-type-marketing"]'
+      );
+      const analyticsEl = configWrap.querySelector(
+        '[type="checkbox"][name="cookie-type-analytics"]'
+      );
+      const saveBtn = configWrap.querySelector('[form-element="cookie-save"]');
+
+      // on save
+      saveBtn.addEventListener("click", () => {
+        const options = {
+          essentials: true,
+          marketing: marketingEl.checked,
+          analytics: analyticsEl.checked,
+        };
+
+        console.log(options);
+
+        utilities.createCookie("consent", options, true, 180);
+
+        configWrap.style.opacity = 0;
+        setTimeout(() => configWrap.remove(), 300);
+      });
+
+      // on close
+      const closeEls = configWrap.querySelectorAll(
+        ".cookie_bar-close-icon, .cookie_bar-close-bg"
+      );
+      closeEls.forEach((el) =>
+        el.addEventListener("click", () => {
+          configWrap.style.opacity = 0;
+          setTimeout(() => configWrap.remove(), 300);
+        })
+      );
+
+      // hide bar and show popup
+      cookieEl.style.opacity = 0;
+      setTimeout(() => cookieEl.remove(), 300);
+
+      requestAnimationFrame(() => {
+        configWrap.style.opacity = 1;
+      });
+    });
   },
   async initGsap() {
     await Promise.all([
@@ -891,8 +967,6 @@ const initCore = {
         "https://cdn.jsdelivr.net/gh/timothydesign/script/split-type.js"
       ),
     ]);
-
-    // console.log("GSAP + plugins loaded");
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -1482,6 +1556,33 @@ const initForm = {
         const result = await verifyStepFields();
 
         if (!result) return;
+
+        // cookie consent
+        let consent = decodeURIComponent(getCookieValue("consent"));
+
+        if (consent) {
+          consent = JSON.parse(consent);
+
+          let consentStr;
+
+          if (typeof consent === "boolean") {
+            consentStr = "All";
+          }
+
+          if (typeof consent === "object") {
+            if (consent.marketing && consent.analytics) consentStr = "All";
+            else {
+              consentStr = "Essentials";
+              if (consent.marketing) consentStr += ", Marketing";
+              if (consent.analytics) consentStr += ", Analytics";
+            }
+          }
+
+          utilities.updateInput(
+            document.querySelectorAll(".input_cookie-consent"),
+            consentStr
+          );
+        }
 
         // amplitude
         const product = formType;
