@@ -1,7 +1,7 @@
 git add . && \
 git commit -m "updated cookie consent" && \
 git push origin main && \
-git tag -a v32.4.19 -m "v32.4.19 release" && \
-git push origin v32.4.19 && \
-gh release create v32.4.19 --generate-notes
+git tag -a v32.4.20 -m "v32.4.20 release" && \
+git push origin v32.4.20 && \
+gh release create v32.4.20 --generate-notes
 

@@ -285,7 +285,7 @@ function createJobEl(job) {
 
   return `<a href="${
     job.apply_url ? job.apply_url : ""
-  }" class="jobs_item w-inline-block"
+  }" target="_blank" class="jobs_item w-inline-block"
     ><div class="jobs_top-wrap">
       <div class="jobs_logo-wrap">
         <img
@@ -323,13 +323,13 @@ function createJobEl(job) {
             : ""
         }
         ${
-          tag
+          (job.ideal_hourly_rate || job.ideal_yearly_compensation) && tag
             ? salary(tag, job.ideal_hourly_rate, job.ideal_yearly_compensation)
             : ""
         }
       </div>
       <div class="jobs_skills">
-        <div>Required skills</div>
+        ${skills.length ? "<div>Required skills</div>" : ""}
        
         <div class="jobs_skills-list">
            ${skills.reduce(
@@ -370,11 +370,32 @@ function formatCompensation(amount) {
 }
 
 function salary(tag, hourly, comp) {
-  let salary;
+  if (!tag) return;
 
-  if (tag === "Extended team") {
-    if (!hourly) return;
-    salary = `${hourly?.["min"]}-${hourly?.["max"]}/hour pay`;
+  if (tag === "Core team") {
+    if (!comp) return;
+
+    const minFormatted = formatCompensation(comp?.["min"]);
+    const maxFormatted = formatCompensation(comp?.["max"]);
+    const salary = `${minFormatted}-${maxFormatted}/year compensation`;
+
+    return `<div class="jobs_info-salary">
+        <div dataset-popover="wrapper" class="jobs_info-cap">
+          <div class="jobs_salary-icon"></div>
+          <div>${salary}</div>
+          <div dataset-popover="target" class="jobs_salary-trigger"></div>
+          <div dataset-popover="item" class="popover_item is-salary">
+            <div>
+              Total compensation includes base salary, equity, bonuses, and benefits.
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // for non-core jobs
+  if (tag === "Extended team" && hourly) {
+    const salary = `${hourly?.["min"]}-${hourly?.["max"]}/hour pay`;
 
     return `
     <div class="jobs_info-salary">
@@ -386,26 +407,7 @@ function salary(tag, hourly, comp) {
     `;
   }
 
-  if (tag === "Core team") {
-    if (!comp) return;
-
-    const minFormatted = formatCompensation(comp?.["min"]);
-    const maxFormatted = formatCompensation(comp?.["max"]);
-    salary = `${minFormatted}-${maxFormatted}/year compensation`;
-
-    return `<div class="jobs_info-salary">
-        <div dataset-popover="wrapper" class="jobs_info-cap">
-          <div class="jobs_salary-icon"></div>
-          <div>${salary}</div>
-          <div dataset-popover="target" class="jobs_salary-trigger"></div>
-          <div dataset-popover="item" class="popover_item is-salary">
-            <div>
-              Total compensation includes base salary, bonuses, and benefits.
-            </div>
-          </div>
-        </div>
-      </div>`;
-  }
+  return;
 }
 
 function jobTag(tag) {

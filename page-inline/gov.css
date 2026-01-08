@@ -1,0 +1,28 @@
+@media screen and (min-width: 992px) {
+  .g_hd_image {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all ease-in-out 0.3s;
+  }
+
+  .g_hd_image.is-visible {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+
+  .g_hd_text-item {
+    transition: all 0.3s;
+  }
+
+  .g_hd_text-item.is-selected {
+    color: var(--white-90, rgba(255, 255, 255, 0.9));
+  }
+
+  .g_hd_icon {
+    transition: all 0.3s;
+  }
+
+  .g_hd_text-item.is-selected .g_hd_icon {
+    transform: translateX(5px);
+  }
+}

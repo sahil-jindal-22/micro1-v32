@@ -1,0 +1,43 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Data Engine",
+  "url": "https://www.micro1.ai/data-engine",
+  "description": "Managed human data platform where micro1 recruits, vets, and manages expert AI trainers to produce high-quality training and evaluation data.",
+  "provider": {
+    "@id": "https://www.micro1.ai/#organization"
+  },
+  "serviceType": "Human data",
+  "areaServed": "Worldwide",
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "AI labs and enterprise ML teams"
+  },
+  "hasOfferCatalog": {
+    "@type": "OfferCatalog",
+    "name": "Data Engine Capabilities",
+    "itemListElement": [
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Recruitment engine"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Data platform"
+        }
+      },
+      {
+        "@type": "Offer",
+        "itemOffered": {
+          "@type": "Service",
+          "name": "Talent ops and performance"
+        }
+      }
+    ]
+  }
+}

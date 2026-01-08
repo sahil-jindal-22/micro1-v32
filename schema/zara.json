@@ -1,0 +1,37 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Zara",
+  "description": "AI recruiter agent that sources, vets, and qualifies world-class talent with speed and precision.",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Web",
+  "provider": {
+    "@id": "https://www.micro1.ai/#organization"
+  },
+  "url": "https://www.micro1.ai/zara",
+  "softwareHelp": {
+    "@type": "CreativeWork",
+    "url": "https://kb.micro1.ai/kb/introduction"
+  },
+  "applicationSubCategory": "Recruitment AI Agent",
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Enterprises"
+  },
+  "featureList": [
+    "AI-powered candidate sourcing",
+    "Automated candidate interviews",
+    "Pre-qualification of candidates",
+    "Global payroll and compliance handling",
+    "29+ language support",
+    "24/7 availability",
+    "ATS integration"
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.8",
+    "reviewCount": "1000",
+    "bestRating": "5",
+    "worstRating": "1"
+  }
+}

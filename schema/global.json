@@ -1,0 +1,33 @@
+[
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "micro1",
+    "url": "https://www.micro1.ai",
+    "publisher": {
+      "@id": "https://www.micro1.ai/#organization"
+    }
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Corporation",
+    "name": "micro1",
+    "url": "https://www.micro1.ai",
+    "@id": "https://www.micro1.ai/#organization",
+    "logo": "https://cdn.prod.website-files.com/68b095121300aebde21ab3f4/693c85c18643560d1a7c5a4b_Company%20Icon%20(6)%20(1).png",
+    "sameAs": [
+      "https://www.linkedin.com/company/micro1/",
+      "https://x.com/micro1_ai",
+      "https://www.instagram.com/micro1.ai/",
+      "https://www.youtube.com/channel/UCciOfEsQhXOTMSO3iJ3XVMw",
+      "https://www.reddit.com/r/micro1_ai/"
+    ],
+    "description": "micro1 is the talent and data infrastructure for AGI. We partner with leading AI labs and enterprises to vet human intelligence, curate world-class teams, and transform their expertise into the highest-quality AI training data.",
+    "slogan": "The AI platform for human intelligence",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "contactType": "customer support",
+      "email": "support@micro1.ai"
+    }
+  }
+]

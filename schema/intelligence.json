@@ -1,0 +1,23 @@
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Intelligence",
+  "url": "https://www.micro1.ai/intelligence",
+  "description": "Reinforcement learning environments and expert-curated datasets for training and evaluating AI models.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "provider": {
+    "@id": "https://www.micro1.ai/#organization"
+  },
+  "featureList": [
+    "Reinforcement learning environments",
+    "Expert-curated off-the-shelf datasets",
+    "Ready-to-train evaluation benchmarks",
+    "High-fidelity real-world robotics data"
+  ],
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "AI research and deployment companies"
+  },
+  "applicationSubCategory": "AI training and evaluation platform"
+}

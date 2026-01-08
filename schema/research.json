@@ -1,0 +1,22 @@
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": "https://www.micro1.ai/blog/how-we-build-ai-training-data#article",
+  "headline": "How micro1 builds high-quality AI training data",
+  "description": "An inside look at how micro1 vets experts and produces high-quality human intelligence for AI training.",
+  "url": "https://www.micro1.ai/blog/how-we-build-ai-training-data",
+  "datePublished": "2024-09-12",
+  "dateModified": "2024-09-12",
+  "publisher": {
+    "@id": "https://www.micro1.ai/#organization"
+  },
+  "author": {
+    "@id": "https://www.micro1.ai/#organization"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://www.micro1.ai/blog/how-we-build-ai-training-data"
+  },
+  "image": ["https://www.micro1.ai/images/blog/ai-training-data-cover.png"],
+  "inLanguage": "en"
+}
