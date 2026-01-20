@@ -1663,7 +1663,7 @@ const initForm = {
 
           console.log("twitter code fired talent");
         }
-        if (formType === "human-data") {
+        if (formType === "human-data" || formType === "int") {
           window.twq && twq("event", "tw-ocr68-opq5o", {});
 
           window.lintrk("track", { conversion_id: 23452004 });
