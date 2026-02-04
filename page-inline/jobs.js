@@ -1,25 +1,20 @@
 const state = {
   jobs: { result: [], count: 0 },
   keyword: "",
-  filters: { type: "", location: "" },
   pagination: { page: 1, limit: 18, loading: false },
   els: {
     wrapper: document.querySelector(".jobs_list"),
     formSearch: document.querySelector(".jobs_form_form"),
     inputSearch: document.querySelector(".jobs_form_search"),
     btnSearchSubmit: document.querySelector(".jobs_form_btn"),
-    btnOpenFilter: document.querySelector(".jobs_form_filter"),
     btnFormSubmit: document.querySelector("input[type='submit']"),
     formFilters: document.querySelector(".jobs_popup_form"),
-    btnFiltersApply: document.querySelectorAll(".jobs_form_cta button")[1],
-    btnFiltersDiscard: document.querySelectorAll(".jobs_form_cta button")[0],
   },
 };
 
 async function initApp() {
   updateJobs(true);
   initSearch();
-  initFilters();
   initPopover();
 }
 
@@ -105,12 +100,8 @@ async function fetchJobs() {
       headers: headers,
       body: JSON.stringify({
         action: "get_all_jobs",
-        filters: {
-          engagement_type: state.filters.type?.toLowerCase(),
-          location: state.filters.location?.toLowerCase(),
-        },
       }),
-    }
+    },
   );
 
   const data = await response.json();
@@ -143,15 +134,14 @@ function renderJobs() {
 }
 
 function renderJobsHeader() {
-  const hasFilters =
-    state.keyword || state.filters.location || state.filters.type;
+  const hasFilters = state.keyword;
   const clearFiltersButton = hasFilters
-    ? "<span class='jobs_result-clear'>Clear filters</span>"
+    ? "<span class='jobs_result-clear'>Clear search</span>"
     : "";
 
   state.els.wrapper.insertAdjacentHTML(
     "afterbegin",
-    `<p class="jobs_result-info">${state.jobs.count} jobs found ${clearFiltersButton}</p>`
+    `<p class="jobs_result-info">${state.jobs.count} jobs found ${clearFiltersButton}</p>`,
   );
 
   listenerClearFilters();
@@ -172,7 +162,7 @@ function renderLoadMoreSentinel() {
   if (state.jobs.result.length < state.jobs.count) {
     state.els.wrapper.insertAdjacentHTML(
       "afterend",
-      '<div class="scroll-sentinel"></div>'
+      '<div class="scroll-sentinel"></div>',
     );
 
     const newSentinel = document.querySelector(".scroll-sentinel");
@@ -201,7 +191,7 @@ function createIntersectionObserver() {
         await loadMoreJobs();
       }
     },
-    { rootMargin: "100px" }
+    { rootMargin: "100px" },
   );
 }
 
@@ -237,11 +227,10 @@ function renderNoResults() {
     <div class="jobs_result-0-wrap">
       <div class="jobs_result-0-img"></div>
       <p>
-        No jobs match your search. Try adjusting the filters or
-        <span class="job_result-0-clear">Clear filters</span>.
+        No jobs match your search. <span class="job_result-0-clear">Clear search</span>.
       </p>
     </div>
-  `
+  `,
   );
 
   listenerClearFilters();
@@ -261,8 +250,8 @@ function createJobEl(job) {
   let skills = job.skills || [];
   const skillsCount = skills.length;
 
-  if (skillsCount > 6) {
-    skills = skills.slice(0, 6);
+  if (skillsCount > 3) {
+    skills = skills.slice(0, 3);
   }
 
   const defaultLogo =
@@ -323,7 +312,7 @@ function createJobEl(job) {
             : ""
         }
         ${
-          (job.ideal_hourly_rate || job.ideal_yearly_compensation) && tag
+          job.ideal_hourly_rate || job.ideal_yearly_compensation
             ? salary(tag, job.ideal_hourly_rate, job.ideal_yearly_compensation)
             : ""
         }
@@ -335,12 +324,12 @@ function createJobEl(job) {
            ${skills.reduce(
              (acc, curr) =>
                acc + `<div class="jobs_skill-cap"><div>${curr}</div></div>`,
-             ""
+             "",
            )}
            ${
-             skillsCount > 6
+             skillsCount > 3
                ? `<div class="jobs_skill-cap"><div>${
-                   skillsCount - 6
+                   skillsCount - 3
                  }+ more</div></div>`
                : ``
            }
@@ -370,8 +359,6 @@ function formatCompensation(amount) {
 }
 
 function salary(tag, hourly, comp) {
-  if (!tag) return;
-
   if (tag === "Core team") {
     if (!comp) return;
 
@@ -394,7 +381,7 @@ function salary(tag, hourly, comp) {
   }
 
   // for non-core jobs
-  if (tag === "Extended team" && hourly) {
+  if (hourly) {
     const salary = `${hourly?.["min"]}-${hourly?.["max"]}/hour pay`;
 
     return `
@@ -514,56 +501,15 @@ function clearSearch() {
   state.keyword = "";
 }
 
-function initFilters() {
-  state.els.btnOpenFilter.addEventListener("click", (e) => {
-    e.preventDefault();
-  });
-
-  state.els.formFilters.addEventListener("submit", (e) => {
-    e.preventDefault();
-  });
-
-  state.els.btnFiltersApply.addEventListener("click", () => {
-    state.filters.type = document.querySelector(
-      'input[name="Engagement-type"]:checked'
-    )?.value;
-    state.filters.location = document.querySelector(
-      'input[name="Location"]:checked'
-    )?.value;
-
-    updateJobs();
-  });
-
-  state.els.btnFiltersDiscard.addEventListener("click", () => {
-    clearFilters();
-    updateJobs();
-  });
-}
-
-function clearFilters() {
-  const allRadio = document.querySelectorAll(".jobs_form_radio");
-
-  allRadio.forEach((radioEl) => {
-    radioEl.querySelector("input").checked = false;
-    radioEl
-      .querySelector(".w-form-formradioinput")
-      .classList.remove("w--redirected-checked");
-  });
-
-  state.filters.type = "";
-  state.filters.location = "";
-}
-
 function listenerClearFilters() {
   const resetFiltersEls = document.querySelectorAll(
-    ".jobs_result-clear, .job_result-0-clear"
+    ".jobs_result-clear, .job_result-0-clear",
   );
 
   resetFiltersEls.forEach((el) =>
     el.addEventListener("click", () => {
       clearSearch();
-      clearFilters();
       updateJobs();
-    })
+    }),
   );
 }

@@ -38,7 +38,7 @@ async function fetchJobs() {
       body: JSON.stringify({
         action: "get_all_jobs",
       }),
-    }
+    },
   );
 
   const data = await response.json();
@@ -84,8 +84,8 @@ function createJobEl(job) {
   let skills = job.skills || [];
   const skillsCount = skills.length;
 
-  if (skillsCount > 5) {
-    skills = skills.slice(0, 5);
+  if (skillsCount > 3) {
+    skills = skills.slice(0, 3);
   }
 
   const defaultLogo =
@@ -146,7 +146,7 @@ function createJobEl(job) {
             : ""
         }
         ${
-          (job.ideal_hourly_rate || job.ideal_yearly_compensation) && tag
+          job.ideal_hourly_rate || job.ideal_yearly_compensation
             ? salary(tag, job.ideal_hourly_rate, job.ideal_yearly_compensation)
             : ""
         }
@@ -158,12 +158,12 @@ function createJobEl(job) {
            ${skills.reduce(
              (acc, curr) =>
                acc + `<div class="jobs_skill-cap"><div>${curr}</div></div>`,
-             ""
+             "",
            )}
            ${
-             skillsCount > 5
+             skillsCount > 3
                ? `<div class="jobs_skill-cap"><div>${
-                   skillsCount - 5
+                   skillsCount - 3
                  }+ more</div></div>`
                : ``
            }
@@ -193,8 +193,6 @@ function formatCompensation(amount) {
 }
 
 function salary(tag, hourly, comp) {
-  if (!tag) return;
-
   if (tag === "Core team") {
     if (!comp) return;
 
@@ -217,7 +215,7 @@ function salary(tag, hourly, comp) {
   }
 
   // for non-core jobs
-  if (tag === "Extended team" && hourly) {
+  if (hourly) {
     const salary = `${hourly?.["min"]}-${hourly?.["max"]}/hour pay`;
 
     return `

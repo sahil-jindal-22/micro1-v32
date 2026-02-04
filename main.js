@@ -53,7 +53,7 @@ const utilities = {
     expireTime.setDate(expireTime.getDate() + expiry);
 
     document.cookie = `${name}=${encodeURIComponent(
-      stringify ? JSON.stringify(data) : data
+      stringify ? JSON.stringify(data) : data,
     )}; path=/; expires=${expireTime}`;
   },
   loadScript(src, defer = false) {
@@ -114,10 +114,10 @@ const utilities = {
       if (utilities.freeDomains.includes(domain)) return;
 
       const personApiUrl = `https://hook.us1.make.com/lxholkn672i1jsfsgrs82geyxn641a0u?email=${encodeURIComponent(
-        userContactInfo.email
+        userContactInfo.email,
       )}`;
       const domainApiUrl = `https://hook.us1.make.com/ax4r7raw56xdx5aemjmsoxuwgbfxhu6y?domain=${encodeURIComponent(
-        domain
+        domain,
       )}`;
 
       // Start both requests in parallel
@@ -151,15 +151,15 @@ const utilities = {
 
       utilities.updateInput(
         document.querySelectorAll(".input_company-size"),
-        data.size
+        data.size,
       );
       utilities.updateInput(
         document.querySelectorAll(".input_company-linkedin"),
-        data.linkedin
+        data.linkedin,
       );
       utilities.updateInput(
         document.querySelectorAll(".input_company-funding"),
-        this.roundCurrency(data.funding)
+        this.roundCurrency(data.funding),
       );
 
       customTrackData.company = data;
@@ -170,7 +170,7 @@ const utilities = {
       console.log("couldn't enrich");
       utilities.updateInput(
         document.querySelectorAll(".input_company-size"),
-        "couldn't enrich"
+        "couldn't enrich",
       );
       return null;
     }
@@ -312,7 +312,7 @@ const initTracking = {
 
       utilities.updateInput(
         document.querySelectorAll(".ref_site_input"),
-        refCookie
+        refCookie,
       );
     }
 
@@ -348,7 +348,7 @@ const initTracking = {
 
       if (curr_cookie_contact) {
         const currentCookieUTM = JSON.parse(
-          decodeURIComponent(curr_cookie_contact)
+          decodeURIComponent(curr_cookie_contact),
         );
 
         if (!utm_campaign && currentCookieUTM.utm_campaign) return;
@@ -376,23 +376,23 @@ const initTracking = {
 
       utilities.updateInput(
         document.querySelectorAll(".utm_source_input"),
-        utm_source
+        utm_source,
       );
       utilities.updateInput(
         document.querySelectorAll(".utm_campaign_input"),
-        utm_campaign
+        utm_campaign,
       );
       utilities.updateInput(
         document.querySelectorAll(".utm_medium_input"),
-        utm_medium
+        utm_medium,
       );
       utilities.updateInput(
         document.querySelectorAll(".utm_content_input"),
-        utm_content
+        utm_content,
       );
       utilities.updateInput(
         document.querySelectorAll(".utm_term_input"),
-        utm_term
+        utm_term,
       );
 
       customTrackData.utm = {
@@ -411,7 +411,7 @@ const initTracking = {
     let current_page = location.href;
     utilities.updateInput(
       document.querySelectorAll(".current_page_name"),
-      current_page
+      current_page,
     );
 
     if (current_page === "/") current_page = "/home";
@@ -431,7 +431,7 @@ const initTracking = {
 
         utilities.updateInput(
           document.querySelectorAll(".last_page_name"),
-          last_page
+          last_page,
         );
 
         customTrackData.last_page = last_page;
@@ -458,7 +458,7 @@ const initTracking = {
 
       utilities.updateInput(
         document.querySelectorAll(".first_page_name"),
-        first_page
+        first_page,
       );
 
       customTrackData.first_page = first_page;
@@ -475,7 +475,7 @@ const initTracking = {
         refCookie = decodeURIComponent(refCookie);
         utilities.updateInput(
           document.querySelectorAll(".ref_input"),
-          refCookie
+          refCookie,
         );
         customTrackData.ref = refCookie;
       } catch {
@@ -516,7 +516,7 @@ const initTracking = {
 
     const addParamsToURLs = function (paramsObj, identifierArr) {
       const paramsStr = decodeURIComponent(
-        new URLSearchParams(paramsObj).toString()
+        new URLSearchParams(paramsObj).toString(),
       );
 
       customTrackData.portalParams = paramsStr;
@@ -529,7 +529,7 @@ const initTracking = {
         (link) =>
           (link.href += link.href.includes("?")
             ? `&${paramsStr}`
-            : `?${paramsStr}`)
+            : `?${paramsStr}`),
       );
 
       return links;
@@ -616,29 +616,45 @@ const initTracking = {
         if (window.location.host.includes("webflow.io")) {
           link.href = link.href.replace(
             "zara.micro1.ai",
-            "new-stage.client.micro1.ai"
+            "new-stage.client.micro1.ai",
           );
           link.href = link.href.replace(
             "talent.micro1.ai",
-            "new-stage.talent.micro1.ai"
+            "new-stage.talent.micro1.ai",
           );
           link.href = link.href.replace(
             "intelligence.micro1.ai",
-            "new-stage.intelligence.micro1.ai"
+            "new-stage.intelligence.micro1.ai",
+          );
+        }
+      });
+
+      const domainListJob = [
+        "jobs.micro1.ai",
+        "dev.d3k2dall9o449y.amplifyapp.com",
+      ];
+
+      const jobLinks = addParamsToURLs(paramsObj, domainListJob);
+
+      jobLinks.forEach((link) => {
+        if (window.location.host.includes("webflow.io")) {
+          link.href = link.href.replace(
+            "jobs.micro1.ai",
+            "dev.d3k2dall9o449y.amplifyapp.com",
           );
         }
       });
 
       // Get user data from meeting form
       const meetingContainer = document.querySelector(
-        ".meetings-iframe-container"
+        ".meetings-iframe-container",
       );
 
       if (meetingContainer) {
         window.addEventListener("message", (event) => {
           if (event.data.meetingBookSucceeded) {
             meetingContainer.querySelector(
-              ".meetings-iframe-container iframe"
+              ".meetings-iframe-container iframe",
             ).style.height = "auto";
 
             const product = meetingContainer.dataset.product;
@@ -680,7 +696,7 @@ const initTracking = {
 
               window.amplitude.track(
                 "Static - Demo booked",
-                amplitudeEventParams
+                amplitudeEventParams,
               );
             }
 
@@ -704,7 +720,7 @@ const initTracking = {
                       email,
                       properties: { customTrackData },
                     }),
-                  }
+                  },
                 );
               }
 
@@ -712,7 +728,7 @@ const initTracking = {
                 "numFormSubmissons",
                 numFormSubmissions,
                 false,
-                90
+                90,
               );
             }
           }
@@ -753,7 +769,7 @@ const initTracking = {
       (link) =>
         link.dataset.formCta ||
         paths.some((str) => link.href?.includes(str)) ||
-        domainList.some((str) => link.href?.includes(str))
+        domainList.some((str) => link.href?.includes(str)),
     );
 
     selectedLinks.forEach((link) => {
@@ -853,8 +869,8 @@ const initCore = {
       .querySelectorAll(".overflow-hide")
       .forEach((el) =>
         el.addEventListener("click", () =>
-          document.querySelector("body").classList.toggle("no-scroll")
-        )
+          document.querySelector("body").classList.toggle("no-scroll"),
+        ),
       );
   },
   initCookie() {
@@ -891,7 +907,7 @@ const initCore = {
           analytics: true,
         },
         true,
-        180
+        180,
       );
     }
 
@@ -915,13 +931,13 @@ const initCore = {
         // select els
         configWrap = document.querySelector(".cookie_bar-popup");
         const marketingEl = configWrap.querySelector(
-          '[type="checkbox"][name="cookie-type-marketing"]'
+          '[type="checkbox"][name="cookie-type-marketing"]',
         );
         const analyticsEl = configWrap.querySelector(
-          '[type="checkbox"][name="cookie-type-analytics"]'
+          '[type="checkbox"][name="cookie-type-analytics"]',
         );
         const saveBtn = configWrap.querySelector(
-          '[form-element="cookie-save"]'
+          '[form-element="cookie-save"]',
         );
 
         // on save
@@ -949,13 +965,13 @@ const initCore = {
 
         // on close
         const closeEls = configWrap.querySelectorAll(
-          ".cookie_bar-close-icon, .cookie_bar-close-bg"
+          ".cookie_bar-close-icon, .cookie_bar-close-bg",
         );
         closeEls.forEach((el) =>
           el.addEventListener("click", () => {
             configWrap.style.opacity = 0;
             setTimeout(() => (configWrap.style.display = "none"), 300);
-          })
+          }),
         );
       }
 
@@ -969,13 +985,13 @@ const initCore = {
   async initGsap() {
     await Promise.all([
       utilities.loadScript(
-        "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"
+        "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js",
       ),
       utilities.loadScript(
-        "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js"
+        "https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/ScrollTrigger.min.js",
       ),
       utilities.loadScript(
-        "https://cdn.jsdelivr.net/gh/timothydesign/script/split-type.js"
+        "https://cdn.jsdelivr.net/gh/timothydesign/script/split-type.js",
       ),
     ]);
 
@@ -1088,7 +1104,7 @@ const initCore = {
   },
   fixBlogBorder() {
     const blogItems = document.querySelectorAll(
-      ".blog_collection_list_wrapper.is-check-border .blog_item"
+      ".blog_collection_list_wrapper.is-check-border .blog_item",
     );
     const blogCount = blogItems.length;
 
@@ -1110,7 +1126,7 @@ const initCore = {
   setTargetBlank() {
     document
       .querySelectorAll(
-        '[data-button-target="blank"] a, a[data-button-target="blank"]'
+        '[data-button-target="blank"] a, a[data-button-target="blank"]',
       )
       .forEach((link) => {
         link.setAttribute("target", "_blank");
@@ -1146,7 +1162,7 @@ const initForm = {
       let allSteps = form.querySelectorAll(".form-step-wrap");
       const prevButton = mainForm.querySelector("[form-element='prev-btn']");
       const nextButtons = mainForm.querySelectorAll(
-        "[form-element='next-btn']"
+        "[form-element='next-btn']",
       );
       const progressBar = mainForm.querySelector(".progress-bar");
       const submitBtn = mainForm.querySelector("[form-element='submit-btn']");
@@ -1166,13 +1182,13 @@ const initForm = {
       const validateEmailAPI = async (email) => {
         try {
           const nextButton = allSteps[currentStep].querySelector(
-            "[form-element='next-btn']"
+            "[form-element='next-btn']",
           );
 
           nextButton.classList.add("disabled");
 
           const response = await fetch(
-            `https://api.zerobounce.net/v2/validate?api_key=e23a5efbbbab4b28a4df85ec1e41676d&email=${email}&timeout=3`
+            `https://api.zerobounce.net/v2/validate?api_key=e23a5efbbbab4b28a4df85ec1e41676d&email=${email}&timeout=3`,
           );
 
           if (!response.ok) {
@@ -1198,7 +1214,7 @@ const initForm = {
           String(email)
             .toLowerCase()
             .match(
-              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
             ) &&
           !utilities.freeDomains.includes(email.split("@")[1].toLowerCase()) &&
           (await validateEmailAPI(email))
@@ -1242,12 +1258,12 @@ const initForm = {
       // pass form type
       utilities.updateInput(
         mainForm.querySelectorAll(".input_form-type"),
-        formType
+        formType,
       );
 
       mainForm
         .querySelectorAll(
-          `input[type="text"][required], input[type="number"][required], input[type="email"][required],  input[type="tel"][required], textarea[required], .other-field-wrap input[type="text"], textarea[data-required='true']`
+          `input[type="text"][required], input[type="number"][required], input[type="email"][required],  input[type="tel"][required], textarea[required], .other-field-wrap input[type="text"], textarea[data-required='true']`,
         )
         .forEach((input) =>
           input.addEventListener("input", () => {
@@ -1271,7 +1287,7 @@ const initForm = {
                 .querySelector(".error-view");
               if (errorView) errorView.style.display = "none";
             }
-          })
+          }),
         );
 
       async function verifyStepFields() {
@@ -1288,7 +1304,7 @@ const initForm = {
           showError?.dataset.defaultText || errorTextEl?.innerText;
 
         const checkboxes = formStep.querySelectorAll(
-          `[type="checkbox"], [type="radio"]`
+          `[type="checkbox"], [type="radio"]`,
         );
 
         if (checkboxes.length > 0) {
@@ -1316,7 +1332,7 @@ const initForm = {
         }
 
         const allInputFields = formStep.querySelectorAll(
-          `input[type="text"][required], input[type="number"][required], input[type="email"][required],  input[type="tel"][required], textarea[required], input[type="file"][required], textarea[data-required='true']`
+          `input[type="text"][required], input[type="number"][required], input[type="email"][required],  input[type="tel"][required], textarea[required], input[type="file"][required], textarea[data-required='true']`,
         );
         console.log(allInputFields);
         if (allInputFields.length > 0) {
@@ -1390,7 +1406,7 @@ const initForm = {
         }
 
         const fileUploading = formStep.querySelector(
-          ".w-file-upload-uploading"
+          ".w-file-upload-uploading",
         );
 
         if (
@@ -1470,7 +1486,7 @@ const initForm = {
 
           if (hasOtherOption) {
             const customValue = formStep.querySelector(
-              ".other-field-wrap input"
+              ".other-field-wrap input",
             )?.value;
 
             if (customValue) {
@@ -1496,7 +1512,7 @@ const initForm = {
             console.log("enable zara");
 
             allSteps = form.querySelectorAll(
-              ".form-step-wrap:not([data-step-type=human-data])"
+              ".form-step-wrap:not([data-step-type=human-data])",
             );
           }
 
@@ -1507,7 +1523,7 @@ const initForm = {
             console.log("enable hd");
 
             allSteps = form.querySelectorAll(
-              ".form-step-wrap:not([data-step-type=zara])"
+              ".form-step-wrap:not([data-step-type=zara])",
             );
           }
         }
@@ -1523,7 +1539,7 @@ const initForm = {
         console.log(step);
         if (product === "general" && step === 2) {
           answer = formStep.querySelector(
-            ".radio-wrapper.is-checked input"
+            ".radio-wrapper.is-checked input",
           )?.value;
         }
 
@@ -1591,7 +1607,7 @@ const initForm = {
 
           utilities.updateInput(
             document.querySelectorAll(".input_cookie-consent"),
-            consentStr
+            consentStr,
           );
         }
 
@@ -1616,7 +1632,7 @@ const initForm = {
 
         mainForm
           .querySelectorAll(
-            ".w-checkbox:not(.checkbox_legal), [data-has-other-option='checkbox'] .other-field-wrap input, .iti__selected-country, .iti__search-input"
+            ".w-checkbox:not(.checkbox_legal), [data-has-other-option='checkbox'] .other-field-wrap input, .iti__selected-country, .iti__search-input",
           )
           .forEach((el) => el.remove());
 
@@ -1697,7 +1713,7 @@ const initForm = {
           "numFormSubmissons",
           numFormSubmissions,
           false,
-          90
+          90,
         );
 
         // if general form
@@ -1732,14 +1748,14 @@ const initForm = {
                 Accept: "application/json",
               },
               body: new FormData(mainForm),
-            }
+            },
           );
 
           if (!response.ok) {
             console.log(response);
 
             throw new Error(
-              "Form not submitted! Please try again later or contact support@micro1.ai"
+              "Form not submitted! Please try again later or contact support@micro1.ai",
             );
           }
 
@@ -1749,7 +1765,7 @@ const initForm = {
 
             window.amplitude.track(
               "Static - Form submitted",
-              amplitudeEventParams
+              amplitudeEventParams,
             );
           }
 
@@ -1783,7 +1799,7 @@ const initForm = {
         currentStep === allSteps.length - 1 ? submitForm() : moveToNextStep();
       });
       nextButtons.forEach((btn) =>
-        btn.addEventListener("click", moveToNextStep)
+        btn.addEventListener("click", moveToNextStep),
       );
       document.addEventListener("keydown", handleKeydown);
       prevButton.onclick = () => {
@@ -1797,7 +1813,7 @@ const initForm = {
   },
   setCheckBoxRadio() {
     const allRadioInputs = document.querySelectorAll(
-      ".popup-form [type='radio']"
+      ".popup-form [type='radio']",
     );
 
     const changeRadioInput = (input) => {
@@ -1815,11 +1831,11 @@ const initForm = {
     allRadioInputs.forEach((input) =>
       input.addEventListener("change", () => {
         changeRadioInput(input);
-      })
+      }),
     );
 
     const allCheckboxInputs = document.querySelectorAll(
-      ".popup-form [type='checkbox']:not([name='Accept-Conditions'])"
+      ".popup-form [type='checkbox']:not([name='Accept-Conditions'])",
     );
 
     const changeCheckboxInput = (input) => {
@@ -1833,11 +1849,11 @@ const initForm = {
     allCheckboxInputs.forEach((input) =>
       input.addEventListener("change", () => {
         changeCheckboxInput(input);
-      })
+      }),
     );
 
     const otherRadioInputs = document.querySelectorAll(
-      "[data-has-other-option='radio'] [type='radio']"
+      "[data-has-other-option='radio'] [type='radio']",
     );
 
     otherRadioInputs.forEach((input) => {
@@ -1850,7 +1866,7 @@ const initForm = {
           null
         ) {
           const otherInputText = input.parentElement.querySelector(
-            "[data-other-input='true']"
+            "[data-other-input='true']",
           ).dataset.otherInputText;
           otherTextInputWrapper.querySelector("input").placeholder =
             otherInputText || "Please enter here";
@@ -1865,7 +1881,7 @@ const initForm = {
     });
 
     const otherRadioActualInputs = document.querySelectorAll(
-      "[data-has-other-option='radio'] .other-field-wrap input"
+      "[data-has-other-option='radio'] .other-field-wrap input",
     );
 
     otherRadioActualInputs.forEach((input) =>
@@ -1875,14 +1891,14 @@ const initForm = {
           .querySelector(".radio-wrapper.is-checked input");
 
         otherRadio.value = e.target.value;
-      })
+      }),
     );
 
     const otherCheckboxLabels = document.querySelectorAll(
-      "[data-has-other-option='checkbox'] [data-other-input='true']"
+      "[data-has-other-option='checkbox'] [data-other-input='true']",
     );
     const otherCheckboxInputs = Array.from(otherCheckboxLabels).map((label) =>
-      label.parentElement.querySelector("[type='checkbox']")
+      label.parentElement.querySelector("[type='checkbox']"),
     );
 
     otherCheckboxInputs.forEach((input) => {
@@ -1895,7 +1911,7 @@ const initForm = {
     });
 
     const allCheckboxes = document.querySelectorAll(
-      ".popup-form input[type='checkbox']:not([name='Accept-Conditions']), .popup-form input[type='radio']"
+      ".popup-form input[type='checkbox']:not([name='Accept-Conditions']), .popup-form input[type='radio']",
     );
 
     if (allCheckboxes.length > 0) {
@@ -2051,7 +2067,7 @@ const initGsap = {
               opacity: 0.2,
               stagger: 0.1,
             },
-            "<"
+            "<",
           );
       });
     });
@@ -2088,7 +2104,7 @@ const initGsap = {
             }
           });
         },
-        { threshold: 0.5 }
+        { threshold: 0.5 },
       );
 
       observer.observe(video);
@@ -2121,7 +2137,7 @@ const initGsap = {
             }, 3000);
           }
         },
-        { passive: true }
+        { passive: true },
       );
     });
   },
@@ -2212,7 +2228,7 @@ const initGsap = {
           duration: 1,
           ease: "none",
         },
-        "<"
+        "<",
       );
 
       ScrollTrigger.create({
@@ -2284,7 +2300,7 @@ const initGsap = {
           duration: 1,
           ease: "none",
         },
-        "<"
+        "<",
       );
 
       ScrollTrigger.create({
@@ -2334,7 +2350,7 @@ const initGsap = {
   },
   stickyTextScroll() {
     const wrappers = document.querySelectorAll(
-      "[data-sticky-text-scroll='track']"
+      "[data-sticky-text-scroll='track']",
     );
 
     if (wrappers.length === 0) return;
@@ -2343,7 +2359,7 @@ const initGsap = {
       const list = wrapper.querySelector("[data-sticky-text-scroll='target']");
 
       const items = wrapper.querySelectorAll(
-        "[data-sticky-text-scroll='item']"
+        "[data-sticky-text-scroll='item']",
       );
 
       console.log(list);
@@ -2371,7 +2387,7 @@ const initGsap = {
     if (!els.length) return;
 
     await utilities.loadScript(
-      "https://cdn.jsdelivr.net/npm/countup@1.8.2/countUp.js"
+      "https://cdn.jsdelivr.net/npm/countup@1.8.2/countUp.js",
     );
 
     els.forEach((el) => {
@@ -2410,7 +2426,7 @@ const initGsapMob = {
     });
 
     const breadCrumbBack = document.querySelectorAll(
-      ".nav_dd_p_title-mob.is-back"
+      ".nav_dd_p_title-mob.is-back",
     );
 
     breadCrumbBack.forEach((link) => {
@@ -2532,7 +2548,7 @@ const initGsapDesk = {
           link.classList.add("is-selected");
           listContainer.innerHTML = "";
           listContainer.insertAdjacentElement("afterbegin", lists[i]);
-        })
+        }),
       );
 
       links[0].classList.add("is-selected");
@@ -2545,7 +2561,7 @@ const initGsapDesk = {
 const initAfterScroll = {
   async initSlider() {
     const sliderWrapperEls = Array.from(
-      document.querySelectorAll(".swiper-component")
+      document.querySelectorAll(".swiper-component"),
     );
 
     console.log(sliderWrapperEls);
@@ -2553,7 +2569,7 @@ const initAfterScroll = {
     if (!sliderWrapperEls.length) return;
 
     await utilities.loadScript(
-      "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"
+      "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js",
     );
 
     sliders = setSlider(sliderWrapperEls);
