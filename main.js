@@ -632,6 +632,8 @@ const initTracking = {
       const domainListJob = [
         "jobs.micro1.ai",
         "dev.d3k2dall9o449y.amplifyapp.com",
+        "refer.micro1.ai",
+        "new-stage.refer.micro1.ai",
       ];
 
       const jobLinks = addParamsToURLs(paramsObj, domainListJob);
@@ -641,6 +643,11 @@ const initTracking = {
           link.href = link.href.replace(
             "jobs.micro1.ai",
             "dev.d3k2dall9o449y.amplifyapp.com",
+          );
+
+          link.href = link.href.replace(
+            "refer.micro1.ai",
+            "new-stage.refer.micro1.ai",
           );
         }
       });
@@ -758,11 +765,16 @@ const initTracking = {
 
     const domainList = [
       "client.micro1.ai",
-      "zara.micro1.ai",
       "intelligence.micro1.ai",
       "new-stage.intelligence.micro1.ai",
-      "dev.d1y3udqq47tapp.amplifyapp.com",
-      "feat-zara-dashboard.d1y3udqq47tapp.amplifyapp.com",
+      "zara.micro1.ai",
+      "new-stage.talent.micro1.ai",
+      "talent.micro1.ai",
+      "new-stage.client.micro1.ai",
+      "jobs.micro1.ai",
+      "dev.d3k2dall9o449y.amplifyapp.com",
+      "refer.micro1.ai",
+      "new-stage.refer.micro1.ai",
     ];
 
     const selectedLinks = links.filter(

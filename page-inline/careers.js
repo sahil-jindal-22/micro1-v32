@@ -1,4 +1,4 @@
-const state = {
+let state = {
   jobs: { result: [], count: 0 },
   pagination: {
     page: 1,
