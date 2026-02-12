@@ -634,6 +634,7 @@ const initTracking = {
         "dev.d3k2dall9o449y.amplifyapp.com",
         "refer.micro1.ai",
         "new-stage.refer.micro1.ai",
+        "interview.micro1.ai",
       ];
 
       const jobLinks = addParamsToURLs(paramsObj, domainListJob);
