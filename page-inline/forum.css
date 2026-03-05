@@ -1,0 +1,9 @@
+.hide-cat,
+.hide-state {
+  display: none;
+}
+
+.fs-selectcustom_link.w--current {
+  color: #000;
+  background-color: #ffffffe6;
+}

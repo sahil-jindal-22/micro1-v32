@@ -254,71 +254,18 @@ function createJobEl(job) {
     skills = skills.slice(0, 3);
   }
 
-  const defaultLogo =
-    "https://cdn.prod.website-files.com/68b095121300aebde21ab3f4/68d1b0bfb4d9544f62f81232_micro1%20icon%20(1).webp";
-  const micro1Logo =
-    "https://cdn.prod.website-files.com/68b095121300aebde21ab3f4/68d1b0c145c1e24606f22f37_micro1%20icon.webp";
-
-  let logo = job.company_logo;
-
-  if (logo) {
-    if (logo.includes("micro1-single-logo.png")) logo = micro1Logo;
-    if (logo.includes("default-company-icon.png")) logo = defaultLogo;
-  } else {
-    logo = defaultLogo;
-  }
-
-  const location = job.location_type
-    ? job.location_type.charAt(0).toUpperCase() + job.location_type.slice(1)
-    : "Remote";
-
   return `<a href="${
     job.apply_url ? job.apply_url : ""
   }" target="_blank" class="jobs_item w-inline-block"
     ><div class="jobs_top-wrap">
-      <div class="jobs_logo-wrap">
-        <img
-          src="${logo}"
-          loading="lazy"
-          alt=""
-          class="jobs_logo"
-        />
-
-        <div class="jobs_info-wrap">
-          <div class="jobs_date">${date}</div>
-          ${tag ? jobTag(tag) : ""}
-        </div>
-      </div>
-      <div>
-        <h2 class="jobs_name">${job.job_name ? job.job_name : ""}</h2>
-        <div class="jobs_company">${
-          job.company_name ? job.company_name : ""
-        }</div>
-      </div>
-      <div class="jobs_info">
-        <div class="jobs_info-cap">
-          <div class="jobs_loc-icon"></div>
-          <div>${location}</div>
-        </div>
-        ${
-          job.engagement_type
-            ? `<div class="jobs_info-cap">
-          <div class="jobs_type-icon"></div>
-          <div>${
-            job.engagement_type.charAt(0).toUpperCase() +
-            job.engagement_type.slice(1)
-          }</div>
-        </div>`
-            : ""
-        }
-        ${
-          job.ideal_hourly_rate || job.ideal_yearly_compensation
-            ? salary(tag, job.ideal_hourly_rate, job.ideal_yearly_compensation)
-            : ""
-        }
-      </div>
-      <div class="jobs_skills">
-        ${skills.length ? "<div>Required skills</div>" : ""}
+    <div class="jobs_info-wrap">
+      <div class="jobs_date">${date}</div>
+      ${tag ? jobTag(tag) : ""}
+    </div>
+    <h2 class="jobs_name">${job.job_name ? job.job_name : ""}</h2>
+    <div class="jobs_company">${job.company_name ? job.company_name : ""}</div>
+    <div class="jobs_skills">
+      ${skills.length ? "<div>Required skills</div>" : ""}
        
         <div class="jobs_skills-list">
            ${skills.reduce(
@@ -330,16 +277,20 @@ function createJobEl(job) {
              skillsCount > 3
                ? `<div class="jobs_skill-cap"><div>${
                    skillsCount - 3
-                 }+ more</div></div>`
+                 }+</div></div>`
                : ``
            }
         </div>
       </div>
-    </div>
-    <div class="jobs_cta"><div>Apply</div></div></a
-  >
-
-  `;
+  
+      ${
+        job.ideal_hourly_rate || job.ideal_yearly_compensation
+          ? salary(tag, job.ideal_hourly_rate, job.ideal_yearly_compensation)
+          : ""
+      }
+  </div>
+  <div class="jobs_cta"><div>Apply</div></div></a
+>`;
 }
 
 function formatCompensation(amount) {
@@ -364,32 +315,24 @@ function salary(tag, hourly, comp) {
 
     const minFormatted = formatCompensation(comp?.["min"]);
     const maxFormatted = formatCompensation(comp?.["max"]);
-    const salary = `${minFormatted}-${maxFormatted}/year compensation`;
+    const salary = `${minFormatted}-${maxFormatted}/yr`;
 
-    return `<div class="jobs_info-salary">
-        <div dataset-popover="wrapper" class="jobs_info-cap">
-          <div class="jobs_salary-icon"></div>
-          <div>${salary}</div>
-          <div dataset-popover="target" class="jobs_salary-trigger"></div>
-          <div dataset-popover="item" class="popover_item is-salary">
-            <div>
-              Total compensation includes base salary, equity, bonuses, and benefits.
-            </div>
-          </div>
-        </div>
-      </div>`;
+    return `<div dataset-popover="wrapper" class="jobs_salary">
+      <div>Compensation: <span class="job_salary-bold">$${salary}</span></div>
+      <div dataset-popover="target" class="jobs_salary-trigger"></div>
+      <div dataset-popover="item" class="popover_item is-salary">
+        <div>Total compensation includes base salary, bonuses, and benefits.</div>
+      </div>
+    </div>`;
   }
 
   // for non-core jobs
   if (hourly) {
-    const salary = `${hourly?.["min"]}-${hourly?.["max"]}/hour pay`;
+    const salary = `${hourly?.["min"]}-${hourly?.["max"]}/h`;
 
     return `
-    <div class="jobs_info-salary">
-      <div class="jobs_info-cap">
-        <div class="jobs_salary-icon"></div>
-        <div>${salary}</div>
-      </div>
+    <div class="jobs_salary">
+      <div>Pay: <span class="job_salary-bold">$${salary}</span></div>
     </div>
     `;
   }

@@ -1,3 +1,43 @@
+<div class="jobs_salary">
+  <div>Pay: <span class="job_salary-bold">Salary</span></div>
+</div>
+
+<a href="#" class="jobs_item w-inline-block"
+  ><div class="jobs_top-wrap">
+    <div class="jobs_info-wrap">
+      <div class="jobs_date">Posted on Feb 10, 2025</div>
+      <div dataset-popover="wrapper" class="jobs_tag_wrap">
+        <div dataset-popover="target" class="jobs_tag is-core">Core team</div>
+        <div dataset-popover="target" class="jobs_tag is-extended hide">
+          Core team
+        </div>
+        <div dataset-popover="item" class="popover_item">
+          <div>
+            This opening is for the micro1 core team as a full time employee.
+          </div>
+        </div>
+      </div>
+    </div>
+    <h2 class="jobs_name">Full-Stack developer</h2>
+    <div class="jobs_company">{Company name}</div>
+    <div class="jobs_skills">
+      <div class="text-weight-light">Required skills</div>
+      <div class="jobs_skills-list">
+        <div class="jobs_skill-cap"><div>React</div></div>
+      </div>
+    </div>
+    <div dataset-popover="wrapper" class="jobs_salary">
+      <div>Pay: Salary</div>
+      <div dataset-popover="target" class="jobs_salary-trigger"></div>
+      <div dataset-popover="item" class="popover_item is-salary hide">
+        <div>
+          Total compensation includes base salary, bonuses, and benefits.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="jobs_cta"><div>Apply</div></div></a
+>
 <!-- Tracking code -->
 <script type="text/javascript">
   let consent = decodeURIComponent(getCookieValue("consent"));
@@ -13,7 +53,7 @@
     console.log(
       !consent,
       consent && typeof consent === "boolean",
-      consent && typeof consent === "object" && consent.marketing
+      consent && typeof consent === "object" && consent.marketing,
     );
     // Linkedin start
     _linkedin_partner_id = "4502324";
@@ -58,10 +98,10 @@
     !(function (e, t) {
       if (!document.getElementById(e)) {
         var c = document.createElement("script");
-        (c.src =
+        ((c.src =
           "https://js.hs-analytics.net/analytics/1744829700000/24317846.js"),
           (c.type = "text/javascript"),
-          (c.id = e);
+          (c.id = e));
         var n = document.getElementsByTagName("script")[0];
         n.parentNode.insertBefore(c, n);
       }
@@ -113,7 +153,7 @@
       window,
       document,
       "script",
-      "https://connect.facebook.net/en_US/fbevents.js"
+      "https://connect.facebook.net/en_US/fbevents.js",
     );
     fbq("init", "748316996617780");
     fbq("track", "PageView");
@@ -142,7 +182,7 @@
     console.log(
       !consent,
       consent && typeof consent === "boolean",
-      consent && typeof consent === "object" && consent.analytics
+      consent && typeof consent === "object" && consent.analytics,
     );
     // Amplitude
     (function () {

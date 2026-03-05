@@ -1,5 +1,8 @@
 (() => {
   const itemWrapEls = Array.from(document.querySelectorAll(".forum_item-wrap"));
+  const emptyState = document.querySelector("#forum-no-events");
+  const stateBtns = Array.from(document.querySelectorAll("[data-state-btn]"));
+  const catInput = document.querySelector("#Select");
 
   // Move speakers
   itemWrapEls.forEach((item) => {
@@ -13,28 +16,57 @@
     imgWrapEl.appendChild(speakerEl);
   });
 
-  // category filter
-  const catBtnEls = Array.from(
-    document.querySelectorAll("[data-category-btn]")
-  );
-
-  catBtnEls.forEach((el) => {
+  // state filter
+  stateBtns.forEach((el) => {
     el.addEventListener("click", () => {
-      const category = el.dataset.categoryBtn;
+      const state = el.dataset.stateBtn;
 
       itemWrapEls.forEach((el) => {
-        el.classList.remove("hide");
+        el.classList.remove("hide-state");
       });
 
-      catBtnEls.forEach((el) => el.classList.remove("is-selected"));
+      stateBtns.forEach((el) => el.classList.remove("is-selected"));
 
       el.classList.add("is-selected");
 
-      if (category === "All") return;
+      if (state === "All") {
+        window.requestAnimationFrame(() => {
+          checkEmpty();
+        });
+        return;
+      }
 
       itemWrapEls
-        .filter((el) => el.dataset.categoryItem !== category)
-        .forEach((el) => el.classList.add("hide"));
+        .filter((el) => el.dataset.state !== state)
+        .forEach((el) => el.classList.add("hide-state"));
+
+      window.requestAnimationFrame(() => {
+        checkEmpty();
+      });
+    });
+  });
+
+  // category filter
+  catInput.addEventListener("change", () => {
+    const category = catInput.value;
+
+    itemWrapEls.forEach((el) => {
+      el.classList.remove("hide-cat");
+    });
+
+    if (category === "All categories") {
+      window.requestAnimationFrame(() => {
+        checkEmpty();
+      });
+      return;
+    }
+
+    itemWrapEls
+      .filter((el) => el.dataset.categoryItem !== category)
+      .forEach((el) => el.classList.add("hide-cat"));
+
+    window.requestAnimationFrame(() => {
+      checkEmpty();
     });
   });
 
@@ -81,6 +113,20 @@
       return `${diffHours} hour${diffHours !== 1 ? "s" : ""}`;
     } else {
       return `${diffMinutes} min${diffMinutes !== 1 ? "s" : ""}`;
+    }
+  }
+
+  function checkEmpty() {
+    const currentEls = itemWrapEls.filter(
+      (el) =>
+        !el.classList.contains("hide-state") &&
+        !el.classList.contains("hide-cat"),
+    );
+
+    if (currentEls.length === 0) {
+      emptyState.classList.remove("hide");
+    } else {
+      emptyState.classList.add("hide");
     }
   }
 })();

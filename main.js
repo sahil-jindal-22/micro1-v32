@@ -1517,29 +1517,29 @@ const initForm = {
           return;
         }
 
-        if (allSteps[currentStep].dataset.stepCheckPoint) {
-          if (
-            formStep.querySelector(".w-radio.is-checked input")?.value ===
-            "Interview your own candidates"
-          ) {
-            console.log("enable zara");
+        // if (allSteps[currentStep].dataset.stepCheckPoint) {
+        //   if (
+        //     formStep.querySelector(".w-radio.is-checked input")?.value ===
+        //     "Interview your own candidates"
+        //   ) {
+        //     console.log("enable zara");
 
-            allSteps = form.querySelectorAll(
-              ".form-step-wrap:not([data-step-type=human-data])",
-            );
-          }
+        //     allSteps = form.querySelectorAll(
+        //       ".form-step-wrap:not([data-step-type=human-data])",
+        //     );
+        //   }
 
-          if (
-            formStep.querySelector(".w-radio.is-checked input")?.value ===
-            "Explore human data"
-          ) {
-            console.log("enable hd");
+        //   if (
+        //     formStep.querySelector(".w-radio.is-checked input")?.value ===
+        //     "Explore human data"
+        //   ) {
+        //     console.log("enable hd");
 
-            allSteps = form.querySelectorAll(
-              ".form-step-wrap:not([data-step-type=zara])",
-            );
-          }
-        }
+        //     allSteps = form.querySelectorAll(
+        //       ".form-step-wrap:not([data-step-type=zara])",
+        //     );
+        //   }
+        // }
 
         if (currentStep + 1 <= allSteps.length - 1) currentStep++;
         showStep(currentStep);
@@ -1548,20 +1548,20 @@ const initForm = {
         const product = formType;
         const step = currentStep;
         const question = formStep.querySelector(".step-title")?.textContent;
-        let answer;
+        // let answer;
         console.log(step);
-        if (product === "general" && step === 2) {
-          answer = formStep.querySelector(
-            ".radio-wrapper.is-checked input",
-          )?.value;
-        }
+        // if (product === "general" && step === 2) {
+        //   answer = formStep.querySelector(
+        //     ".radio-wrapper.is-checked input",
+        //   )?.value;
+        // }
 
         if (window.amplitude) {
           window.amplitude.track("Static - Moved step in form", {
             product,
             step,
             question,
-            ...(answer && { answer }),
+            // ...(answer && { answer }),
           });
         }
       }
@@ -1730,12 +1730,12 @@ const initForm = {
         );
 
         // if general form
-        const leadType = allFormData.get("general-requirement");
-        if (leadType) {
-          if (leadType === "Explore human data") {
-            redirectPath = undefined;
-          }
-        }
+        // const leadType = allFormData.get("general-requirement");
+        // if (leadType) {
+        //   if (leadType === "Explore human data") {
+        //     redirectPath = undefined;
+        //   }
+        // }
 
         const amplitudeEventParams = utilities.toSnakeCaseObject({
           ...(userContactInfo && userContactInfo),
