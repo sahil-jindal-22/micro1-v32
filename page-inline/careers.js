@@ -39,6 +39,7 @@ async function fetchJobs() {
       headers: headers,
       body: JSON.stringify({
         action: "get_all_jobs",
+        filters: { type: ["EXPERT"] },
       }),
     },
   );
@@ -99,7 +100,6 @@ function createJobEl(job) {
       ${tag ? jobTag(tag) : ""}
     </div>
     <h2 class="jobs_name">${job.job_name ? job.job_name : ""}</h2>
-    <div class="jobs_company">${job.company_name ? job.company_name : ""}</div>
     <div class="jobs_skills">
       ${skills.length ? "<div>Required skills</div>" : ""}
        
