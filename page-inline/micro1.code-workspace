@@ -1,0 +1,13 @@
+{
+  "folders": [
+	{
+		"path": "../../../Desktop/micro1"
+	},
+	{
+		"path": ".."
+	}
+],
+  "settings": {
+    "liveServer.settings.multiRootWorkspaceName": "V32"
+  }
+}

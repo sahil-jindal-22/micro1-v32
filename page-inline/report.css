@@ -114,6 +114,32 @@ body {
 .traj-prompt {
   color: #9ca3af;
 }
+.report-loader-wrap {
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.report-loader {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-top-color: rgba(255, 255, 255, 0.85);
+  animation: report-spin 0.75s linear infinite;
+}
+.report-loader-text {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  line-height: 1.4;
+}
+@keyframes report-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .prompt-shell {
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;

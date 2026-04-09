@@ -1,5 +1,5 @@
 document.getElementById("report-root").innerHTML =
-  '<div class="container">\n      <!-- 10. EXAMPLE TRAJECTORIES -->\n      <div class="section">\n        <p style="margin-bottom: 1rem">\n          Select a run to view the full agent trajectory, tool calls, and\n          criteria results.\n        </p>\n        <div class="traj-controls">\n          <div class="task-select">\n            <select id="traj-select" onchange="showTrajectory()">\n              <option value="0">[HIGH] Task 16 — GPT-5.4 — reward 0.893</option>\n              <option value="1">\n                [HIGH] Task 16 — Gemini 3.1 Pro — reward 0.857\n              </option>\n              <option value="2">\n                [HIGH] Task 33 — Claude Opus 4.6 — reward 0.643\n              </option>\n              <option value="3">\n                [MID] Task 36 — Gemini 3.1 Pro — reward 0.398\n              </option>\n              <option value="4">\n                [MID] Task 6 — Claude Opus 4.6 — reward 0.390\n              </option>\n              <option value="5">[MID] Task 28 — GPT-5.4 — reward 0.385</option>\n              <option value="6">\n                [LOW] Task 34 — Claude Opus 4.6 — reward 0.096\n              </option>\n              <option value="7">\n                [LOW] Task 34 — Gemini 3.1 Pro — reward 0.096\n              </option>\n              <option value="8">[LOW] Task 38 — GPT-5.4 — reward 0.086</option>\n            </select>\n          </div>\n        </div>\n        <div class="traj-tabs">\n          <button\n            class="traj-tab active"\n            id="tab-prompt"\n            onclick="setTrajTab(\'prompt\')"\n          >\n            Prompt\n          </button>\n          <button\n            class="traj-tab"\n            id="tab-trajectory"\n            onclick="setTrajTab(\'trajectory\')"\n          >\n            Trajectory\n          </button>\n          <button\n            class="traj-tab"\n            id="tab-results"\n            onclick="setTrajTab(\'results\')"\n          >\n            Results\n          </button>\n        </div>\n        <div class="traj-layout">\n          <div class="traj-col active" id="traj-col-prompt">\n            <div class="traj-prompt" id="prompt-viewer"></div>\n          </div>\n          <div class="traj-col" id="traj-col-trajectory">\n            <div class="traj-viewer" id="traj-viewer"></div>\n          </div>\n          <div class="traj-col" id="traj-col-results">\n            <div id="criteria-viewer"></div>\n          </div>\n        </div>\n      </div>\n    </div>';
+  '<div class="">\n      <!-- 10. EXAMPLE TRAJECTORIES -->\n      <div class="">\n        <p style="margin-bottom: 1rem">\n          Select a run to view the full agent trajectory, tool calls, and\n          criteria results.\n        </p>\n        <div class="traj-controls">\n          <div class="task-select">\n            <select id="traj-select" onchange="showTrajectory()">\n              <option value="0">[HIGH] Task 16 — GPT-5.4 — reward 0.893</option>\n              <option value="1">\n                [HIGH] Task 16 — Gemini 3.1 Pro — reward 0.857\n              </option>\n              <option value="2">\n                [HIGH] Task 33 — Claude Opus 4.6 — reward 0.643\n              </option>\n              <option value="3">\n                [MID] Task 36 — Gemini 3.1 Pro — reward 0.398\n              </option>\n              <option value="4">\n                [MID] Task 6 — Claude Opus 4.6 — reward 0.390\n              </option>\n              <option value="5">[MID] Task 28 — GPT-5.4 — reward 0.385</option>\n              <option value="6">\n                [LOW] Task 34 — Claude Opus 4.6 — reward 0.096\n              </option>\n              <option value="7">\n                [LOW] Task 34 — Gemini 3.1 Pro — reward 0.096\n              </option>\n              <option value="8">[LOW] Task 38 — GPT-5.4 — reward 0.086</option>\n            </select>\n          </div>\n        </div>\n        <div class="traj-tabs">\n          <button\n            class="traj-tab active"\n            id="tab-prompt"\n            onclick="setTrajTab(\'prompt\')"\n          >\n            Prompt\n          </button>\n          <button\n            class="traj-tab"\n            id="tab-trajectory"\n            onclick="setTrajTab(\'trajectory\')"\n          >\n            Trajectory\n          </button>\n          <button\n            class="traj-tab"\n            id="tab-results"\n            onclick="setTrajTab(\'results\')"\n          >\n            Results\n          </button>\n        </div>\n        <div class="traj-layout">\n          <div class="traj-col active" id="traj-col-prompt">\n            <div class="traj-prompt" id="prompt-viewer"></div>\n          </div>\n          <div class="traj-col" id="traj-col-trajectory">\n            <div class="traj-viewer" id="traj-viewer"></div>\n          </div>\n          <div class="traj-col" id="traj-col-results">\n            <div id="criteria-viewer"></div>\n          </div>\n        </div>\n      </div>\n    </div>';
 
 let prompts = [];
 let exampleRuns = [];
@@ -12,6 +12,36 @@ var colors = [OPUS, GPT, GEMINI];
 var tid = 0;
 var textStore = {};
 var textStoreId = 0;
+var isReportLoading = false;
+
+function buildLoaderHtml(label) {
+  return (
+    '<div class="report-loader-wrap">' +
+    '<div class="report-loader" aria-hidden="true"></div>' +
+    '<div class="report-loader-text">' +
+    esc(label || "Loading report data...") +
+    "</div>" +
+    "</div>"
+  );
+}
+
+function setLoadingState(isLoading) {
+  isReportLoading = !!isLoading;
+  var selectEl = document.getElementById("traj-select");
+  if (selectEl) {
+    selectEl.disabled = isReportLoading;
+    selectEl.setAttribute("aria-busy", isReportLoading ? "true" : "false");
+  }
+
+  if (!isReportLoading) return;
+  var loader = buildLoaderHtml("Loading report data...");
+  var promptEl = document.getElementById("prompt-viewer");
+  var trajEl = document.getElementById("traj-viewer");
+  var criteriaEl = document.getElementById("criteria-viewer");
+  if (promptEl) promptEl.innerHTML = loader;
+  if (trajEl) trajEl.innerHTML = loader;
+  if (criteriaEl) criteriaEl.innerHTML = loader;
+}
 
 function esc(s) {
   if (!s) return "";
@@ -434,9 +464,18 @@ function renderGenericTool(group) {
 }
 
 function showTrajectory() {
+  if (isReportLoading) return;
   tid = 0;
   var idx = document.getElementById("traj-select").value;
   var run = exampleRuns[idx];
+  if (!run) {
+    var emptyHtml =
+      '<p style="color:#9CA3AF;">No run data available. Please check report-data.json.</p>';
+    document.getElementById("prompt-viewer").innerHTML = emptyHtml;
+    document.getElementById("traj-viewer").innerHTML = emptyHtml;
+    document.getElementById("criteria-viewer").innerHTML = emptyHtml;
+    return;
+  }
 
   var promptEntry = getPromptForTask(run.task_id);
   var promptText = promptEntry.prompt;
@@ -520,13 +559,23 @@ function showTrajectory() {
 }
 
 async function loadReportData() {
+  setLoadingState(true);
   try {
-    const res = await fetch("./report-data.json", { cache: "no-store" });
-    const data = await res.json();
+    const res = await fetch(
+      "https://cdn.jsdelivr.net/gh/sahil-jindal-22/micro1-v32@v32.4.80/page-inline/report-data.json",
+      { cache: "no-store" },
+    );
+    const raw = await res.text();
+    await new Promise(function (resolve) {
+      requestAnimationFrame(resolve);
+    });
+    const data = JSON.parse(raw);
     prompts = Array.isArray(data.prompts) ? data.prompts : [];
     exampleRuns = Array.isArray(data.exampleRuns) ? data.exampleRuns : [];
+    setLoadingState(false);
     showTrajectory();
   } catch (err) {
+    setLoadingState(false);
     const el = document.getElementById("report-root");
     if (el)
       el.innerHTML =
