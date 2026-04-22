@@ -1,0 +1,38 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://www.micro1.ai/ali-ansari#person",
+  "name": "Ali Ansari",
+  "jobTitle": "Founder & CEO",
+  "url": "https://www.micro1.ai/ali-ansari",
+  "image": "https://cdn.prod.website-files.com/68b095121300aebde21ab3f4/69dfbc453355e53b2567ccca_Frame%202147227604%20(1).jpg",
+  "worksFor": {
+    "@id": "https://www.micro1.ai/#organization"
+  },
+  "sameAs": [
+    "https://www.linkedin.com/in/aliansarinik",
+    "https://x.com/aliansarinik",
+    "https://www.instagram.com/ali_ansarinik/"
+  ],
+  "description": "Ali Ansari is the founder and CEO of micro1, an AI human data training platform that partners with frontier AI labs to deliver high-quality, expert-led data and evaluation at scale. Under his leadership, micro1 has grown rapidly, building a global network of specialized experts and becoming a trusted infrastructure partner for AI companies, with a run rate exceeding $200M ARR.",
+  "knowsAbout": [
+    "Artificial Intelligence",
+    "AI Training Data",
+    "Human Data Infrastructure"
+  ],
+  "alumniOf": [
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "University of California, Berkeley"
+    },
+    {
+      "@type": "CollegeOrUniversity",
+      "name": "Stanford University"
+    }
+  ],
+  "nationality": {
+    "@type": "Country",
+    "name": "United States"
+  },
+  "gender": "Male"
+}

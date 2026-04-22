@@ -9,12 +9,15 @@ let state = {
     wrapper: document.querySelector(".jobs_min-list"),
     section: document.querySelector(".s_j_jobs"),
   },
+  trackingString: "",
 };
 
 window.addEventListener("load", initJobs);
 
 async function initJobs() {
   await fetchJobs();
+
+  setUTM();
 
   renderJobs();
 
@@ -91,9 +94,9 @@ function createJobEl(job) {
     skills = skills.slice(0, 3);
   }
 
-  return `<a href="${
-    job.apply_url ? job.apply_url : ""
-  }" target="_blank" class="jobs_item w-inline-block"
+  const link = job.apply_url ? formatLink(job.apply_url) : "";
+
+  return `<a href="${link}" target="_blank" class="jobs_item w-inline-block"
     ><div class="jobs_top-wrap">
     <div class="jobs_info-wrap">
       <div class="jobs_date">${date}</div>
@@ -244,4 +247,23 @@ function initPopover() {
       }
     });
   }
+}
+
+function setUTM() {
+  const { cusRef, portalParams } = customTrackData;
+  let finalString = portalParams;
+
+  if (!finalString.includes("utm_source") && cusRef) {
+    if (cusRef.includes("google")) cusRef = "google";
+
+    finalString = finalString + `&utm_source=${cusRef}`;
+  }
+
+  state.trackingString = finalString;
+}
+
+function formatLink(href, queryString = state.trackingString) {
+  if (!href) return "";
+  const base = href.split("?")[0];
+  return queryString ? `${base}?${queryString}` : base;
 }

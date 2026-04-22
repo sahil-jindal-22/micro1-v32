@@ -481,7 +481,7 @@ function showTrajectory() {
   var promptText = promptEntry.prompt;
   var promptMarked = addPromptMarkers(promptText, promptEntry.highlight_tokens);
   var promptHtml =
-    '<div class="prompt-shell"><div class="prompt-card"><div class="prompt-pre">' +
+    '<div class="prompt-shell"><div class="prompt-disclaimer">Note: All individuals and data presented below are mock profiles designed to reflect real-world taxpayer scenarios. These profiles have been created by domain experts solely for model evaluation purposes.</div><div class="prompt-card"><div class="prompt-pre">' +
     renderPromptText(promptMarked || "Prompt not available for this task.") +
     "</div></div></div>";
   document.getElementById("prompt-viewer").innerHTML = promptHtml;

@@ -1,5 +1,6 @@
 let state = {
   jobs: { result: [], count: 0 },
+  keyword: "",
   pagination: {
     page: 1,
     limit: 100,
@@ -8,17 +9,59 @@ let state = {
   els: {
     wrapper: document.querySelector(".c_j_list"),
     section: document.querySelector(".s_c_j"),
+    formSearch: document.querySelector(".jobs_form_c"),
+    inputSearch: document.querySelector(".jobs_form_search_c"),
+    btnSearchSubmit: document.querySelector(".jobs_form_btn_c"),
   },
+  trackingString: "",
 };
 
-window.addEventListener("load", initJobs);
+window.addEventListener("load", function () {
+  updateJobs(true);
+  initSearch();
+});
 
-async function initJobs() {
+async function updateJobs(checkParams = false) {
+  // reset job
+  state.pagination.page = 1;
+  state.jobs.result = [];
+
+  renderLoader();
+
+  if (checkParams) {
+    const params = new URLSearchParams(document.location.search);
+    const search = params.get("search");
+
+    if (search) {
+      state.els.inputSearch.value = search;
+      state.keyword = search;
+    }
+  }
+
   await fetchJobs();
+
+  if (!state.trackingString) setUTM();
 
   renderJobs();
 
   if (window.gsap !== undefined) ScrollTrigger.refresh();
+}
+
+function renderLoader() {
+  state.els.wrapper.innerHTML = "";
+
+  const loaderEl = `
+    <div class="jobs_loader-wrap">
+      <div class="css-loader animate-loader">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  `;
+
+  state.els.wrapper.insertAdjacentHTML("afterbegin", loaderEl);
 }
 
 async function fetchJobs() {
@@ -31,7 +74,7 @@ async function fetchJobs() {
   headers.append("Content-Type", "application/json");
 
   const response = await fetch(
-    `${baseURL}/job/portal?page=${state.pagination.page}&limit=${state.pagination.limit}`,
+    `${baseURL}/job/portal?page=${state.pagination.page}&limit=${state.pagination.limit}&keyword=${state.keyword}`,
     {
       method: "POST",
       headers: headers,
@@ -58,7 +101,7 @@ function renderJobs() {
   state.els.wrapper.innerHTML = "";
 
   if (state.jobs.count === 0) {
-    state.els.section.remove();
+    renderNoResults();
     return;
   }
 
@@ -74,10 +117,10 @@ function renderJobsList() {
 function createJobEl(job) {
   const tag = job.job_tags?.[0];
 
+  const link = job.apply_url ? formatLink(job.apply_url) : "";
+
   return `
-    <a href="${
-      job.apply_url ? job.apply_url : ""
-    }" target="_blank" class="c_j_item w-inline-block">
+    <a href="${link}" target="_blank" class="c_j_item w-inline-block">
       <h1 class="c_j_name">${job.job_name ? job.job_name : ""}</h1>
       <p class="c_j_pay"> $${
         job.ideal_hourly_rate || job.ideal_yearly_compensation
@@ -86,6 +129,22 @@ function createJobEl(job) {
       }</p>
     </a>
   `;
+}
+
+function renderNoResults() {
+  state.els.wrapper.insertAdjacentHTML(
+    "afterbegin",
+    `
+    <div class="jobs_result-0-wrap">
+      <div class="jobs_result-0-img"></div>
+      <p>
+        No jobs match your search. <span class="job_result-0-clear">Clear search</span>.
+      </p>
+    </div>
+  `,
+  );
+
+  listenerClearFilters();
 }
 
 function formatCompensation(amount) {
@@ -125,6 +184,39 @@ function salary(tag, hourly, comp) {
   return;
 }
 
+function initSearch() {
+  state.els.formSearch.addEventListener("submit", (e) => {
+    e.preventDefault();
+    console.log(123);
+  });
+
+  state.els.inputSearch.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+
+      if (state.els.inputSearch.value === "" && state.keyword === "") {
+        return;
+      }
+
+      state.keyword = state.els.inputSearch.value;
+
+      updateJobs();
+    }
+  });
+
+  state.els.btnSearchSubmit.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (state.els.inputSearch.value === "" && state.keyword === "") {
+      return;
+    }
+
+    state.keyword = state.els.inputSearch.value;
+
+    updateJobs();
+  });
+}
+
 function trackImgsLoadAll() {
   const wrappers = document.querySelectorAll("[data-track-img-load-all]");
 
@@ -155,4 +247,42 @@ function trackImgsLoadAll() {
   });
 }
 
+function clearSearch() {
+  state.els.inputSearch.value = "";
+
+  state.keyword = "";
+}
+
+function listenerClearFilters() {
+  const resetFiltersEls = document.querySelectorAll(
+    ".jobs_result-clear, .job_result-0-clear",
+  );
+
+  resetFiltersEls.forEach((el) =>
+    el.addEventListener("click", () => {
+      clearSearch();
+      updateJobs();
+    }),
+  );
+}
+
 trackImgsLoadAll();
+
+function setUTM() {
+  const { cusRef, portalParams } = customTrackData;
+  let finalString = portalParams;
+
+  if (!finalString.includes("utm_source") && cusRef) {
+    if (cusRef.includes("google")) cusRef = "google";
+
+    finalString = finalString + `&utm_source=${cusRef}`;
+  }
+
+  state.trackingString = finalString;
+}
+
+function formatLink(href, queryString = state.trackingString) {
+  if (!href) return "";
+  const base = href.split("?")[0];
+  return queryString ? `${base}?${queryString}` : base;
+}

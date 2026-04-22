@@ -274,18 +274,21 @@ const initTracking = {
   },
   organicSocialRef() {
     const ref = document.referrer;
-    const refTwitter = ref.includes("//t.co/");
-    const refLinkedin = ref.includes("linkedin.com") || ref.includes("lnkd.in");
+    const refTwitter =
+      ref.includes("t.co") || ref.includes("twitter") || ref.includes("x.com");
+    const refLinkedin = ref.includes("linkedin") || ref.includes("lnkd");
+    const refFacebook = ref.includes("facebook");
 
-    if (!refTwitter && !refLinkedin) return;
+    if (!refTwitter && !refLinkedin && !refFacebook) return;
 
     if (getCookieValue("utm_cookie_contact")) return;
 
     let refSource;
     const utm_cookie_contact = {};
 
-    if (refTwitter) refSource = "Twitter";
-    if (refLinkedin) refSource = "LinkedIn";
+    if (refTwitter) refSource = "twitter";
+    if (refLinkedin) refSource = "linkedin";
+    if (refFacebook) refSource = "facebook";
 
     utm_cookie_contact.utm_source = refSource;
     utm_cookie_contact.utm_medium = "social";

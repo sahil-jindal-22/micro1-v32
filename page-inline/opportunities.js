@@ -10,6 +10,7 @@ const state = {
     btnFormSubmit: document.querySelector("input[type='submit']"),
     formFilters: document.querySelector(".jobs_popup_form"),
   },
+  trackingString: "",
 };
 
 async function initApp() {
@@ -42,6 +43,8 @@ async function updateJobs(checkParams = false) {
   }
 
   await fetchJobs();
+
+  if (!state.trackingString) setUTM();
 
   renderJobs();
 
@@ -142,7 +145,7 @@ function renderJobsHeader() {
 
   state.els.wrapper.insertAdjacentHTML(
     "afterbegin",
-    `<p class="jobs_result-info">${state.jobs.count} jobs found ${clearFiltersButton}</p>`,
+    `<p class="jobs_result-info">${state.jobs.count} roles found ${clearFiltersButton}</p>`,
   );
 
   listenerClearFilters();
@@ -228,7 +231,7 @@ function renderNoResults() {
     <div class="jobs_result-0-wrap">
       <div class="jobs_result-0-img"></div>
       <p>
-        No jobs match your search. <span class="job_result-0-clear">Clear search</span>.
+        No roles match your search. <span class="job_result-0-clear">Clear search</span>.
       </p>
     </div>
   `,
@@ -255,9 +258,9 @@ function createJobEl(job) {
     skills = skills.slice(0, 3);
   }
 
-  return `<a href="${
-    job.apply_url ? job.apply_url : ""
-  }" target="_blank" class="jobs_item w-inline-block"
+  const link = job.apply_url ? formatLink(job.apply_url) : "";
+
+  return `<a href="${link}" target="_blank" class="jobs_item w-inline-block"
     ><div class="jobs_top-wrap">
     <div class="jobs_info-wrap">
       <div class="jobs_date">${date}</div>
@@ -456,4 +459,25 @@ function listenerClearFilters() {
       updateJobs();
     }),
   );
+}
+
+function setUTM() {
+  const { cusRef, portalParams } = customTrackData;
+  let finalString = portalParams;
+
+  if (!finalString.includes("utm_source") && cusRef) {
+    if (cusRef.includes("google")) cusRef = "google";
+
+    finalString = finalString + `&utm_source=${cusRef}`;
+  }
+
+  state.trackingString = finalString;
+
+  console.log("hi");
+}
+
+function formatLink(href, queryString = state.trackingString) {
+  if (!href) return "";
+  const base = href.split("?")[0];
+  return queryString ? `${base}?${queryString}` : base;
 }

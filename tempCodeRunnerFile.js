@@ -1,1 +1,1 @@
-redirectPath
+linkedin
