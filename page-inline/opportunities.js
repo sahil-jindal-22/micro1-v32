@@ -462,7 +462,7 @@ function listenerClearFilters() {
 }
 
 function setUTM() {
-  const { cusRef, portalParams } = customTrackData;
+  let { cusRef, portalParams } = customTrackData;
   let finalString = portalParams;
 
   if (!finalString.includes("utm_source") && cusRef) {
@@ -472,8 +472,6 @@ function setUTM() {
   }
 
   state.trackingString = finalString;
-
-  console.log("hi");
 }
 
 function formatLink(href, queryString = state.trackingString) {

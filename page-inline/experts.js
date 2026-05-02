@@ -250,7 +250,7 @@ function initPopover() {
 }
 
 function setUTM() {
-  const { cusRef, portalParams } = customTrackData;
+  let { cusRef, portalParams } = customTrackData;
   let finalString = portalParams;
 
   if (!finalString.includes("utm_source") && cusRef) {

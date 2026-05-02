@@ -1186,6 +1186,11 @@ const initForm = {
       let redirectPath = mainForm.dataset.formRedirectPath;
       const formWrap = form.closest(".popup-form");
       const formType = formWrap.dataset.formBlock;
+      const formWorkCTA = formWrap.querySelector(".step-looking-for-job-cta");
+      const formWorkPopup = formWrap.querySelector(".form-e-popup");
+      const formWorkPopupClose = formWrap.querySelectorAll(
+        ".form-e-bg, .form-e-close, .form-e-cta-l",
+      );
 
       const successWrapEl = formWrap.querySelector(".w-form-done");
 
@@ -1276,6 +1281,25 @@ const initForm = {
         mainForm.querySelectorAll(".input_form-type"),
         formType,
       );
+
+      if (formWorkPopup) {
+        // set work popup trigger
+        formWorkCTA.addEventListener("click", () => {
+          formWorkPopup.style.display = "flex";
+          requestAnimationFrame(() => {
+            formWorkPopup.style.opacity = 1;
+          });
+        });
+
+        formWorkPopupClose.forEach((close) => {
+          close.addEventListener("click", () => {
+            formWorkPopup.style.opacity = 0;
+            requestAnimationFrame(() => {
+              setTimeout(() => (formWorkPopup.style.display = "none"), 300);
+            });
+          });
+        });
+      }
 
       mainForm
         .querySelectorAll(
@@ -1380,7 +1404,8 @@ const initForm = {
               if (!(await validateEmail(allInputFields[i].value))) {
                 allInputFields[i].style.borderColor = "#f86567";
                 allInputFields[i].focus();
-                errorText = "Please enter a valid company email address.";
+                errorText =
+                  "Please enter a valid business email address. This form is for business inquiries only.";
                 result = false;
               } else {
                 errorText = "Please enter your contact details.";
@@ -1546,6 +1571,44 @@ const initForm = {
 
         if (currentStep + 1 <= allSteps.length - 1) currentStep++;
         showStep(currentStep);
+
+        if (formWorkPopup && currentStep === 1) {
+          requestAnimationFrame(() => {
+            const emailValue =
+              allSteps[currentStep - 1].querySelector("[type='email']")?.value;
+
+            if (!emailValue) return;
+
+            function isNonEduEmail(email) {
+              const e = email.toLowerCase();
+
+              const blocked = [
+                "student",
+                "university",
+                "campus",
+                "college",
+                "alumni",
+                ".edu",
+                ".ac.",
+              ];
+
+              for (const item of blocked) {
+                if (e.includes(item)) {
+                  return false;
+                }
+              }
+
+              return true;
+            }
+
+            if (isNonEduEmail(emailValue)) return;
+
+            formWorkPopup.style.display = "flex";
+            requestAnimationFrame(() => {
+              formWorkPopup.style.opacity = 1;
+            });
+          });
+        }
 
         // amplitude
         const product = formType;
