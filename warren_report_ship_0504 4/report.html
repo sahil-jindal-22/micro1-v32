@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three runs on NYPD Stop and Frisk Gun Search</title>
+    <link rel="stylesheet" href="report.css" />
+  </head>
+  <body class="traj-page">
+    <div class="container">
+      <div class="section traj-hero">
+        <div id="report-root" class="traj-root"></div>
+      </div>
+    </div>
+    <script>
+      /**
+       * Warren NYPD trajectory viewer — shell mounts immediately; JSON loads asynchronously
+       * and only fills the stats grid + panel (never blocks page paint).
+       */
+      (function () {
+        const TRAJ_DATA_URL = "http://127.0.0.1:5500/page-inline/warren.json";
+
+        let TRAJS = null;
+        let CRITERIA = null;
+        let WORKSPACE = null;
+
+        const MODEL_OPTIONS = [
+          { slug: "gpt55", label: "GPT-5.5" },
+          { slug: "opus", label: "Claude Opus 4.7" },
+          { slug: "gemini", label: "Gemini 3.1 Pro" },
+        ];
+        let activePanel = "prompt";
+        let currentSlug = "gpt55";
+
+        const LAYOUT_HTML = `
+        <div class="traj-layout" data-node-id="46582:10001">
+          <div class="traj-top-block">
+            <div class="traj-select-field">
+              <div class="traj-select-wrap">
+                <select id="traj-model-select" class="traj-select" aria-label="Select model run"></select>
+              </div>
+            </div>
+            <div id="traj-meta-grid" class="traj-meta-grid"></div>
+          </div>
+          <div class="traj-panels-wrap">
+            <div class="traj-segments" id="traj-segments" role="tablist" aria-label="Run detail">
+              <button type="button" class="traj-seg active" data-panel="prompt" role="tab" aria-selected="true">Prompt</button>
+              <button type="button" class="traj-seg" data-panel="world" role="tab" aria-selected="false">World</button>
+              <button type="button" class="traj-seg" data-panel="grading" role="tab" aria-selected="false">Pre-criterion grading</button>
+              <button type="button" class="traj-seg" data-panel="memo" role="tab" aria-selected="false">Submitted memo</button>
+              <button type="button" class="traj-seg" data-panel="trajectory" role="tab" aria-selected="false">Full trajectory</button>
+            </div>
+            <div class="traj-panel-outer">
+              <div id="traj-panel-body" class="traj-panel-body" role="tabpanel"></div>
+            </div>
+          </div>
+        </div>`;
+
+        function mountLayout(root) {
+          root.innerHTML = LAYOUT_HTML;
+        }
+
+        function escapeHtml(s) {
+          if (s == null) return "";
+          return String(s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+        }
+
+        function primeLoadingSelect() {
+          const sel = document.getElementById("traj-model-select");
+          if (!sel) return;
+          sel.innerHTML = '<option value="">Loading…</option>';
+        }
+
+        function showLoadingMetaGrid() {
+          const grid = document.getElementById("traj-meta-grid");
+          if (!grid) return;
+          const labels = [
+            "Reward",
+            "Model",
+            "Messages",
+            "Tool calls",
+            "Web searches",
+            "View_image",
+            "Duration",
+            "Input tokens",
+          ];
+          const rowHtml = (slice) =>
+            slice
+              .map(
+                (label) =>
+                  `<div class="traj-stat-card"><div class="traj-stat-label">${escapeHtml(label)}</div><div class="traj-stat-value">—</div></div>`,
+              )
+              .join("");
+          grid.innerHTML = `<div class="traj-meta-row">${rowHtml(labels.slice(0, 4))}</div><div class="traj-meta-row">${rowHtml(labels.slice(4))}</div>`;
+        }
+
+        function showLoadingPanel() {
+          const body = document.getElementById("traj-panel-body");
+          if (!body) return;
+          body.innerHTML =
+            '<div class="traj-loader" aria-live="polite" aria-busy="true">' +
+            '<div class="traj-loader__spinner" aria-hidden="true"></div>' +
+            "<span>Loading run data…</span>" +
+            "</div>";
+        }
+
+        function showErrorInPanel(message) {
+          const body = document.getElementById("traj-panel-body");
+          if (!body) return;
+          body.innerHTML =
+            '<div class="traj-error" role="alert">' +
+            escapeHtml(message || "Failed to load data.") +
+            "</div>";
+        }
+
+        function setTrajControlsEnabled(on) {
+          const sel = document.getElementById("traj-model-select");
+          if (sel) sel.disabled = !on;
+          document.querySelectorAll("#traj-segments .traj-seg").forEach((b) => {
+            b.disabled = !on;
+          });
+        }
+
+        const EXPAND_LINES_PROSE = 10;
+        const EXPAND_LINES_MONO = 14;
+        /** Show expand only when raw text exceeds this (no DOM measurement). */
+        const EXPAND_CHARS_PROSE = 420;
+        /** Thinking snippets need a bit more room before collapsing than main body text. */
+        const EXPAND_CHARS_THINKING = 520;
+        const EXPAND_CHARS_MONO = 560;
+        let trajExpandSeq = 0;
+
+        function wrapExpandable(escapedInnerHtml, maxLines) {
+          const ml = maxLines != null ? maxLines : EXPAND_LINES_PROSE;
+          const id = "traj-exp-" + ++trajExpandSeq;
+          return (
+            `<div class="traj-expandable" data-traj-max-lines="${ml}">` +
+            `<div class="traj-expandable-inner" id="${id}">${escapedInnerHtml}</div>` +
+            `<button type="button" class="traj-expand-toggle" aria-expanded="false" aria-controls="${id}">Show more</button>` +
+            `</div>`
+          );
+        }
+
+        /** Compare threshold to length after trim + collapsing whitespace runs (thinking/body only). */
+        function effectiveCharLengthForExpandGate(rawText, maxLines) {
+          const s = String(rawText == null ? "" : rawText).trim();
+          if (maxLines === EXPAND_LINES_MONO) return s.length;
+          return s.replace(/\s+/g, " ").length;
+        }
+
+        /** Long trajectory copy → expandable + button; short → plain escaped HTML. */
+        function trajectoryExpandableBlock(
+          rawText,
+          maxLines,
+          minCharsOverride,
+        ) {
+          const t = rawText == null ? "" : String(rawText);
+          const escaped = escapeHtml(t);
+          let thresh;
+          if (minCharsOverride != null) {
+            thresh = minCharsOverride;
+          } else {
+            thresh =
+              maxLines === EXPAND_LINES_MONO
+                ? EXPAND_CHARS_MONO
+                : EXPAND_CHARS_PROSE;
+          }
+          const gateLen = effectiveCharLengthForExpandGate(t, maxLines);
+          if (gateLen <= thresh) return escaped;
+          return wrapExpandable(escaped, maxLines);
+        }
+
+        function lineHeightPx(el) {
+          const lh = getComputedStyle(el).lineHeight;
+          let px = parseFloat(lh);
+          if (!Number.isFinite(px) || lh === "normal") {
+            px = parseFloat(getComputedStyle(el).fontSize) * 1.45;
+          }
+          return px;
+        }
+
+        let trajExpandFontsHook = false;
+
+        function initTrajectoryExpandCollapse(container) {
+          if (!container) return;
+          /** Only show control when max-height actually hides content (matches real collapsed layout). */
+          const clipEpsilonPx = 1;
+
+          container.querySelectorAll(".traj-expandable").forEach((wrap) => {
+            const inner = wrap.querySelector(".traj-expandable-inner");
+            const btn = wrap.querySelector(".traj-expand-toggle");
+            if (!inner || !btn) return;
+
+            wrap.classList.remove(
+              "traj-expandable--open",
+              "traj-expandable--no-expand",
+            );
+            inner.style.removeProperty("max-height");
+            inner.style.removeProperty("overflow");
+            void inner.offsetHeight;
+
+            const maxLines = parseInt(
+              wrap.dataset.trajMaxLines || String(EXPAND_LINES_PROSE),
+              10,
+            );
+            const maxH = maxLines * lineHeightPx(inner);
+
+            inner.style.setProperty("max-height", maxH + "px");
+            inner.style.setProperty("overflow", "hidden");
+            void inner.offsetHeight;
+
+            const clipped =
+              inner.scrollHeight > inner.clientHeight + clipEpsilonPx;
+
+            if (!clipped) {
+              wrap.classList.add("traj-expandable--no-expand");
+              inner.style.removeProperty("max-height");
+              inner.style.removeProperty("overflow");
+              btn.hidden = true;
+              btn.setAttribute("aria-hidden", "true");
+              btn.textContent = "Show more";
+              btn.setAttribute("aria-expanded", "false");
+              return;
+            }
+
+            btn.hidden = false;
+            btn.removeAttribute("aria-hidden");
+            btn.textContent = "Show more";
+            btn.setAttribute("aria-expanded", "false");
+          });
+        }
+
+        function scheduleTrajectoryExpandables() {
+          const run = () => {
+            const trajScroll = document.querySelector(
+              "#traj-panel-body .traj-panel-scroll--traj",
+            );
+            initTrajectoryExpandCollapse(trajScroll);
+          };
+          requestAnimationFrame(run);
+          if (document.fonts && document.fonts.ready && !trajExpandFontsHook) {
+            trajExpandFontsHook = true;
+            document.fonts.ready.then(run);
+          }
+        }
+
+        function extractTextFromContent(content) {
+          if (content == null) return { text: "", thinking: [] };
+          if (typeof content === "string")
+            return { text: content, thinking: [] };
+          if (Array.isArray(content)) {
+            let text = [];
+            let thinking = [];
+            for (const c of content) {
+              if (typeof c === "string") {
+                text.push(c);
+                continue;
+              }
+              if (!c || typeof c !== "object") continue;
+              if (c.type === "thinking") {
+                if (c.thinking) thinking.push(c.thinking);
+                continue;
+              }
+              if (c.type === "text" || c.text) {
+                text.push(c.text || "");
+                continue;
+              }
+              if (c.type === "tool_use") continue;
+              if (c.type === "tool_result") {
+                const inner = extractTextFromContent(c.content);
+                text.push(inner.text);
+                continue;
+              }
+            }
+            return { text: text.join("\n").trim(), thinking };
+          }
+          return { text: String(content), thinking: [] };
+        }
+
+        function findFinalMemo(run) {
+          for (const msg of run.trajectory || []) {
+            for (const tc of msg.tool_calls || []) {
+              const fn = tc.function || {};
+              if (fn.name === "submit_answer") {
+                try {
+                  const args = JSON.parse(fn.arguments || "{}");
+                  return (
+                    args.answer ||
+                    args.final_answer ||
+                    args.memo ||
+                    JSON.stringify(args, null, 2)
+                  );
+                } catch (e) {
+                  return fn.arguments || "";
+                }
+              }
+            }
+          }
+          return null;
+        }
+
+        function fmtMs(ms) {
+          if (!ms) return "—";
+          const s = ms / 1000;
+          if (s < 60) return s.toFixed(0) + "s";
+          return Math.floor(s / 60) + "m " + Math.round(s % 60) + "s";
+        }
+
+        function fmtNum(n) {
+          if (n == null) return "—";
+          if (n >= 1e6) return (n / 1e6).toFixed(2) + "M";
+          if (n >= 1e3) return (n / 1e3).toFixed(0) + "K";
+          return String(n);
+        }
+
+        function countTools(run) {
+          const counts = {};
+          for (const msg of run.trajectory || []) {
+            for (const tc of msg.tool_calls || []) {
+              const name = (tc.function || {}).name || "unknown";
+              counts[name] = (counts[name] || 0) + 1;
+            }
+          }
+          return counts;
+        }
+
+        function renderMetaGrid(run) {
+          const tools = countTools(run);
+          const toolTotal = Object.values(tools).reduce((a, b) => a + b, 0);
+          const row1 = [
+            {
+              label: "Reward",
+              value: run.reward != null ? run.reward.toFixed(3) : "—",
+            },
+            { label: "Model", value: run.model_label || run.model || "—" },
+            {
+              label: "Messages",
+              value: String(
+                run.message_count != null
+                  ? run.message_count
+                  : (run.trajectory || []).length,
+              ),
+            },
+            { label: "Tool calls", value: String(toolTotal) },
+          ];
+          const row2 = [
+            { label: "Web searches", value: String(tools.exa_search || 0) },
+            { label: "View_image", value: String(tools.view_image || 0) },
+            { label: "Duration", value: fmtMs(run.duration_ms) },
+            { label: "Input tokens", value: fmtNum(run.input_tokens) },
+          ];
+          const card = (x) =>
+            `<div class="traj-stat-card"><div class="traj-stat-label">${escapeHtml(x.label)}</div><div class="traj-stat-value">${escapeHtml(String(x.value))}</div></div>`;
+          return `<div class="traj-meta-row">${row1.map(card).join("")}</div><div class="traj-meta-row">${row2.map(card).join("")}</div>`;
+        }
+
+        function renderGrading(run) {
+          const perCrit = (run.metrics || {}).per_criterion || [];
+          if (!perCrit.length)
+            return '<div class="traj-empty">No per-criterion grading data.</div>';
+          const rows = perCrit;
+          let html =
+            '<div class="traj-grading-card"><div class="traj-grading-header"><div>Score</div><div>Weight</div><div>Criterion</div></div>';
+          html += '<div class="traj-grading">';
+          for (const r of rows) {
+            const score = r.score != null ? r.score : 0;
+            const cid = r.criterion_id;
+            const meta = (CRITERIA.criteria || {})[cid] || {};
+            const isNegative = meta.kind === "negative";
+            const rawWeight = r.weight != null ? r.weight : 0;
+            const signedWeight = isNegative ? -Math.abs(rawWeight) : rawWeight;
+            const passing = isNegative ? score < 0.5 : score >= 0.5;
+            const partial = isNegative
+              ? score < 1 && score >= 0.5
+              : score < 0.5 && score > 0;
+            const cls = passing ? "pass" : partial ? "partial" : "fail";
+            const text = meta.text || `(${escapeHtml(cid || "unknown")})`;
+            const judge = r.reasoning || r.judge_reasoning || r.rationale || "";
+            const kindBadge = isNegative
+              ? ` <span class="crit-kind-neg">PENALTY</span>`
+              : "";
+            const weightStr =
+              signedWeight > 0 ? `+${signedWeight}` : String(signedWeight);
+            const weightCls = signedWeight < 0 ? "weight neg" : "weight";
+            html += `<div class="traj-grading-row">
+        <div class="traj-grading-kv traj-grading-kv--score">
+          <span class="traj-grading-mobile-label">Score</span>
+          <div class="score ${cls}">${score.toFixed(2)}</div>
+        </div>
+        <div class="traj-grading-kv traj-grading-kv--weight">
+          <span class="traj-grading-mobile-label">Weight</span>
+          <div class="${weightCls}">${escapeHtml(weightStr)}</div>
+        </div>
+        <div class="traj-grading-kv traj-grading-kv--criterion">
+          <span class="traj-grading-mobile-label">Criterion</span>
+          <div class="traj-grading-criterion-body">
+            <div class="crit-text">${escapeHtml(text)}${kindBadge}</div>
+            ${judge ? `<div class="judge-note"><span class="judge-note-label">Judge</span><span class="judge-note-body">${escapeHtml(judge)}</span></div>` : ""}
+          </div>
+        </div>
+      </div>`;
+          }
+          html += "</div></div>";
+          return html;
+        }
+
+        function renderToolCall(tc) {
+          const fn = tc.function || {};
+          let args = fn.arguments || "";
+          try {
+            const parsed = JSON.parse(args);
+            args = JSON.stringify(parsed, null, 2);
+          } catch (e) {
+            /* leave raw */
+          }
+          return `<div class="traj-tool-call">
+      <div class="traj-tool-call-name">${escapeHtml(fn.name || "tool_call")}</div>
+      <div class="traj-tool-call-args">${trajectoryExpandableBlock(args, EXPAND_LINES_MONO)}</div>
+    </div>`;
+        }
+
+        function renderMessage(msg, idx) {
+          const role = msg.role || "unknown";
+          const cls =
+            role === "assistant"
+              ? "assistant"
+              : role === "tool"
+                ? "tool"
+                : "user";
+          const { text, thinking } = extractTextFromContent(msg.content);
+
+          let inner = "";
+          for (const t of thinking) {
+            const trimmed = t.trim();
+            if (!trimmed) continue;
+            inner +=
+              '<div class="traj-msg-thinking">' +
+              '<div class="traj-msg-thinking-label">Thinking</div>' +
+              `<div class="traj-msg-thinking-body">${trajectoryExpandableBlock(trimmed, EXPAND_LINES_PROSE, EXPAND_CHARS_THINKING)}</div>` +
+              "</div>";
+          }
+          if (text && text.trim()) {
+            inner += `<div class="traj-msg-content">${trajectoryExpandableBlock(text.trim(), EXPAND_LINES_PROSE)}</div>`;
+          }
+          for (const tc of msg.tool_calls || []) {
+            inner += renderToolCall(tc);
+          }
+
+          const headerHtml = `<div class="traj-msg-header ${cls}">[${idx}] ${escapeHtml(role)}</div>`;
+          return `<div class="traj-msg ${cls}">${headerHtml}<div class="traj-msg-thread-body">${inner}</div></div>`;
+        }
+
+        function renderTrajectory(run) {
+          trajExpandSeq = 0;
+          const traj = run.trajectory || [];
+          if (!traj.length)
+            return '<div class="traj-empty">No trajectory data.</div>';
+          return traj.map((m, i) => renderMessage(m, i)).join("");
+        }
+
+        function fmtBytes(n) {
+          if (n == null) return "";
+          if (n < 1024) return n + " B";
+          if (n < 1024 * 1024) return (n / 1024).toFixed(1) + " KB";
+          if (n < 1024 * 1024 * 1024)
+            return (n / (1024 * 1024)).toFixed(1) + " MB";
+          return (n / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+        }
+
+        function countNode(node) {
+          if (node.type === "file") return 1;
+          return (node.children || []).reduce((a, c) => a + countNode(c), 0);
+        }
+
+        function renderFsNode(node, parentPath) {
+          const path = parentPath ? parentPath + "/" + node.name : node.name;
+          if (node.type === "file") {
+            return `<div class="fsv-row fsv-file"><span class="fsv-name">${escapeHtml(node.name)}</span><span class="fsv-size">${fmtBytes(node.size)}</span></div>`;
+          }
+          const childCount = countNode(node);
+          const childrenHtml = (node.children || [])
+            .map((c) => renderFsNode(c, path))
+            .join("");
+          return `<details class="fsv-dir"><summary><span class="fsv-name">${escapeHtml(node.name)}/</span><span class="fsv-size">${childCount} file${childCount === 1 ? "" : "s"}</span></summary><div class="fsv-children">${childrenHtml}</div></details>`;
+        }
+
+        function renderWorkspace() {
+          const tree = WORKSPACE.tree;
+          if (!tree) return '<div class="traj-empty">No workspace data.</div>';
+          const rootChildren = (tree.children || [])
+            .map((c) => renderFsNode(c, WORKSPACE.root_path))
+            .join("");
+          return `<div class="fsv-root"><div class="fsv-rootlabel">${escapeHtml(WORKSPACE.root_path)}/</div>${rootChildren}</div>`;
+        }
+
+        function panelBodyHtml(run, panel) {
+          const memo = findFinalMemo(run);
+          const promptText = CRITERIA.prompt_text || "";
+          switch (panel) {
+            case "prompt":
+              return `<div class="traj-prompt-shell"><div class="traj-prompt-body">${escapeHtml(promptText || "(prompt unavailable)")}</div></div>`;
+            case "world":
+              return `<div class="traj-panel-scroll">${renderWorkspace()}</div>`;
+            case "grading":
+              return `<div class="traj-panel-scroll">${renderGrading(run)}</div>`;
+            case "memo":
+              return `<div class="traj-prompt-shell"><div class="traj-memo traj-memo--panel">${escapeHtml(memo || "(no memo found)")}</div></div>`;
+            case "trajectory":
+              return `<div class="traj-panel-scroll traj-panel-scroll--traj">${renderTrajectory(run)}</div>`;
+            default:
+              return "";
+          }
+        }
+
+        function syncSegmentUI() {
+          document.querySelectorAll(".traj-seg").forEach((b) => {
+            const on = b.dataset.panel === activePanel;
+            b.classList.toggle("active", on);
+            b.setAttribute("aria-selected", on ? "true" : "false");
+          });
+        }
+
+        function render(slug) {
+          const run = TRAJS[slug];
+          if (!run) return;
+          currentSlug = slug;
+          const grid = document.getElementById("traj-meta-grid");
+          if (grid) grid.innerHTML = renderMetaGrid(run);
+          const body = document.getElementById("traj-panel-body");
+          if (body) body.innerHTML = panelBodyHtml(run, activePanel);
+          scheduleTrajectoryExpandables();
+        }
+
+        function setPanel(panel) {
+          activePanel = panel;
+          syncSegmentUI();
+          const run = TRAJS[currentSlug];
+          const body = document.getElementById("traj-panel-body");
+          if (run && body) body.innerHTML = panelBodyHtml(run, panel);
+          scheduleTrajectoryExpandables();
+        }
+
+        function fillModelSelect() {
+          const sel = document.getElementById("traj-model-select");
+          if (!sel) return;
+          sel.innerHTML = MODEL_OPTIONS.map(({ slug, label }) => {
+            const r = TRAJS[slug];
+            const rw = r?.reward != null ? r.reward.toFixed(3) : "—";
+            return `<option value="${escapeHtml(slug)}">${escapeHtml(label)} ${escapeHtml(rw)}</option>`;
+          }).join("");
+          sel.value = currentSlug;
+        }
+
+        function wireEvents() {
+          document
+            .getElementById("traj-model-select")
+            .addEventListener("change", (e) => {
+              if (!TRAJS) return;
+              render(e.target.value);
+            });
+          document
+            .getElementById("traj-segments")
+            .addEventListener("click", (e) => {
+              if (!TRAJS) return;
+              const btn = e.target.closest(".traj-seg");
+              if (!btn) return;
+              setPanel(btn.dataset.panel);
+            });
+
+          const root = document.getElementById("report-root");
+          if (root) {
+            root.addEventListener("click", (e) => {
+              const toggle = e.target.closest(".traj-expand-toggle");
+              if (!toggle || !root.contains(toggle)) return;
+              if (!toggle.closest(".traj-panel-scroll--traj")) return;
+              const wrap = toggle.closest(".traj-expandable");
+              const inner =
+                wrap && wrap.querySelector(".traj-expandable-inner");
+              if (!wrap || !inner) return;
+              if (wrap.classList.contains("traj-expandable--no-expand")) return;
+
+              const opening = !wrap.classList.contains("traj-expandable--open");
+              wrap.classList.toggle("traj-expandable--open", opening);
+              if (opening) {
+                inner.style.removeProperty("max-height");
+                inner.style.removeProperty("overflow");
+                toggle.textContent = "Show less";
+                toggle.setAttribute("aria-expanded", "true");
+              } else {
+                const maxLines = parseInt(
+                  wrap.dataset.trajMaxLines || String(EXPAND_LINES_PROSE),
+                  10,
+                );
+                inner.style.setProperty(
+                  "max-height",
+                  maxLines * lineHeightPx(inner) + "px",
+                );
+                inner.style.setProperty("overflow", "hidden");
+                toggle.textContent = "Show more";
+                toggle.setAttribute("aria-expanded", "false");
+              }
+            });
+          }
+        }
+
+        function initViewer(data) {
+          TRAJS = data.trajectories;
+          CRITERIA = data.criteria;
+          WORKSPACE = data.workspace;
+          if (!TRAJS || !CRITERIA || !WORKSPACE) {
+            showErrorInPanel(
+              "Invalid data: expected trajectories, criteria, and workspace.",
+            );
+            return;
+          }
+          fillModelSelect();
+          render(currentSlug);
+          syncSegmentUI();
+          setTrajControlsEnabled(true);
+        }
+
+        function loadTrajectoryJson() {
+          fetch(TRAJ_DATA_URL)
+            .then((r) => {
+              if (!r.ok)
+                throw new Error(
+                  "Could not load " + TRAJ_DATA_URL + " (" + r.status + ")",
+                );
+              return r.json();
+            })
+            .then((data) => initViewer(data))
+            .catch((err) => {
+              showErrorInPanel(
+                err.message || "Network error while loading run data.",
+              );
+            });
+        }
+
+        function start() {
+          const root = document.getElementById("report-root");
+          if (!root) return;
+          mountLayout(root);
+          primeLoadingSelect();
+          showLoadingMetaGrid();
+          showLoadingPanel();
+          setTrajControlsEnabled(false);
+          wireEvents();
+          requestAnimationFrame(function () {
+            loadTrajectoryJson();
+          });
+        }
+
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", start);
+        } else {
+          start();
+        }
+      })();
+    </script>
+  </body>
+</html>

@@ -31,15 +31,28 @@ function timeRemaining(timeString) {
     return null;
   }
 
-  const diffMinutes = Math.floor(diffMs / (1000 * 60));
-  const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const msMin = 1000 * 60;
+  const msHour = msMin * 60;
+  const msDay = msHour * 24;
 
-  if (diffDays > 0) {
-    return `${diffDays} day${diffDays !== 1 ? "s" : ""}`;
-  } else if (diffHours > 0) {
-    return `${diffHours} hour${diffHours !== 1 ? "s" : ""}`;
-  } else {
-    return `${diffMinutes} min${diffMinutes !== 1 ? "s" : ""}`;
+  const days = Math.floor(diffMs / msDay);
+  const remAfterDays = diffMs % msDay;
+  const hrs = Math.floor(remAfterDays / msHour);
+
+  if (diffMs < 48 * msHour) {
+    const parts = [];
+    if (days > 0) {
+      parts.push(`${days} day${days !== 1 ? "s" : ""}`);
+    }
+    if (hrs > 0) {
+      parts.push(`${hrs} hr${hrs !== 1 ? "s" : ""}`);
+    }
+    if (parts.length > 0) {
+      return parts.join(" ");
+    }
+    const mins = Math.floor(diffMs / msMin);
+    return `${mins} min${mins !== 1 ? "s" : ""}`;
   }
+
+  return `${days} day${days !== 1 ? "s" : ""}`;
 }

@@ -1,0 +1,862 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Roboto+Mono:wght@300;400&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body.traj-page {
+  font-family: "Outfit", sans-serif;
+  background: #000;
+  color: #f3f4f6;
+  line-height: 1.6;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+}
+::-webkit-scrollbar-thumb {
+  background: #2d2d2d;
+  border-radius: 999px;
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.traj-page .container {
+  max-width: 1100px;
+  padding: 2rem 1.5rem;
+}
+
+.traj-page .section.traj-hero {
+  margin-bottom: 0;
+}
+
+/* Layout + chrome (report.html inline script / LAYOUT_HTML) */
+.traj-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  margin-top: 18px;
+}
+.traj-top-block {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.traj-select-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.traj-select-wrap {
+  position: relative;
+  width: 100%;
+}
+.traj-select {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(217, 217, 231, 0.13);
+  border-radius: 4px;
+  color: #8d8e92;
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  line-height: 20px;
+  padding: 10px 40px 10px 12px;
+  cursor: pointer;
+}
+.traj-select option {
+  background: #1a1a1c;
+  color: #e5e5e5;
+}
+.traj-select:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.28);
+}
+.traj-select-wrap::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%238d8e92' d='m213.66 101.66-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+.traj-meta-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.8);
+}
+.traj-meta-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.traj-stat-card {
+  flex: 1 1 calc(25% - 6px);
+  min-width: 100px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  padding: 10px 18px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  align-items: center;
+  justify-content: center;
+}
+.traj-stat-label {
+  font-size: 13px;
+  font-weight: 300;
+  opacity: 0.7;
+  line-height: 1;
+}
+.traj-stat-value {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+}
+.traj-panels-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.traj-segments {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  width: fit-content;
+  max-width: 100%;
+  gap: 0;
+}
+.traj-seg {
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  color: rgba(255, 255, 255, 0.6);
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+  padding: 10px 18px;
+  cursor: pointer;
+  white-space: nowrap;
+  line-height: 1;
+  opacity: 0.85;
+}
+.traj-seg:hover {
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 1;
+}
+.traj-seg.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 1;
+}
+.traj-panel-outer {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  padding: 14px 12px 12px;
+  width: 100%;
+}
+.traj-prompt-shell {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  padding: 14px 16px;
+  overflow: visible;
+  max-height: none;
+  height: auto;
+}
+.traj-prompt-body {
+  font-family: "Roboto Mono", monospace;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.traj-panel-scroll {
+  max-height: none;
+  height: auto;
+  overflow: visible;
+}
+.traj-panel-scroll--traj {
+  padding-right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-expandable {
+  min-width: 0;
+}
+.traj-page .traj-panel-scroll--traj .traj-expandable-inner {
+  min-width: 0;
+  min-height: 0;
+}
+.traj-page .traj-panel-scroll--traj .traj-expandable--open .traj-expandable-inner {
+  max-height: none !important;
+  overflow: visible !important;
+}
+.traj-page .traj-panel-scroll--traj .traj-expandable--no-expand .traj-expand-toggle {
+  display: none !important;
+}
+.traj-page .traj-panel-scroll--traj .traj-expand-toggle {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  opacity: 0.92;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.traj-page .traj-panel-scroll--traj .traj-expand-toggle:hover {
+  filter: brightness(1.18);
+  opacity: 1;
+}
+.traj-page .traj-panel-scroll--traj .traj-expand-toggle:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.traj-empty {
+  color: #6b7280;
+  font-style: italic;
+  padding: 0.5rem;
+}
+
+/* Workspace tree (renderWorkspace) */
+.fsv-root {
+  background: #111112;
+  border-radius: 4px;
+  padding: 0.75rem;
+  max-height: 600px;
+  overflow-y: auto;
+  font-family: "Courier New", monospace;
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+.fsv-rootlabel {
+  color: #818cf8;
+  margin-bottom: 0.3rem;
+  font-weight: 500;
+}
+.fsv-dir {
+  margin-left: 0;
+}
+.fsv-dir summary {
+  cursor: pointer;
+  padding: 0.18rem 0;
+  color: #818cf8;
+  user-select: none;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.fsv-dir summary::-webkit-details-marker {
+  display: none;
+}
+.fsv-dir summary::before {
+  content: "▶";
+  color: #6b7280;
+  font-size: 0.6rem;
+  transition: transform 0.15s;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.fsv-dir[open] > summary::before {
+  transform: rotate(90deg);
+}
+.fsv-dir summary:hover {
+  color: #a5b4fc;
+  background: rgba(255, 255, 255, 0.02);
+}
+.fsv-dir summary .fsv-size {
+  margin-left: auto;
+}
+.fsv-children {
+  margin-left: 1.1rem;
+  padding-left: 0.6rem;
+  border-left: 1px solid rgba(129, 140, 248, 0.18);
+}
+.fsv-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.12rem 0;
+  padding-left: 1.1rem;
+}
+.fsv-row .fsv-size {
+  margin-left: auto;
+}
+.fsv-file .fsv-name {
+  color: #d1d5db;
+}
+.fsv-size {
+  color: #6b7280;
+  font-size: 0.76rem;
+  flex-shrink: 0;
+}
+
+.traj-page .traj-panel-scroll--traj > .traj-msg {
+  margin: 0;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg {
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: none;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg.assistant {
+  background: rgba(129, 141, 255, 0.1);
+  border-radius: 4px;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg.user {
+  background: rgba(240, 242, 248, 0.045);
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg > .traj-msg-header {
+  margin-bottom: 0;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-header {
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.25;
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg.assistant > .traj-msg-header.assistant {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: #9da5d6;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-header.user {
+  color: rgba(186, 190, 202, 0.92);
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg.tool {
+  background: rgba(53, 255, 60, 0.08);
+  border-radius: 4px;
+  padding: 14px 16px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-header.tool {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(141, 255, 131, 0.54);
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg.tool > .traj-msg-header.tool {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(141, 255, 131, 0.14);
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg.tool > .traj-msg-thread-body {
+  padding-top: 12px;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thread-body {
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thread-body > .traj-msg-thinking:first-child {
+  margin-top: 12px;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thread-body > .traj-msg-thinking {
+  background: transparent;
+  margin: 0;
+  padding: 14px 0 0;
+  border: none;
+  border-radius: 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thread-body > .traj-tool-call {
+  margin-top: 0;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thread-body > .traj-tool-call:first-child {
+  margin-top: 12px;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thread-body > .traj-msg-content:first-child {
+  margin-top: 12px;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thread-body .traj-msg-content {
+  margin-top: 0;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg.tool .traj-msg-content {
+  font-family: "Roboto Mono", monospace;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(141, 255, 131, 0.48);
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thinking {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: visible;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thinking-label {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(160, 169, 255, 0.8);
+  text-transform: none;
+  letter-spacing: normal;
+  margin: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-thinking-body {
+  font-family: "Outfit", sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.54);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-msg-content {
+  margin-top: 8px;
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(228, 232, 242, 0.76);
+}
+
+.traj-page .traj-panel-scroll--traj .traj-tool-call {
+  margin: 0;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: visible;
+}
+
+.traj-page .traj-panel-scroll--traj .traj-tool-call-name {
+  font-family: "Outfit", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.54);
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.traj-page .traj-panel-scroll--traj .traj-tool-call-args {
+  max-height: none;
+  overflow: visible;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-family: "Roboto Mono", monospace;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.54);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.traj-page .traj-memo.traj-memo--panel {
+  max-height: none;
+  background: transparent;
+  padding: 0;
+  font-family: "Roboto Mono", monospace;
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: pre-wrap;
+}
+.traj-page .fsv-root {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 4px;
+  padding: 14px 16px;
+  max-height: none;
+}
+
+.traj-page .traj-grading-card {
+  width: 100%;
+}
+.traj-page .traj-grading-card .traj-grading-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  padding: 11px 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  border-bottom: none;
+}
+.traj-page .traj-grading-card .traj-grading-header > div {
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.9);
+  opacity: 0.6;
+  text-transform: none;
+  letter-spacing: normal;
+}
+.traj-page .traj-grading-card .traj-grading-header > div:nth-child(1) {
+  flex: 0 0 73px;
+  width: 73px;
+}
+.traj-page .traj-grading-card .traj-grading-header > div:nth-child(2) {
+  flex: 0 0 72px;
+  width: 72px;
+}
+.traj-page .traj-grading-card .traj-grading-header > div:nth-child(3) {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.traj-page .traj-grading-card .traj-grading {
+  font-size: inherit;
+}
+.traj-page .traj-grading-mobile-label {
+  display: none;
+}
+.traj-page .traj-grading-card .traj-grading-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+}
+.traj-page .traj-grading-card .traj-grading-row:last-child {
+  border-bottom: none;
+}
+.traj-page .traj-grading-card .traj-grading-kv--score {
+  flex: 0 0 73px;
+  width: 73px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.traj-page .traj-grading-card .traj-grading-kv--weight {
+  flex: 0 0 72px;
+  width: 72px;
+  box-sizing: border-box;
+  min-width: 0;
+}
+.traj-page .traj-grading-card .traj-grading-kv--criterion {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.traj-page .traj-grading-card .traj-grading-criterion-body {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  align-items: stretch;
+  min-width: 0;
+}
+.traj-page .traj-grading-card .traj-grading-kv--score .score {
+  flex: none;
+  width: 73px;
+  box-sizing: border-box;
+  justify-self: unset;
+  font-family: "Outfit", sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.3;
+  text-align: left;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+  height: fit-content;
+  width: fit-content;
+  max-width: 73px;
+}
+.traj-page .traj-grading-card .traj-grading-kv--weight > .weight {
+  flex: none;
+  box-sizing: border-box;
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0.6;
+  text-align: left;
+  padding-top: 0;
+}
+.traj-page .traj-grading-card .traj-grading-kv--weight > .weight.neg {
+  color: rgba(255, 127, 127, 0.77);
+  opacity: 1;
+}
+.traj-page .traj-grading-card .crit-text {
+  font-family: "Outfit", sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0.6;
+}
+.traj-page .traj-grading-card .crit-kind-neg {
+  display: inline-block;
+  margin-left: 0.4rem;
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.12);
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  vertical-align: 1px;
+}
+.traj-page .traj-grading-card .traj-grading-kv--score .score.pass {
+  background: rgba(49, 255, 111, 0.11);
+  border-color: rgba(177, 227, 185, 0.2);
+  color: rgba(127, 255, 159, 0.77);
+}
+.traj-page .traj-grading-card .traj-grading-kv--score .score.partial {
+  background: rgba(252, 211, 77, 0.11);
+  border-color: rgba(227, 201, 140, 0.35);
+  color: rgba(253, 224, 71, 0.85);
+}
+.traj-page .traj-grading-card .traj-grading-kv--score .score.fail {
+  background: rgba(255, 49, 49, 0.11);
+  border-color: rgba(227, 177, 177, 0.2);
+  color: rgba(255, 127, 127, 0.77);
+}
+.traj-page .traj-grading-card .judge-note {
+  margin-top: 0;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 4px;
+  border-left: none;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+.traj-page .traj-grading-card .judge-note-label {
+  font-family: "Roboto Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #6a79ff;
+  text-transform: none;
+  letter-spacing: normal;
+  padding-top: 0;
+  flex-shrink: 0;
+}
+.traj-page .traj-grading-card .judge-note-body {
+  font-family: "Roboto Mono", monospace;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.48;
+  color: rgba(255, 255, 255, 0.8);
+  opacity: 0.6;
+  font-style: normal;
+  flex: 1;
+  min-width: 0;
+}
+
+.traj-page .traj-panel-body {
+  min-width: 0;
+}
+
+.traj-page .traj-grading-card .crit-text,
+.traj-page .traj-grading-card .judge-note-body {
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 960px) {
+  .traj-page .traj-grading-card .traj-grading-header {
+    display: none;
+  }
+  .traj-page .traj-grading-mobile-label {
+    display: block;
+    font-family: "Outfit", sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.45);
+    padding-top: 2px;
+  }
+  .traj-page .traj-grading-card .traj-grading-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+    padding: 12px 10px;
+  }
+  .traj-page .traj-grading-card .traj-grading-kv--score,
+  .traj-page .traj-grading-card .traj-grading-kv--weight,
+  .traj-page .traj-grading-card .traj-grading-kv--criterion {
+    flex: none;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(50px, 60px) minmax(0, 1fr);
+    gap: 8px 14px;
+    align-items: start;
+  }
+  .traj-page .traj-grading-card .traj-grading-kv--score .score {
+    width: fit-content;
+    max-width: none;
+    justify-self: start;
+  }
+  .traj-page .traj-grading-card .traj-grading-kv--weight > .weight {
+    justify-self: start;
+  }
+  .traj-page .traj-grading-card .judge-note {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .traj-page .traj-grading-card .judge-note-label {
+    padding-top: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .traj-stat-card {
+    flex: 1 1 calc(50% - 4px);
+  }
+  .traj-seg {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .traj-panel-outer {
+    padding: 12px 10px 10px;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .traj-page .traj-grading-card .traj-grading-row {
+    padding: 10px 8px;
+    gap: 12px;
+  }
+  .traj-page .traj-grading-mobile-label {
+    font-size: 12px;
+  }
+  .traj-page .traj-grading-card .traj-grading-kv--score,
+  .traj-page .traj-grading-card .traj-grading-kv--weight,
+  .traj-page .traj-grading-card .traj-grading-kv--criterion {
+    grid-template-columns: minmax(50px, 60px) minmax(0, 1fr);
+    gap: 6px 10px;
+  }
+  .traj-page .traj-grading-card .crit-text {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .traj-page .traj-grading-card .traj-grading-kv--score .score,
+  .traj-page .traj-grading-card .traj-grading-kv--weight > .weight {
+    font-size: 13px;
+  }
+  .traj-page .traj-grading-card .judge-note-label,
+  .traj-page .traj-grading-card .judge-note-body {
+    font-size: 10px;
+  }
+}
+
+/* Loader inside panel while JSON loads; error banner in panel on failure */
+.traj-root {
+  margin-top: 18px;
+}
+.traj-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 3rem 1.5rem;
+  color: rgba(255, 255, 255, 0.45);
+  font-family: "Outfit", sans-serif;
+  font-size: 14px;
+}
+.traj-panel-body > .traj-loader {
+  padding: 2.25rem 1rem;
+  min-height: 160px;
+}
+.traj-loader__spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-top-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  animation: traj-spin 0.65s linear infinite;
+}
+@keyframes traj-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.traj-error {
+  padding: 1.25rem 1rem;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 6px;
+  background: rgba(248, 113, 113, 0.08);
+  color: #fecaca;
+  font-size: 14px;
+  line-height: 1.5;
+}
