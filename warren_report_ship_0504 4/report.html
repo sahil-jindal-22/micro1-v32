@@ -6,7 +6,7 @@
     <title>Three runs on NYPD Stop and Frisk Gun Search</title>
     <link rel="stylesheet" href="report.css" />
   </head>
-  <body class="traj-page">
+  <body style="background:#000">
     <div class="container">
       <div class="section traj-hero">
         <div id="report-root" class="traj-root"></div>
@@ -18,7 +18,8 @@
        * and only fills the stats grid + panel (never blocks page paint).
        */
       (function () {
-        const TRAJ_DATA_URL = "http://127.0.0.1:5500/page-inline/warren.json";
+        const TRAJ_DATA_URL =
+          "https://cdn.jsdelivr.net/gh/sahil-jindal-22/micro1-v32@v32.4.96/page-inline/warren.json";
 
         let TRAJS = null;
         let CRITERIA = null;
