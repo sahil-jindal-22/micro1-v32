@@ -1824,16 +1824,13 @@ const initForm = {
         const final = formType === "dp" ? dpSheet : hubspot;
 
         try {
-          const response = await fetch(
-            "https://hook.us1.make.com/iixlkvnhvlvods3gx3l1rnftpkk92std",
-            {
-              method: "POST",
-              header: {
-                Accept: "application/json",
-              },
-              body: new FormData(mainForm),
+          const response = await fetch(final, {
+            method: "POST",
+            header: {
+              Accept: "application/json",
             },
-          );
+            body: new FormData(mainForm),
+          });
 
           if (!response.ok) {
             console.log(response);
