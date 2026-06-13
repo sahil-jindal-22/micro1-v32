@@ -1,3 +1,7 @@
+body {
+  background-color: black;
+}
+
 /**
  * Quantis trajectory viewer — all rules scoped to #quantis-traj-root (embed-safe).
  */
@@ -15,7 +19,7 @@
   max-width: 100%;
   min-width: 0;
   font-family: inherit;
-  color: #f3f4f6;
+  color: #828282;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
@@ -78,21 +82,17 @@
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256'%3E%3Cpath fill='%238d8e92' d='m213.66 101.66-80 80a8 8 0 0 1-11.32 0l-80-80a8 8 0 0 1 11.32-11.32L128 164.69l74.34-74.35a8 8 0 0 1 11.32 11.32Z'/%3E%3C/svg%3E")
     center / contain no-repeat;
 }
+/* Desktop: 3 columns × 2 rows for six stats. Mobile: 2 columns × 3 rows. */
 #quantis-traj-root .traj-meta-grid {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   width: 100%;
+  min-width: 0;
   color: rgba(255, 255, 255, 0.8);
 }
-#quantis-traj-root .traj-meta-row {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
 #quantis-traj-root .traj-stat-card {
-  flex: 1 1 0;
-  min-width: 100px;
+  min-width: 0;
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 4px;
@@ -114,6 +114,8 @@
   font-size: 14px;
   font-weight: 400;
   line-height: 1;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 #quantis-traj-root .traj-panels-wrap {
   display: flex;
@@ -185,10 +187,10 @@
   border-radius: 4px;
   padding: 14px 16px;
 }
-#quantis-traj-root .traj-prompt-body {
+#quantis-traj-root .traj-prompt-body p {
   font-family: "Roboto Mono", monospace;
   font-weight: 300;
-  font-size: 13px;
+  font-size: 13px !important;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.6);
 }
@@ -584,9 +586,18 @@
 }
 
 @media (max-width: 720px) {
+  #quantis-traj-root .traj-meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
   #quantis-traj-root .traj-stat-card {
-    flex: 1 1 calc(50% - 4px);
-    min-width: 90px;
+    padding: 8px 6px;
+  }
+  #quantis-traj-root .traj-stat-label {
+    font-size: 11px;
+  }
+  #quantis-traj-root .traj-stat-value {
+    font-size: 12px;
   }
   #quantis-traj-root .traj-segments {
     width: 100%;
@@ -597,6 +608,7 @@
     font-size: 13px;
     justify-content: center;
     text-align: center;
+    width: 50%;
   }
   #quantis-traj-root .traj-panel-body > .traj-panel-scroll,
   #quantis-traj-root .traj-panel-body > .traj-prompt-shell {

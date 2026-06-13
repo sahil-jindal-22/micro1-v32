@@ -1818,6 +1818,11 @@ const initForm = {
       // submit to make.com
       async function submitFormToMake(amplitudeEventParams) {
         console.log("init form submit");
+        const hubspot = `https://hook.us1.make.com/iixlkvnhvlvods3gx3l1rnftpkk92std`;
+        const dpSheet = `https://hook.us1.make.com/dzgjuhsc8ynum5pdx1nvtqqv8jm93k1v`;
+
+        const final = formType === "dp" ? dpSheet : hubspot;
+
         try {
           const response = await fetch(
             "https://hook.us1.make.com/iixlkvnhvlvods3gx3l1rnftpkk92std",
