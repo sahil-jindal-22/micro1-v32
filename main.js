@@ -524,6 +524,11 @@ const initTracking = {
 
       customTrackData.portalParams = paramsStr;
 
+      utilities.updateInput(
+        document.querySelectorAll(".portal_params"),
+        paramsStr,
+      );
+
       const links = [
         ...document.querySelectorAll("a[href]:not([href='#'])"),
       ].filter((link) => identifierArr.some((str) => link.href.includes(str)));
