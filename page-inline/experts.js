@@ -96,14 +96,15 @@ function createJobEl(job) {
 
   const link = job.apply_url ? formatLink(job.apply_url) : "";
 
-  return `<a href="${link}" target="_blank" class="jobs_item w-inline-block"
-    ><div class="jobs_top-wrap">
-    <div class="jobs_info-wrap">
-      <div class="jobs_date">${date}</div>
-      ${tag ? jobTag(tag) : ""}
-    </div>
-    <h2 class="jobs_name">${job.job_name ? job.job_name : ""}</h2>
-    <div class="jobs_skills">
+  return `
+      <a href="${link}" target="_blank" class="jobs_item w-inline-block"
+      ><div class="jobs_hover"></div>
+      <div class="jobs_top-wrap">
+        <div class="jobs_info-wrap">
+          <div class="jobs_date">${date}</div>
+        </div>
+        <h2 class="jobs_name">${job.job_name ? job.job_name : ""}</h2>
+         <div class="jobs_skills">
       ${skills.length ? "<div>Required skills</div>" : ""}
        
         <div class="jobs_skills-list">
@@ -121,15 +122,47 @@ function createJobEl(job) {
            }
         </div>
       </div>
-  
-      ${
-        job.ideal_hourly_rate || job.ideal_yearly_compensation
-          ? salary(tag, job.ideal_hourly_rate, job.ideal_yearly_compensation)
-          : ""
-      }
-  </div>
-  <div class="jobs_cta"><div>Apply</div></div></a
->`;
+      </div>
+      <div class="jobs_bottom">
+        <div dataset-popover="wrapper" class="jobs_salary">
+          <div>${
+            job.ideal_hourly_rate || job.ideal_yearly_compensation
+              ? salary(
+                  tag,
+                  job.ideal_hourly_rate,
+                  job.ideal_yearly_compensation,
+                )
+              : ""
+          }</div>
+        </div>
+        <div class="jobs_cta">
+          <div class="jobs_cta-icon w-embed">
+            <svg
+              width="100%"
+              height="100%"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3.75 12L20.25 12"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+              <path
+                d="M13.5 5.25L20.25 12L13.5 18.75"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              ></path>
+            </svg>
+          </div>
+        </div></div
+    ></a>
+  `;
 }
 
 function formatCompensation(amount) {

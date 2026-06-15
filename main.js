@@ -1827,7 +1827,6 @@ const initForm = {
         const dpSheet = `https://hook.us1.make.com/dzgjuhsc8ynum5pdx1nvtqqv8jm93k1v`;
 
         const final = formType === "dp" ? dpSheet : hubspot;
-
         try {
           const response = await fetch(final, {
             method: "POST",

@@ -1,0 +1,543 @@
+const state = {
+  jobs: { result: [], count: 0 },
+  keyword: "",
+  pagination: { page: 1, limit: 18, loading: false },
+  els: {
+    wrapper: document.querySelector(".jobs_list"),
+    formSearch: document.querySelector(".jobs_form_form"),
+    inputSearch: document.querySelector(".jobs_form_search"),
+    btnSearchSubmit: document.querySelector(".jobs_form_btn"),
+    btnFormSubmit: document.querySelector("input[type='submit']"),
+    formFilters: document.querySelector(".jobs_popup_form"),
+  },
+  trackingString: "",
+};
+
+async function initApp() {
+  updateJobs(true);
+  initSearch();
+  initPopover();
+}
+
+initApp();
+
+async function updateJobs(checkParams = false) {
+  // Remove existing sentinel
+  const existingSentinel = document.querySelector(".scroll-sentinel");
+  if (existingSentinel) existingSentinel.remove();
+
+  // reset job
+  state.pagination.page = 1;
+  state.jobs.result = [];
+
+  renderLoader();
+
+  if (checkParams) {
+    const params = new URLSearchParams(document.location.search);
+    const search = params.get("search");
+
+    if (search) {
+      state.els.inputSearch.value = search;
+      state.keyword = search;
+    }
+  }
+
+  await fetchJobs();
+
+  if (!state.trackingString) setUTM();
+
+  renderJobs();
+
+  setupInfiniteScroll();
+}
+
+function renderLoader() {
+  state.els.wrapper.innerHTML = "";
+
+  const loaderEl = `
+    <div class="jobs_loader-wrap">
+      <div class="css-loader animate-loader">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  `;
+
+  state.els.wrapper.insertAdjacentHTML("afterbegin", loaderEl);
+}
+
+function renderMoreLoader() {
+  // Remove existing loader if any
+  const existingLoader = document.querySelector(".jobs_loader-wrap");
+  if (existingLoader) existingLoader.remove();
+
+  const loaderEl = `
+    <div class="jobs_loader-wrap">
+      <div class="css-loader animate-loader">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+  `;
+
+  state.els.wrapper.insertAdjacentHTML("beforeend", loaderEl);
+}
+
+async function fetchJobs() {
+  const url = window.location.href;
+  const baseURL = url.includes("webflow.io")
+    ? "https://dev-api.micro1.ai/api/v1"
+    : "https://prod-api.micro1.ai/api/v1";
+
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
+
+  const response = await fetch(
+    `${baseURL}/job/portal?page=${state.pagination.page}&limit=${state.pagination.limit}&keyword=${state.keyword}`,
+    {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify({
+        action: "get_all_jobs",
+        filters: { type: ["EXPERT"] },
+      }),
+    },
+  );
+
+  const data = await response.json();
+  state.jobs.count = data.total;
+
+  // Ensure we only take the limit number of items
+  const newJobs = data.data.slice(0, state.pagination.limit);
+
+  // For initial load, replace the results
+  if (state.pagination.page === 1) {
+    state.jobs.result = newJobs;
+  } else {
+    // For infinite scroll, append the new results
+    state.jobs.result = [...state.jobs.result, ...newJobs];
+  }
+
+  console.log("Jobs loaded:", state.jobs.result.length);
+}
+
+function renderJobs() {
+  state.els.wrapper.innerHTML = "";
+
+  if (state.jobs.count === 0) {
+    renderNoResults();
+    return;
+  }
+
+  renderJobsHeader();
+  renderJobsList();
+}
+
+function renderJobsHeader() {
+  const hasFilters = state.keyword;
+  const clearFiltersButton = hasFilters
+    ? "<span class='jobs_result-clear'>Clear search</span>"
+    : "";
+
+  state.els.wrapper.insertAdjacentHTML(
+    "afterbegin",
+    `<p class="jobs_result-info">${state.jobs.count} roles found ${clearFiltersButton}</p>`,
+  );
+
+  listenerClearFilters();
+}
+
+function renderJobsList() {
+  state.jobs.result.forEach((job) => {
+    state.els.wrapper.insertAdjacentHTML("beforeend", createJobEl(job));
+  });
+}
+
+function renderLoadMoreSentinel() {
+  // Remove existing sentinel
+  const existingSentinel = document.querySelector(".scroll-sentinel");
+  if (existingSentinel) existingSentinel.remove();
+
+  // Add new sentinel if more jobs exist
+  if (state.jobs.result.length < state.jobs.count) {
+    state.els.wrapper.insertAdjacentHTML(
+      "afterend",
+      '<div class="scroll-sentinel"></div>',
+    );
+
+    const newSentinel = document.querySelector(".scroll-sentinel");
+    if (newSentinel && state.observer) {
+      state.observer.observe(newSentinel);
+    }
+  }
+}
+
+function setupInfiniteScroll() {
+  if (state.observer) {
+    state.observer.disconnect();
+  }
+
+  state.observer = createIntersectionObserver();
+  renderLoadMoreSentinel();
+}
+
+function createIntersectionObserver() {
+  return new IntersectionObserver(
+    async (entries) => {
+      const sentinel = entries[0];
+      if (sentinel.isIntersecting && !state.pagination.loading) {
+        state.observer.unobserve(sentinel.target);
+        console.log("visible");
+        await loadMoreJobs();
+      }
+    },
+    { rootMargin: "100px" },
+  );
+}
+
+async function loadMoreJobs() {
+  if (state.jobs.result.length >= state.jobs.count) return;
+
+  state.pagination.loading = true;
+  renderMoreLoader();
+
+  // Load new jobs
+  state.pagination.page += 1;
+  await fetchJobs();
+
+  // Remove loader
+  const loader = document.querySelector(".jobs_loader-wrap");
+  if (loader) loader.remove();
+
+  // Render only new jobs
+  const startIndex = (state.pagination.page - 1) * state.pagination.limit;
+  const newJobs = state.jobs.result.slice(startIndex);
+  newJobs.forEach((job) => {
+    state.els.wrapper.insertAdjacentHTML("beforeend", createJobEl(job));
+  });
+
+  state.pagination.loading = false;
+  renderLoadMoreSentinel();
+}
+
+function renderNoResults() {
+  state.els.wrapper.insertAdjacentHTML(
+    "afterbegin",
+    `
+    <div class="jobs_result-0-wrap">
+      <div class="jobs_result-0-img"></div>
+      <p>
+        No roles match your search. <span class="job_result-0-clear">Clear search</span>.
+      </p>
+    </div>
+  `,
+  );
+
+  listenerClearFilters();
+}
+
+function createJobEl(job) {
+  const tag = job.job_tags?.[0];
+
+  const date = job.date_posted
+    ? new Date(job.date_posted).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      })
+    : "";
+
+  let skills = job.skills || [];
+  const skillsCount = skills.length;
+
+  if (skillsCount > 3) {
+    skills = skills.slice(0, 3);
+  }
+
+  const link = job.apply_url ? formatLink(job.apply_url) : "";
+
+  return `
+  <a href="${link}" target="_blank" class="jobs_item w-inline-block"
+  ><div class="jobs_hover"></div>
+  <div class="jobs_top-wrap">
+    <div class="jobs_info-wrap">
+      <div class="jobs_date">${date}</div>
+    </div>
+    <h2 class="jobs_name">${job.job_name ? job.job_name : ""}</h2>
+     <div class="jobs_skills">
+  ${skills.length ? "<div>Required skills</div>" : ""}
+   
+    <div class="jobs_skills-list">
+       ${skills.reduce(
+         (acc, curr) =>
+           acc + `<div class="jobs_skill-cap"><div>${curr}</div></div>`,
+         "",
+       )}
+       ${
+         skillsCount > 3
+           ? `<div class="jobs_skill-cap"><div>${skillsCount - 3}+</div></div>`
+           : ``
+       }
+    </div>
+  </div>
+  </div>
+  <div class="jobs_bottom">
+    <div dataset-popover="wrapper" class="jobs_salary">
+      <div>${
+        job.ideal_hourly_rate || job.ideal_yearly_compensation
+          ? salary(tag, job.ideal_hourly_rate, job.ideal_yearly_compensation)
+          : ""
+      }</div>
+    </div>
+    <div class="jobs_cta">
+      <div class="jobs_cta-icon w-embed">
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3.75 12L20.25 12"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+          <path
+            d="M13.5 5.25L20.25 12L13.5 18.75"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      </div>
+    </div></div
+></a>
+`;
+
+  return `<a href="${link}" target="_blank" class="jobs_item w-inline-block"
+    ><div class="jobs_top-wrap">
+    <div class="jobs_info-wrap">
+      <div class="jobs_date">${date}</div>
+      ${tag ? jobTag(tag) : ""}
+    </div>
+    <h2 class="jobs_name">${job.job_name ? job.job_name : ""}</h2>
+
+    <div class="jobs_skills">
+      ${skills.length ? "<div>Required skills</div>" : ""}
+       
+        <div class="jobs_skills-list">
+           ${skills.reduce(
+             (acc, curr) =>
+               acc + `<div class="jobs_skill-cap"><div>${curr}</div></div>`,
+             "",
+           )}
+           ${
+             skillsCount > 3
+               ? `<div class="jobs_skill-cap"><div>${
+                   skillsCount - 3
+                 }+</div></div>`
+               : ``
+           }
+        </div>
+      </div>
+  
+      ${
+        job.ideal_hourly_rate || job.ideal_yearly_compensation
+          ? salary(tag, job.ideal_hourly_rate, job.ideal_yearly_compensation)
+          : ""
+      }
+  </div>
+  <div class="jobs_cta"><div>Apply</div></div></a
+>`;
+}
+
+function formatCompensation(amount) {
+  if (!amount || amount === 0) return "0";
+
+  if (amount >= 1000000) {
+    const millions = Math.floor((amount / 1000000) * 10) / 10;
+    return `${millions % 1 === 0 ? millions : millions.toFixed(1)}M`;
+  }
+
+  if (amount >= 1000) {
+    const thousands = Math.floor((amount / 1000) * 10) / 10;
+    return `${thousands % 1 === 0 ? thousands : thousands.toFixed(1)}K`;
+  }
+
+  return amount.toString();
+}
+
+function salary(tag, hourly, comp) {
+  if (tag === "Core team") {
+    if (!comp) return;
+
+    const minFormatted = formatCompensation(comp?.["min"]);
+    const maxFormatted = formatCompensation(comp?.["max"]);
+    const salary = `${minFormatted}-${maxFormatted}/yr`;
+
+    return `<div dataset-popover="wrapper" class="jobs_salary">
+      <div>Compensation: <span class="job_salary-bold">$${salary}</span></div>
+      <div dataset-popover="target" class="jobs_salary-trigger"></div>
+      <div dataset-popover="item" class="popover_item is-salary">
+        <div>Total compensation includes base salary, bonuses, and benefits.</div>
+      </div>
+    </div>`;
+  }
+
+  // for non-core jobs
+  if (hourly) {
+    const salary = `${hourly?.["min"]}-${hourly?.["max"]}/h`;
+
+    return `
+    <div class="jobs_salary">
+      <div>Pay: <span class="job_salary-bold">$${salary}</span></div>
+    </div>
+    `;
+  }
+
+  return;
+}
+
+function jobTag(tag) {
+  const config = {
+    "Core team": {
+      className: "is-core",
+      text: "This opening is for the micro1 core team as a full time employee",
+    },
+    "Extended team": {
+      className: "is-extended",
+      text: "As a contractor working with the micro1 core team closely",
+    },
+  };
+  let html;
+
+  html = `<div dataset-popover="wrapper" class="jobs_tag_wrap">
+    <div dataset-popover="target" class="jobs_tag ${config[tag]?.className}">
+      ${tag}
+    </div>
+    <div dataset-popover="item" class="popover_item">
+      ${config[tag]?.text}
+    </div>
+  </div>`;
+
+  return html;
+}
+
+function initPopover() {
+  const jobList = document.querySelector(".jobs_list");
+
+  const isMobile = window.matchMedia("(max-width: 991px)").matches;
+
+  if (isMobile) {
+    jobList.addEventListener("click", (e) => {
+      const target = e.target.closest("[dataset-popover='target']");
+      if (target) {
+        e.preventDefault();
+        const wrapper = target.closest("[dataset-popover='wrapper']");
+
+        wrapper?.classList.toggle("show-popover");
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      const target = e.target.closest("[dataset-popover='target']");
+      if (!target) {
+        const opens = document.querySelectorAll(".show-popover");
+        opens.forEach((el) => el.classList.remove("show-popover"));
+      }
+    });
+  } else {
+    jobList.addEventListener("mouseover", (e) => {
+      const target = e.target.closest("[dataset-popover='target']");
+      if (target) {
+        const wrapper = target.closest("[dataset-popover='wrapper']");
+        wrapper?.classList.add("show-popover");
+      }
+    });
+    jobList.addEventListener("mouseout", (e) => {
+      const target = e.target.closest("[dataset-popover='target']");
+      if (target) {
+        const wrapper = target.closest("[dataset-popover='wrapper']");
+        wrapper?.classList.remove("show-popover");
+      }
+    });
+  }
+}
+
+function initSearch() {
+  state.els.formSearch.addEventListener("submit", (e) => {
+    e.preventDefault();
+  });
+
+  state.els.inputSearch.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+
+      if (state.els.inputSearch.value === "" && state.keyword === "") {
+        return;
+      }
+
+      state.keyword = state.els.inputSearch.value;
+
+      updateJobs();
+    }
+  });
+
+  state.els.btnSearchSubmit.addEventListener("click", (e) => {
+    e.preventDefault();
+
+    if (state.els.inputSearch.value === "" && state.keyword === "") {
+      return;
+    }
+
+    state.keyword = state.els.inputSearch.value;
+
+    updateJobs();
+  });
+}
+
+function clearSearch() {
+  state.els.inputSearch.value = "";
+
+  state.keyword = "";
+}
+
+function listenerClearFilters() {
+  const resetFiltersEls = document.querySelectorAll(
+    ".jobs_result-clear, .job_result-0-clear",
+  );
+
+  resetFiltersEls.forEach((el) =>
+    el.addEventListener("click", () => {
+      clearSearch();
+      updateJobs();
+    }),
+  );
+}
+
+function setUTM() {
+  let { cusRef, portalParams } = customTrackData;
+  let finalString = portalParams;
+
+  if (!finalString.includes("utm_source") && cusRef) {
+    if (cusRef.includes("google")) cusRef = "google";
+
+    finalString = finalString + `&utm_source=${cusRef}`;
+  }
+
+  state.trackingString = finalString;
+}
+
+function formatLink(href, queryString = state.trackingString) {
+  if (!href) return "";
+  const base = href.split("?")[0];
+  return queryString ? `${base}?${queryString}` : base;
+}
