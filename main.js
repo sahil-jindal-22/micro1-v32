@@ -1235,16 +1235,23 @@ const initForm = {
           return true;
         }
       };
-      const validateEmail = async (email) => {
-        return (
-          String(email)
-            .toLowerCase()
-            .match(
-              /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-            ) &&
-          !utilities.freeDomains.includes(email.split("@")[1].toLowerCase()) &&
-          (await validateEmailAPI(email))
-        );
+      const validateEmail = async (email, allowFreeEmails = false) => {
+        const isValidFormat = String(email)
+          .toLowerCase()
+          .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          );
+
+        if (!isValidFormat) return false;
+
+        if (
+          !allowFreeEmails &&
+          utilities.freeDomains.includes(email.split("@")[1].toLowerCase())
+        ) {
+          return false;
+        }
+
+        return await validateEmailAPI(email);
       };
 
       // init progress bar
@@ -1406,11 +1413,17 @@ const initForm = {
 
               break;
             } else if (allInputFields[i].type === "email") {
-              if (!(await validateEmail(allInputFields[i].value))) {
+              const allowFreeEmails = allInputFields[i].hasAttribute(
+                "data-allow-free-emails",
+              );
+              if (
+                !(await validateEmail(allInputFields[i].value, allowFreeEmails))
+              ) {
                 allInputFields[i].style.borderColor = "#f86567";
                 allInputFields[i].focus();
-                errorText =
-                  "Please enter a valid business email address. This form is for business inquiries only.";
+                errorText = allowFreeEmails
+                  ? "Please enter a valid email address."
+                  : "Please enter a valid business email address. This form is for business inquiries only.";
                 result = false;
               } else {
                 errorText = "Please enter your contact details.";
