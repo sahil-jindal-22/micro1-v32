@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<!--
+  Icon assets:
+  ChatGPT: https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a32a6a0caaea5723289e6d3_chatgpt.png
+  Claude: https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a32a69e9a9fcc1eb53a1e2f_claude.png
+  Gemini: https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a32a69cd1d9a98fefd9e19a_gemini.png
+-->
+<html lang="en">
+    <head> 
+        <link rel="stylesheet" href="main.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Medical</title>
+    </head>
+  <body>
+    <div class="tablet-component comparison-table" aria-label="Model comparison deltas table">
+        <div class="table-scroll">
+          <table>
+            <colgroup>
+              <col class="comparison-col" />
+              <col class="delta-col" />
+              <col class="delta-col" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Comparison</th>
+                <th>Mean &#916;</th>
+                <th>Median &#916;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Comparison">Opus 4.8 vs. GPT-5.5</td>
+                <td data-label="Mean &#916;">+6.3 pts</td>
+                <td data-label="Median &#916;">+7.0 pts</td>
+              </tr>
+              <tr>
+                <td data-label="Comparison">Opus 4.8 vs. Gemini 3.5 Flash</td>
+                <td data-label="Mean &#916;">+6.9 pts</td>
+                <td data-label="Median &#916;">+6.8 pts</td>
+              </tr>
+              <tr>
+                <td data-label="Comparison">GPT-5.5 vs. Gemini 3.5 Flash</td>
+                <td data-label="Mean &#916;">+0.6 pts</td>
+                <td data-label="Median &#916;">+1.2 pts</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    <div class="tablet-component task-anchor-table" aria-label="Task anchor misses table">
+        <div class="table-scroll">
+          <table>
+            <colgroup>
+              <col class="task-col" />
+              <col class="metric-col" />
+              <col class="metric-col" />
+              <col class="metric-col" />
+              <col class="anchor-col" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Mean reward</th>
+                <th>Strongest</th>
+                <th>Weakest</th>
+                <th>Anchor most often missed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Task">report_2605363</td>
+                <td data-label="Mean reward">51.9%</td>
+                <td data-label="Strongest">GPT-5.5</td>
+                <td data-label="Weakest">Gemini</td>
+                <td data-label="Anchor most often missed">
+                  Don&rsquo;t assign an overall stage from a nodal-only breast
+                  specimen
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605346</td>
+                <td data-label="Mean reward">51.9%</td>
+                <td data-label="Strongest">Gemini</td>
+                <td data-label="Weakest">GPT-5.5</td>
+                <td data-label="Anchor most often missed">
+                  Don&rsquo;t assign nodal status / nodal stage from these
+                  specimens
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605264</td>
+                <td data-label="Mean reward">57.9%</td>
+                <td data-label="Strongest">Opus</td>
+                <td data-label="Weakest">GPT-5.5</td>
+                <td data-label="Anchor most often missed">
+                  Don&rsquo;t recommend thyroidectomy for a Bethesda V nodule
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605374</td>
+                <td data-label="Mean reward">60.4%</td>
+                <td data-label="Strongest">GPT-5.5</td>
+                <td data-label="Weakest">Gemini</td>
+                <td data-label="Anchor most often missed">
+                  Don&rsquo;t assign pT/pN stage from a biopsy specimen
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605240</td>
+                <td data-label="Mean reward">61.6%</td>
+                <td data-label="Strongest">GPT-5.5</td>
+                <td data-label="Weakest">Gemini</td>
+                <td data-label="Anchor most often missed">
+                  State Bethesda II malignancy risk as below 3%; hold the
+                  category
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605331</td>
+                <td data-label="Mean reward">64.5%</td>
+                <td data-label="Strongest">Opus</td>
+                <td data-label="Weakest">GPT-5.5</td>
+                <td data-label="Anchor most often missed">
+                  Report the full 300-cell myelogram differential as stated
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605366</td>
+                <td data-label="Mean reward">65.6%</td>
+                <td data-label="Strongest">Opus</td>
+                <td data-label="Weakest">Gemini</td>
+                <td data-label="Anchor most often missed">
+                  Retain the report&rsquo;s &ldquo;favoured over&rdquo; qualifier;
+                  don&rsquo;t exclude SCC
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605191</td>
+                <td data-label="Mean reward">66.2%</td>
+                <td data-label="Strongest">GPT-5.5</td>
+                <td data-label="Weakest">Gemini</td>
+                <td data-label="Anchor most often missed">
+                  p53 wild-type does not indicate MMR deficiency / Lynch risk
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    <div class="tablet-component task-anchor-table" aria-label="Top penalty tasks table">
+        <div class="table-scroll">
+          <table>
+            <colgroup>
+              <col class="task-col" />
+              <col class="metric-col" />
+              <col class="metric-col" />
+              <col class="metric-col" />
+              <col class="anchor-col" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Mean reward</th>
+                <th>Strongest</th>
+                <th>Weakest</th>
+                <th>Anchor most often missed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Task">report_33_MDS</td>
+                <td data-label="Mean reward">31.0 pts</td>
+                <td data-label="Strongest">Opus</td>
+                <td data-label="Weakest">GPT-5.5</td>
+                <td data-label="Anchor most often missed">
+                  Preserving the hypoplastic-MDS vs. aplastic-anemia differential
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605236</td>
+                <td data-label="Mean reward">30.8 pts</td>
+                <td data-label="Strongest">Opus</td>
+                <td data-label="Weakest">GPT-5.5</td>
+                <td data-label="Anchor most often missed">
+                  Stating the R0/R1 margin limit and exact anchors explicitly
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605510</td>
+                <td data-label="Mean reward">29.9 pts</td>
+                <td data-label="Strongest">Opus</td>
+                <td data-label="Weakest">GPT-5.5</td>
+                <td data-label="Anchor most often missed">
+                  Naming the pT1b-vs-pT3a stage discordance, not just flagging it
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605363</td>
+                <td data-label="Mean reward">29.8 pts</td>
+                <td data-label="Strongest">GPT-5.5</td>
+                <td data-label="Weakest">Gemini</td>
+                <td data-label="Anchor most often missed">
+                  Not inferring stage / receptor status from nodal disease alone
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605240</td>
+                <td data-label="Mean reward">29.0 pts</td>
+                <td data-label="Strongest">GPT-5.5</td>
+                <td data-label="Weakest">Gemini</td>
+                <td data-label="Anchor most often missed">
+                  Holding Bethesda II vs. escalating to repeat sampling / molecular
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Task">report_2605351</td>
+                <td data-label="Mean reward">23.0 pts</td>
+                <td data-label="Strongest">Gemini</td>
+                <td data-label="Weakest">GPT-5.5</td>
+                <td data-label="Anchor most often missed">
+                  Accepting the reported OLGA stage vs. recomputing and drifting
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    <div class="tablet-component failure-mode-table" aria-label="Failure modes table">
+        <div class="table-scroll">
+          <table>
+            <colgroup>
+              <col class="failure-col" />
+              <col class="share-col" />
+              <col class="definition-col" />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Failure mode</th>
+                <th>Share of failed criteria</th>
+                <th>One-line definition</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td data-label="Failure mode">Clinical over-reach</td>
+                <td data-label="Share of failed criteria">&#8776;28%</td>
+                <td data-label="One-line definition">
+                  Adds a treatment, surgery, drug, or surveillance interval the
+                  report does not call for
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Failure mode">Quantitative exactness</td>
+                <td data-label="Share of failed criteria">&#8776;18%</td>
+                <td data-label="One-line definition">
+                  Right idea, wrong form: misses the exact number, unit,
+                  threshold, or stage the rubric evaluation criterion
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Failure mode">Unsupported inference</td>
+                <td data-label="Share of failed criteria">&#8776;15%</td>
+                <td data-label="One-line definition">
+                  Infers a stage, biomarker, or subtype the specimen cannot
+                  support
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Failure mode">Collapsed uncertainty</td>
+                <td data-label="Share of failed criteria">&#8776;11%</td>
+                <td data-label="One-line definition">
+                  Resolves a differential or caveat the report deliberately left
+                  open
+                </td>
+              </tr>
+              <tr>
+                <td data-label="Failure mode">Cross-report reconciliation</td>
+                <td data-label="Share of failed criteria">&mdash;</td>
+                <td data-label="One-line definition">
+                  Lists multi-modality findings without saying which dominates the
+                  interpretation
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    <div class="example-callout" aria-label="Worked example callout">
+      <div class="example-content">
+        <p class="example-title">
+          <span class="example-kicker">EXAMPLE</span>
+          <span class="example-dot">&middot;</span>
+          <span>report_2605306 &mdash; mapped upper-GI biopsy, H. pylori gastritis</span>
+        </p>
+
+        <p>
+          <span class="label">Prompt context: </span>
+          <span class="muted">
+            Produce a site-by-site diagnostic summary for a three-site upper-GI
+            biopsy: esophagogastric junction (non-dysplastic Barrett&rsquo;s),
+            gastric body, and antrum/incisura. The antral site shows active
+            chronic gastritis with scarce H. pylori on Giemsa. The task asks for
+            an interpretation of the tissue findings, not a treatment plan.
+          </span>
+        </p>
+
+        <p>
+          <span class="label">Rubric criterion: </span>
+          <span class="muted">
+            Does not recommend a specific H. pylori eradication regimen,
+            antibiotic, or drug by name.
+          </span>
+        </p>
+
+        <p>
+          <span class="label">Model response: </span>
+          <span class="muted">
+            GPT-5.5 run (reward 62%): recommended a &ldquo;14-day bismuth
+            quadruple therapy&rdquo; and named the component drugs &mdash;
+            bismuth, tetracycline, and metronidazole, plus a proton-pump
+            inhibitor.
+          </span>
+        </p>
+
+        <p class="verdict">
+          <span class="label">Verdict: </span>
+          <span class="failed">Failed</span>
+        </p>
+
+        <p>
+          <span class="label">Judge&rsquo;s justification: </span>
+          <span class="muted">
+            The response recommends a specific H. pylori eradication regimen by
+            name (14-day bismuth quadruple therapy) and lists the component
+            antibiotics &mdash; management the report neither contains nor
+            requests.
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="example-callout" aria-label="Worked example callout 2">
+      <div class="example-content">
+        <p class="example-title">
+          <span class="example-kicker">EXAMPLE</span>
+          <span class="example-dot">&middot;</span>
+          <span>report_2605363 &mdash; right axillary (nodal-only) breast specimen</span>
+        </p>
+
+        <p>
+          <span class="label">Prompt context: </span>
+          <span class="muted">
+            Interpret a right axillary dissection in the post-neoadjuvant setting.
+            No primary breast tumor specimen is included, and ER/PR/HER2 are not
+            reported on this material.
+          </span>
+        </p>
+
+        <p>
+          <span class="label">Rubric criterion: </span>
+          <span class="muted">
+            Does not invent or infer ER, PR, or HER2 results from nuclear grade,
+            clinical context, or any source other than the prior diagnostic report.
+          </span>
+        </p>
+
+        <p>
+          <span class="label">Model response: </span>
+          <span class="muted">
+            Gemini 3.5 Flash run (reward 35%): stated the case is &ldquo;most likely
+            TNBC [ER-/PR-/HER2-] or HER2-enriched [HER2+]&rdquo; based on high
+            nuclear grade and lack of treatment response, and named adjuvant
+            pembrolizumab, T-DM1, and trastuzumab deruxtecan.
+          </span>
+        </p>
+
+        <p class="verdict">
+          <span class="label">Verdict: </span>
+          <span class="failed">Failed</span>
+        </p>
+
+        <p>
+          <span class="label">Judge&rsquo;s justification: </span>
+          <span class="muted">
+            The response explicitly infers biomarker status from non-diagnostic
+            features and recommends specific systemic therapy &mdash; two distinct
+            unsupported additions on a specimen that cannot carry them.
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="example-callout" aria-label="Worked example callout 3">
+      <div class="example-content">
+        <p class="example-title">
+          <span class="example-kicker">EXAMPLE</span>
+          <span class="example-dot">&middot;</span>
+          <span>report_33_MDS &mdash; multi-report bone marrow (myelogram + flow + biopsy + karyotype)</span>
+        </p>
+
+        <p>
+          <span class="label">Prompt context: </span>
+          <span class="muted">
+            Integrate a four-modality marrow workup in a 79-year-old with
+            suspected MDS. The core biopsy is markedly hypocellular; the
+            differential between hypoplastic MDS and aplastic anemia is not
+            resolvable on morphology alone.
+          </span>
+        </p>
+
+        <p>
+          <span class="label">Rubric criterion: </span>
+          <span class="muted">
+            Does not present the final diagnosis of hypoplastic myelodysplastic
+            neoplasm as fully established without acknowledging the unresolved
+            differential with aplastic anemia.
+          </span>
+        </p>
+
+        <p>
+          <span class="label">Model response: </span>
+          <span class="muted">
+            GPT-5.5 run (reward 50%): presented hypoplastic MDS as
+            supported/confirmed and did not acknowledge the unresolved
+            differential with aplastic anemia.
+          </span>
+        </p>
+
+        <p class="verdict">
+          <span class="label">Verdict: </span>
+          <span class="failed">Failed</span>
+        </p>
+
+        <p>
+          <span class="label">Judge&rsquo;s justification: </span>
+          <span class="muted">
+            The response presents the diagnosis as established and omits the
+            aplastic-anemia differential that the hypocellular pattern raises and
+            that cannot be excluded on morphology alone.
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="model-score-chips" aria-label="Model score chips">
+      <div class="score-chip">
+        <div class="chip-icon model-logo logo-claude" aria-hidden="true"></div>
+        <span class="chip-label">Claude Opus&nbsp;&nbsp;4.8:</span>
+        <span class="chip-value chip-value-good">82.6%</span>
+      </div>
+
+      <div class="score-chip">
+        <div class="chip-icon model-logo logo-chatgpt" aria-hidden="true"></div>
+        <span class="chip-label">GPT-5.5:</span>
+        <span class="chip-value chip-value-warn">54.9%</span>
+      </div>
+
+      <div class="score-chip">
+        <div class="chip-icon model-logo logo-gemini" aria-hidden="true"></div>
+        <span class="chip-label">Gemini 3.5 Flash:</span>
+        <span class="chip-value chip-value-warn">62.5%</span>
+      </div>
+    </div>
+
+    <div class="tablet-component trace-table" aria-label="Trace outcomes table">
+      <div class="table-scroll">
+        <table>
+          <colgroup>
+            <col class="trace-col">
+            <col class="reward-col">
+            <col class="happened-col">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Trace</th>
+              <th>Reward</th>
+              <th>What happened</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="trace-model">
+                  <div class="trace-model-icon model-logo logo-chatgpt" aria-hidden="true"></div>
+                  <span>GPT-5.5</span>
+                </div>
+              </td>
+              <td><span class="reward-bad">50%</span></td>
+              <td>
+                <p class="trace-muted">5 steps, 4 tool calls - extract, draft, done.</p>
+                <p>
+                  <span class="trace-anchor-label">Anchor</span>: Does not present
+                  hypoplastic MDS as fully established without acknowledging the
+                  aplastic-anemia differential. -&gt;
+                  <span class="trace-failed">FAILED</span>. Presented the diagnosis
+                  as confirmed; omitted the aplastic-anemia differential the
+                  hypocellular pattern raises.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="trace-model">
+                  <div class="trace-model-icon model-logo logo-claude" aria-hidden="true"></div>
+                  <span>Opus 4.8</span>
+                </div>
+              </td>
+              <td><span class="reward-good">92%</span></td>
+              <td>
+                <p class="trace-muted">5 steps, 4 tool calls - extract, plan, write.</p>
+                <p>
+                  <span class="trace-anchor-label">Anchor</span>: Same anchor. -&gt;
+                  <span class="trace-satisfied">SATISFIED</span>. Framed the
+                  core-aspirate discordance as a substrate problem, kept the
+                  aplastic-anemia differential and the missing PNH-clone test in
+                  view.
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="methodology-callout" aria-label="Methodology note">
+      <div class="methodology-content">
+        <p class="methodology-title">Methodology note</p>
+        <p class="methodology-text">
+          A dataset of expert-authored pathology tasks &middot; 3 models (Opus 4.8,
+          GPT-5.5, Gemini 3.5 Flash) &middot; 3 rollouts each. Reports de-identified.
+          Agents run on a generic shell + file + web-search toolkit; answers graded
+          by an LLM judge against weighted expert rubrics. Failure-mode frequencies
+          computed over 203 failed criteria in the trajectory set; full per-task
+          traces are inspectable in the interactive Trajectory Reader. Reward =
+          earned positive weight / total positive weight, clamped to [0, 1].
+        </p>
+      </div>
+    </div>
+
+    <div class="model-score-chips" aria-label="Model score chips 2">
+      <div class="score-chip">
+        <div class="chip-icon model-logo logo-claude" aria-hidden="true"></div>
+        <span class="chip-label">Claude Opus&nbsp;&nbsp;4.8:</span>
+        <span class="chip-value chip-value-good">93.1%</span>
+      </div>
+
+      <div class="score-chip">
+        <div class="chip-icon model-logo logo-chatgpt" aria-hidden="true"></div>
+        <span class="chip-label">GPT-5.5:</span>
+        <span class="chip-value chip-value-warn">63.2%</span>
+      </div>
+
+      <div class="score-chip">
+        <div class="chip-icon model-logo logo-gemini" aria-hidden="true"></div>
+        <span class="chip-label">Gemini 3.5 Flash:</span>
+        <span class="chip-value chip-value-good">88.7%</span>
+      </div>
+    </div>
+
+    <div class="tablet-component trace-table" aria-label="Trace outcomes table 2">
+      <div class="table-scroll">
+        <table>
+          <colgroup>
+            <col class="trace-col">
+            <col class="reward-col">
+            <col class="happened-col">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>Trace</th>
+              <th>Reward</th>
+              <th>What happened</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="trace-model">
+                  <div class="trace-model-icon model-logo logo-chatgpt" aria-hidden="true"></div>
+                  <span>GPT-5.5</span>
+                </div>
+              </td>
+              <td><span class="reward-bad">56%</span></td>
+              <td>
+                <p class="trace-muted">5 steps, 4 tool calls.</p>
+                <p>
+                  <span class="trace-anchor-label">Anchor</span>: States that
+                  perirenal fat involvement corresponds to pT3a under AJCC 8th
+                  edition and that the reported pT1b is therefore internally
+                  discordant. -&gt; <span class="trace-failed">FAILED</span>.
+                  Flagged pT1b &ldquo;for review&rdquo; but never named the pT3a
+                  criterion or stated the stage is internally discordant.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="trace-model">
+                  <div class="trace-model-icon model-logo logo-claude" aria-hidden="true"></div>
+                  <span>Opus 4.8</span>
+                </div>
+              </td>
+              <td><span class="reward-good">94%</span></td>
+              <td>
+                <p class="trace-muted">3 steps, 2 tool calls.</p>
+                <p>
+                  <span class="trace-anchor-label">Anchor</span>: Same anchor.
+                  -&gt; <span class="trace-satisfied">SATISFIED</span>. Stated
+                  explicitly that perinephric fat invasion defines pT3a per AJCC
+                  8th edition, making the reported pT1b internally inconsistent,
+                  and flagged it for reconciliation before sign-out.
+                </p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="model-score-chips" aria-label="Model score chips 3">
+      <div class="score-chip">
+        <div class="chip-icon model-logo logo-claude" aria-hidden="true"></div>
+        <span class="chip-label">Claude Opus&nbsp;&nbsp;4.8:</span>
+        <span class="chip-value chip-value-warn">69.0%</span>
+      </div>
+
+      <div class="score-chip">
+        <div class="chip-icon model-logo logo-chatgpt" aria-hidden="true"></div>
+        <span class="chip-label">GPT-5.5:</span>
+        <span class="chip-value chip-value-good">72.4%</span>
+      </div>
+
+      <div class="score-chip">
+        <div class="chip-icon model-logo logo-gemini" aria-hidden="true"></div>
+        <span class="chip-label">Gemini 3.5 Flash:</span>
+        <span class="chip-value chip-value-bad">43.3%</span>
+      </div>
+    </div>
+
+    <div class="tablet-component trace-table" aria-label="Trace outcomes table">
+        <div class="table-scroll">
+          <table>
+            <colgroup>
+              <col class="trace-col">
+              <col class="reward-col">
+              <col class="happened-col">
+            </colgroup>
+            <thead>
+              <tr>
+                <th>Trace</th>
+                <th>Reward</th>
+                <th>What happened</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="trace-model">
+                    <div class="trace-model-icon model-logo logo-gemini" aria-hidden="true"></div>
+                    <span>Gemini-3.5 Flash</span>
+                  </div>
+                </td>
+                <td><span class="reward-bad">39%</span></td>
+                <td>
+                  <p class="trace-muted">11 steps, 10 tool calls - repeated planning loops.</p>
+                  <p>
+                    <span class="trace-anchor-label">Anchor</span>: Maintains the
+                    Bethesda Category II designation and does not reclassify based on
+                    independent morphological reassessment. -> 
+                    <span class="trace-failed">FAILED</span>. Began at Bethesda II, then
+                    independently reassessed the specimen as borderline-inadequate and
+                    recommended reclassification to Bethesda I plus repeat sampling and
+                    molecular testing.
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="trace-model">
+                    <div class="trace-model-icon model-logo logo-claude" aria-hidden="true"></div>
+                    <span>Opus 4.8</span>
+                  </div>
+                </td>
+                <td><span class="reward-good">79%</span></td>
+                <td>
+                  <p class="trace-muted">3 steps, 2 tool calls.</p>
+                  <p>
+                    <span class="trace-anchor-label">Anchor</span>: Same anchor. -> 
+                    <span class="trace-satisfied">SATISFIED</span>. Concurred with Bethesda II,
+                    documented the cytomorphologic basis, and did not escalate.
+                  </p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+  </body>
+</html>

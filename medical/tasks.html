@@ -1,0 +1,3076 @@
+<!--
+  Icon assets:
+  ChatGPT: https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819240d55b37ecbdafa28_chatgpt-sq.png
+  Claude: https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819241e1c5a2dafd412b0_claude-sq.png
+  Gemini: https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a381924274bb2917b95d565_gemini-sq.png
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benchmark Report</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    
+    .widget4 {
+      --bg: #121212;
+      --border: rgba(255, 255, 255, 0.1);
+      --border-soft: rgba(255, 255, 255, 0.06);
+      --card: rgba(255, 255, 255, 0.03);
+      --card-soft: rgba(255, 255, 255, 0.01);
+      --text-main: rgba(255, 255, 255, 0.9);
+      --text-mid: rgba(255, 255, 255, 0.8);
+      --text-dim: rgba(255, 255, 255, 0.6);
+      --text-faint: rgba(255, 255, 255, 0.4);
+      --chip: rgba(255, 255, 255, 0.03);
+      --chip-border: rgba(255, 255, 255, 0.1);
+      --gold: rgba(236, 191, 44, 0.8);
+      --neutral-a: rgba(158, 158, 158, 0.97);
+      --neutral-b: rgba(240, 240, 240, 0.97);
+      --opus-a: #d87857;
+      --opus-b: #ea8f71;
+      --gem-a: #322f77;
+      --gem-b: #8073fd;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: "Outfit", system-ui, -apple-system, sans-serif;
+      padding: 28px 24px 40px;
+      position: relative;
+    }
+
+    .widget4 * {
+      box-sizing: border-box;
+    }
+
+    .widget4 p {
+      margin: 0;
+    }
+
+    .widget4 .w4-page {
+      width: min(100%, 815px);
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .widget4 .w4-intro {
+      display: grid;
+      gap: 18px;
+    }
+
+    .widget4 .w4-intro p {
+      color: var(--text-dim);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .widget4 .w4-input-wrap {
+      display: grid;
+      gap: 4px;
+      position: relative;
+    }
+
+    .widget4 .w4-input {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-dim);
+      font-size: 13px;
+      line-height: 20px;
+      width: 100%;
+      cursor: pointer;
+      transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+    }
+
+    .widget4 .w4-input:hover,
+    .widget4 .w4-input:focus-visible,
+    .widget4 .w4-input-wrap.open .w4-input {
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 255, 255, 0.24);
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .widget4 .w4-input .chevron {
+      width: 16px;
+      height: 16px;
+      opacity: 0.8;
+      transition: transform 180ms ease;
+    }
+
+    .widget4 .w4-input-wrap.open .chevron {
+      transform: rotate(180deg);
+    }
+
+    .widget4 .w4-dropdown-menu {
+      display: none;
+      border: 1px solid var(--border);
+      background: rgba(15, 15, 15, 0.98);
+      overflow: hidden;
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      z-index: 20;
+    }
+
+    .widget4 .w4-input-wrap.open .w4-dropdown-menu {
+      display: block;
+    }
+
+    .widget4 .w4-dropdown-item {
+      width: 100%;
+      text-align: left;
+      border: 0;
+      background: transparent;
+      color: var(--text-dim);
+      font-family: inherit;
+      font-size: 13px;
+      line-height: 20px;
+      padding: 10px 12px;
+      cursor: pointer;
+    }
+
+    .widget4 .w4-dropdown-item:hover,
+    .widget4 .w4-dropdown-item:focus-visible {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .widget4 .w4-dropdown-item.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-main);
+    }
+
+    .widget4 .w4-content {
+      display: grid;
+      gap: 30px;
+    }
+
+    .widget4 .w4-task-selector {
+      display: none;
+    }
+
+    .widget4 .w4-task-selector.visible {
+      display: grid;
+      gap: 4px;
+    }
+
+    .widget4 .w4-tabs {
+      display: inline-flex;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 4px;
+      width: fit-content;
+    }
+
+    .widget4 .w4-tab {
+      padding: 10px 22px;
+      color: var(--text-faint);
+      font-size: 14px;
+      line-height: 1;
+      white-space: nowrap;
+      border: 0;
+      background: transparent;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background-color 140ms ease, color 140ms ease;
+    }
+
+    .widget4 .w4-tab:not(.active):hover,
+    .widget4 .w4-tab:not(.active):focus-visible {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-mid);
+      outline: none;
+    }
+
+    .widget4 .w4-tab.active {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--text-mid);
+    }
+
+    .widget4 .w4-panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 25px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .widget4 .metric {
+      display: grid;
+      gap: 5px;
+    }
+
+    .widget4 .metric-head {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-mid);
+      font-size: 11px;
+      line-height: 1;
+    }
+
+    .widget4 .metric-bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .widget4 .logo {
+      width: 28px;
+      height: 28px;
+      padding: 2.157px;
+      background: rgba(255, 255, 255, 0.2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .widget4 .metric-logo {
+      border: 0;
+    }
+
+    .widget4 .metric-logo-inner {
+      width: 23.726px;
+      height: 23.726px;
+      display: block;
+    }
+
+
+    .widget4 .track {
+      flex: 1;
+      display: block;
+      height: 28px;
+      border: 0;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px;
+      overflow: hidden;
+    }
+
+    .widget4 .fill {
+      display: block;
+      height: 100%;
+      border: 0.864px solid rgba(255, 255, 255, 0.24);
+      min-width: 8px;
+    }
+
+    .widget4 .fill.gpt {
+      width: 78.5%;
+      background: linear-gradient(90deg, var(--neutral-a), var(--neutral-b));
+    }
+
+    .widget4 .fill.opus {
+      width: 77.5%;
+      background: linear-gradient(90deg, var(--opus-a), var(--opus-b));
+    }
+
+    .widget4 .fill.gem {
+      width: 65.2%;
+      background: linear-gradient(90deg, var(--gem-a), var(--gem-b));
+      border-color: #474179;
+    }
+
+    .widget4 h2 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    .widget4 .w4-cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .widget4 .w4-card {
+      background: var(--card-soft);
+    border: 1px solid var(--border);
+    padding: 22px;
+    display: flex;
+    gap: 6px;
+    flex-direction: column;
+    }
+
+    .widget4 .w4-card h3 {
+      margin: 0;
+      color: var(--text-main);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    .widget4 .w4-card p {
+      color: var(--text-dim);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .widget4 #overview-view {
+      display: grid;
+      gap: 24px;
+    }
+
+    .widget4 #overview-view .overview-section {
+      display: grid;
+      gap: 32px;
+      padding-block: 4px;
+      margin-top: 40px;
+    }
+
+    .widget4 #overview-view .overview-section-subtitle {
+      color: var(--text-dim);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .widget4 #overview-view .overview-subheading {
+      display: grid;
+      gap: 2px;
+    }
+
+    .widget4 #overview-view .overview-subheading h4 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.6;
+      color: var(--text-mid);
+    }
+
+    .widget4 #overview-view .overview-subheading p {
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--text-dim);
+    }
+
+    .widget4 table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .widget4 th,
+    .widget4 td {
+      border: 1px solid var(--border-soft);
+      padding: 8px 12px;
+      text-align: left;
+      vertical-align: middle;
+      color: var(--text-dim);
+      background: var(--card-soft);
+    }
+
+    .widget4 th {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: 400;
+    }
+
+    .widget4 .comparison {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .widget4 .model-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .widget4 .mini-logo {
+      width: 19px;
+      height: 19px;
+      border-radius: 2px;
+      display: inline-block;
+      object-fit: cover;
+      flex: 0 0 auto;
+    }
+
+    .widget4 .lower-stack {
+      display: grid;
+      gap: 20px;
+      padding-bottom: 12px;
+    }
+
+    .widget4 .w4-sample {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 19px 25px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .widget4 .task-meta {
+      display: grid;
+      gap: 1px;
+    }
+
+    .widget4 .task-meta .label {
+      color: var(--text-dim);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .widget4 .task-meta .value {
+      color: var(--text-mid);
+      font-size: 20px;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    .widget4 .w4-sample p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--text-dim);
+    }
+
+    .widget4 .w4-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+    }
+
+    .widget4 .w4-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: var(--chip);
+      border: 1px solid var(--chip-border);
+      font-size: 13px;
+      line-height: 1;
+      color: var(--text-faint);
+    }
+
+    .widget4 .w4-chip strong {
+      font-weight: 400;
+      color: rgba(235, 235, 244, 0.9);
+    }
+
+    .widget4 .w4-chip .gold {
+      color: var(--gold);
+    }
+
+    .widget4 .w4-chip .small-logo {
+      width: 13px;
+      height: 13px;
+      border-radius: 1.4px;
+      object-fit: cover;
+    }
+
+
+
+
+    .widget4 .model-logo {
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .widget4 .logo-claude {
+      background-image: url("https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819241e1c5a2dafd412b0_claude-sq.png");
+    }
+
+    .widget4 .logo-chatgpt {
+      background-image: url("https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819240d55b37ecbdafa28_chatgpt-sq.png");
+    }
+
+    .widget4 .logo-gemini {
+      background-image: url("https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a381924274bb2917b95d565_gemini-sq.png");
+    }
+
+
+
+
+
+    .widget4 .trace-logo {
+      width: 25px;
+      height: 25px;
+      border-radius: 2px;
+    }
+
+
+
+
+
+    .widget4 #overview-view .overview-section-group {
+      display: grid;
+      gap: 12px;
+    }
+
+    .widget4 .task-tab-view {
+      display: none;
+    }
+
+    .widget4 .task-tab-view.visible {
+      display: grid;
+      gap: 20px;
+    }
+
+
+
+
+
+
+    .widget4 .prompt-tab-layout {
+      display: none;
+      gap: 20px;
+    }
+
+    .widget4 .prompt-tab-layout.visible {
+      display: grid;
+    }
+
+    .widget4 .prompt-tab-filter {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      overflow: hidden;
+      display: inline-flex;
+      width: fit-content;
+      text-decoration: none;
+      transition: border-color 160ms ease, background-color 160ms ease;
+    }
+
+    .widget4 .prompt-filter-label {
+      height: 38px;
+      padding: 7px 12px;
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.2;
+      transition: background-color 160ms ease;
+    }
+
+    .widget4 .prompt-filter-action {
+      width: 38px;
+      height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.06);
+      transition: background-color 160ms ease;
+    }
+
+    .widget4 .prompt-filter-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.8);
+      transition: background-color 160ms ease;
+    }
+
+    .widget4 .prompt-filter-icon svg {
+      width: 13.207px;
+      height: 13.207px;
+      display: block;
+    }
+
+    .widget4 .prompt-tab-filter.disabled {
+      opacity: 0.65;
+      pointer-events: none;
+    }
+
+    .widget4 .prompt-tab-filter:not(.disabled):hover,
+    .widget4 .prompt-tab-filter:not(.disabled):focus-visible {
+      border-color: rgba(255, 255, 255, 0.32);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .widget4 .prompt-tab-filter:not(.disabled):hover .prompt-filter-label,
+    .widget4 .prompt-tab-filter:not(.disabled):focus-visible .prompt-filter-label,
+    .widget4 .prompt-tab-filter:not(.disabled):hover .prompt-filter-action,
+    .widget4 .prompt-tab-filter:not(.disabled):focus-visible .prompt-filter-action {
+      background: rgba(255, 255, 255, 0.09);
+    }
+
+    .widget4 .prompt-tab-filter:not(.disabled):hover .prompt-filter-icon,
+    .widget4 .prompt-tab-filter:not(.disabled):focus-visible .prompt-filter-icon {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .widget4 .prompt-card {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 12px;
+      background: transparent;
+    }
+
+    .widget4 .prompt-content {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 14px 16px;
+    }
+
+    .widget4 .prompt-text {
+      margin: 0;
+      white-space: pre-wrap;
+      color: rgba(255, 255, 255, 0.6);
+      font-family: "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.5;
+    }
+
+    .widget4 .failure-tab-layout {
+      display: none;
+      gap: 39px;
+      padding-top: 25px;
+    }
+
+    .widget4 .failure-tab-layout.visible {
+      display: grid;
+    }
+
+    .widget4 .failure-table-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .widget4 .table-scroll-wrap {
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .widget4 .table-scroll-wrap table {
+      min-width: 640px;
+    }
+
+    .widget4 .table-shadow-shell {
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+
+    .widget4 .failure-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      min-width: 760px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .widget4 .failure-table th,
+    .widget4 .failure-table td {
+      border: 1px solid var(--border-soft);
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.01);
+      color: rgba(255, 255, 255, 0.9);
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    .widget4 .failure-table th {
+      background: rgba(255, 255, 255, 0.1);
+      font-weight: 400;
+    }
+
+    .widget4 .failure-table td.rank-cell {
+      color: var(--text-dim);
+    }
+
+    .widget4 .failure-model {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    .widget4 .failure-cell-main {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .widget4 .failure-cell-sub {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 11px;
+      line-height: 1.6;
+      margin-top: -1px;
+    }
+
+    .widget4 .failure-title {
+      margin: 0 0 12px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .widget4 .failure-modes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 19px;
+    }
+
+    .widget4 .failure-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 19px 25px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+      min-height: 206px;
+    }
+
+    .widget4 .failure-card-title {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+
+    .widget4 .failure-card-title .sep {
+      color: rgba(255, 255, 255, 0.2);
+      margin: 0 2px;
+    }
+
+    .widget4 .failure-card-desc {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .widget4 .failure-chip-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .widget4 .failure-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .widget4 .failure-chip-label {
+      color: rgba(255, 255, 255, 0.8);
+      white-space: nowrap;
+    }
+
+    .widget4 .score-good {
+      color: rgba(44, 236, 92, 0.8);
+    }
+
+    .widget4 .score-warn {
+      color: rgba(236, 191, 44, 0.8);
+    }
+
+    .widget4 .score-bad {
+      color: rgba(253, 120, 120, 0.8);
+    }
+
+    .widget4 .results-tab-layout {
+      display: none;
+      gap: 24px;
+    }
+
+    .widget4 .results-tab-layout.visible {
+      display: grid;
+    }
+
+    .widget4 .results-section-title {
+      margin: 0 0 12px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .widget4 .results-heatmap {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.01);
+      padding: 14px 12px 12px;
+      display: grid;
+      gap: 17px;
+    }
+
+    .widget4 .results-heatmap-title {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.9);
+      opacity: 0.6;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 400;
+    }
+
+    .widget4 .results-heatmap-grid {
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      position: relative;
+      max-width: 100%;
+    }
+
+    .widget4 .results-heatmap-head,
+    .widget4 .results-heatmap-row {
+      display: grid;
+      grid-template-columns: 80px minmax(0, 1fr) 60px 60px 105px;
+      gap: 24px;
+      align-items: center;
+      padding: 12px;
+    }
+
+    .widget4 .results-heatmap-head {
+      background: rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+      color: rgba(255, 255, 255, 0.9);
+      opacity: 0.6;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .widget4 .results-heatmap-row {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .widget4 .results-heatmap-row:last-child {
+      border-bottom: 0;
+    }
+
+    .widget4 .results-criterion-id {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .widget4 .results-criterion-weight {
+      color: rgba(255, 255, 255, 0.8);
+      opacity: 0.6;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .widget4 .results-criterion-desc {
+      color: rgba(255, 255, 255, 0.8);
+      opacity: 0.8;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .widget4 .results-score-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 51px;
+      padding: 2px 7px;
+      border: 1px solid;
+      border-radius: 3px;
+      font-size: 14px;
+      line-height: 1.3;
+      font-weight: 400;
+      justify-self: start;
+    }
+
+    .widget4 .results-score-badge.good {
+      background: rgba(49, 255, 111, 0.11);
+      border-color: rgba(177, 227, 185, 0.2);
+      color: rgba(127, 255, 159, 0.77);
+    }
+
+    .widget4 .results-score-badge.warn {
+      background: rgba(236, 191, 44, 0.11);
+      border-color: rgba(236, 191, 44, 0.2);
+      color: rgba(236, 191, 44, 0.77);
+    }
+
+    .widget4 .results-score-badge.bad {
+      background: rgba(255, 49, 49, 0.11);
+      border-color: rgba(227, 177, 177, 0.2);
+      color: rgba(255, 127, 127, 0.77);
+    }
+
+    .widget4 .results-run-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .widget4 .results-run-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 19px 16px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .widget4 .results-run-head {
+      display: grid;
+      gap: 9px;
+    }
+
+    .widget4 .results-run-top {
+      display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 9px;
+    }
+
+    .widget4 .results-run-model {
+      display: inline-flex;
+    align-items: flex-start;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.6;
+    margin: 0;
+    flex-direction: column;
+    justify-content: flex-start;
+    }
+
+    .widget4 .results-run-score {
+      padding: 4px 7px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 16px;
+      line-height: 1.2;
+      font-weight: 400;
+    }
+
+    .widget4 .results-run-meta {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .widget4 .results-run-points,
+    .widget4 .results-run-passfail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+    }
+
+    .widget4 .results-run-points {
+      grid-template-columns: 1fr;
+    }
+
+    .widget4 .results-run-cell {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 13px;
+      line-height: 1.6;
+      padding: 5px 9px;
+      text-align: center;
+    }
+
+    .widget4 .results-run-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 9px;
+      vertical-align: middle;
+    }
+
+    .widget4 .results-run-dot.pass {
+      background: rgba(49, 255, 111, 0.9);
+    }
+
+    .widget4 .results-run-dot.fail {
+      background: rgba(255, 127, 127, 0.9);
+    }
+
+    .widget4 .results-run-criteria {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px 9px;
+    }
+
+    .widget4 .results-criterion-chip {
+      border: 1px solid;
+      border-radius: 3px;
+      padding: 2px 4px;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .widget4 .results-criterion-chip.pass {
+      background: rgba(49, 255, 111, 0.07);
+      border-color: rgba(147, 248, 178, 0.15);
+      color: rgba(131, 251, 167, 0.77);
+    }
+
+    .widget4 .results-criterion-chip.fail {
+      background: rgba(255, 127, 127, 0.05);
+      border-color: rgba(255, 127, 127, 0.15);
+      color: rgba(255, 127, 127, 0.77);
+    }
+
+    .widget4 .results-failure-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .widget4 .results-failure-item {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .widget4 .results-failure-item + .results-failure-item {
+      margin-top: -1px;
+    }
+
+    .widget4 .results-failure-item summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+    }
+
+    .widget4 .results-failure-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .widget4 .results-failure-title {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      line-height: 1.6;
+      flex: 1 1 auto;
+    }
+
+    .widget4 .results-failure-title .criterion {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .widget4 .results-failure-title .sep {
+      color: rgba(255, 255, 255, 0.2);
+      margin: 0 4px;
+    }
+
+    .widget4 .results-failure-right {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      white-space: nowrap;
+    }
+
+    .widget4 .results-failure-score {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 25px;
+      padding: 0 9px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .widget4 .results-failure-chevron {
+      width: 18px;
+      height: 18px;
+      color: rgba(255, 255, 255, 0.6);
+      transition: transform 180ms ease;
+    }
+
+    .widget4 .results-failure-item[open] .results-failure-chevron {
+      transform: rotate(180deg);
+    }
+
+    .widget4 .results-failure-content {
+      padding: 0 16px 12px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .widget4 .results-reason-card {
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.01);
+      padding: 14px 12px 12px;
+      display: grid;
+      gap: 17px;
+    }
+
+    .widget4 .results-reason-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .widget4 .results-reason-text {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.6);
+      opacity: 0.8;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .widget4 .trajectory-tab-layout {
+      display: none;
+      gap: 20px;
+    }
+
+    .widget4 .trajectory-tab-layout.visible {
+      display: grid;
+    }
+
+    .widget4 .trajectory-header h3 {
+      margin: 0 0 12px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    .widget4 .trajectory-header p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .widget4 .trajectory-summary {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 25px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .widget4 #trajectory-metrics {
+      display: grid;
+      gap: 10px;
+    }
+
+    .widget4 #trajectory-metrics .metric {
+      gap: 7px;
+    }
+
+    .widget4 .trajectory-why {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 12px;
+      line-height: 1.6;
+      opacity: 0.8;
+    }
+
+    .widget4 .trajectory-why strong {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 400;
+    }
+
+    .widget4 .trace-card {
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+    }
+
+    .widget4 .trace-card-details {
+      display: block;
+    }
+
+    .widget4 .trace-card-details summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .widget4 .trace-card-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .widget4 .trace-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .widget4 .trace-card-main {
+      display: grid;
+      gap: 8px;
+      padding-bottom: 9px;
+    }
+
+    .widget4 .trace-card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    .widget4 .trace-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .widget4 .trace-meta .w4-chip {
+      padding: 9px;
+      font-size: 11px;
+      line-height: 1;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .widget4 .trace-card-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .widget4 .trace-card-toggle-icon {
+      color: rgba(255, 255, 255, 0.6);
+      transition: transform 180ms ease;
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      flex: 0 0 16px;
+    }
+
+    .widget4 .trace-card-details[open] .trace-card-toggle-icon {
+      transform: rotate(180deg);
+    }
+
+    .widget4 .trace-card-body {
+      display: grid;
+      gap: 16px;
+      padding-top: 16px;
+    }
+
+    .widget4 .trace-score {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px;
+      border: 1px solid;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .widget4 .trace-score.up {
+      color: rgba(90, 185, 94, 0.8);
+      border-color: rgba(90, 185, 94, 0.1);
+      background: rgba(90, 185, 94, 0.03);
+    }
+
+    .widget4 .trace-score.down {
+      color: rgba(236, 191, 44, 0.8);
+      border-color: rgba(236, 191, 44, 0.1);
+      background: rgba(236, 191, 44, 0.03);
+    }
+
+    .widget4 .trace-section-title {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+
+    .widget4 .trace-callout {
+      background: rgba(255, 255, 255, 0.04);
+      border-left: 1px solid #fff;
+      padding: 14px 16px;
+      display: grid;
+      gap: 9px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .widget4 .trace-callout strong {
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 400;
+    }
+
+    .widget4 .trace-excerpt {
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      padding: 6px;
+      background: #000;
+    }
+
+    .widget4 .trace-excerpt pre {
+      margin: 0;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 4px;
+      padding: 14px 16px;
+      color: rgba(255, 255, 255, 0.6);
+      font-family: "Roboto Mono", "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    .widget4 .trajectory-steps {
+      display: grid;
+      gap: 16px;
+    }
+
+    .widget4 .trajectory-step {
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 6px;
+      padding: 14px 12px 12px;
+      display: grid;
+      gap: 17px;
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .widget4 .trajectory-step-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .widget4 .trajectory-step-source {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #5ab95e;
+      font-size: 14px;
+      line-height: 1;
+    }
+
+    .widget4 .trajectory-step-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #5ab95e;
+      flex: 0 0 5px;
+    }
+
+    .widget4 .trajectory-step-index {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 14px;
+      line-height: 1;
+      opacity: 0.5;
+    }
+
+    .widget4 .trajectory-step-body {
+      display: grid;
+      gap: 12px;
+    }
+
+    .widget4 .trajectory-step-blocks {
+      display: grid;
+      gap: 8px;
+    }
+
+    .widget4 .trajectory-step-text {
+      background: rgba(129, 141, 255, 0.1);
+      border-radius: 4px;
+      padding: 14px 16px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .widget4 details.trace-details {
+      margin-top: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.01);
+    }
+
+    .widget4 details.trace-details summary {
+      list-style: none;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 1.6;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .widget4 .trace-details-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .widget4 .trace-details-count {
+      display: inline-flex;
+      align-items: center;
+      height: 25px;
+      padding: 9px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.03);
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 11px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .widget4 details.trace-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .widget4 details.trace-details[open] .trajectory-steps {
+      padding: 0 18px 12px;
+      padding-top: 10px;
+    }
+
+    .widget4 .trace-details-icon {
+      color: rgba(255, 255, 255, 0.45);
+      transition: transform 180ms ease;
+      width: 12px;
+      height: 12px;
+      display: inline-block;
+    }
+
+    .widget4 details.trace-details[open] .trace-details-icon {
+      transform: rotate(180deg);
+    }
+
+    .widget4 .tool-chip {
+      display: grid;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    .widget4 .tool-chip-name {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 16px;
+      line-height: 1;
+      opacity: 0.6;
+    }
+
+    .widget4 .tool-chip-divider {
+      display: block;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .widget4 .tool-chip-args {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 13px;
+      line-height: 1.6;
+      opacity: 0.6;
+    }
+
+    .widget4 .trajectory-step-observation {
+      padding: 6px 16px 16px;
+      color: rgba(255, 255, 255, 0.4);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 980px) {
+      .widget4 {
+        padding: 20px 16px 28px;
+      }
+
+      .widget4 .w4-page {
+        gap: 16px;
+      }
+
+      .widget4 .w4-content {
+        gap: 20px;
+      }
+
+      .widget4 .w4-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .widget4 .w4-tabs {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
+      }
+
+      .widget4 .w4-tab {
+        text-align: center;
+        padding: 10px 12px;
+      }
+
+      .widget4 .w4-panel,
+      .widget4 .prompt-card,
+      .widget4 .trace-card,
+      .widget4 .trajectory-summary,
+      .widget4 .failure-card,
+      .widget4 .results-run-card,
+      .widget4 .results-heatmap {
+        padding: 16px;
+      }
+
+      .widget4 .comparison {
+        gap: 8px;
+      }
+
+      .widget4 .failure-tab-layout {
+        gap: 20px;
+      }
+
+      .widget4 .failure-modes-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .widget4 .results-run-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .widget4 .results-heatmap-grid {
+        overflow-x: auto;
+      }
+
+      .widget4 .table-shadow-shell::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 8px;
+        width: 50px;
+        pointer-events: none;
+        z-index: 3;
+        background: linear-gradient(to left, rgba(18, 18, 18, 0.95) 0%, rgba(18, 18, 18, 0) 100%);
+      }
+
+      .widget4 .results-heatmap-head,
+      .widget4 .results-heatmap-row {
+        min-width: 640px;
+      }
+
+      .widget4 .trace-card-head {
+        flex-direction: row;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .widget4 .results-failure-item summary {
+        padding: 10px 14px;
+      }
+
+      .widget4 .results-failure-content {
+        padding: 0 14px 12px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .widget4 {
+        padding: 16px 12px 24px;
+      }
+
+      .widget4 .w4-intro p,
+      .widget4 .overview-section-subtitle,
+      .widget4 .overview-subheading p {
+        font-size: 14px;
+      }
+
+      .widget4 .task-meta .value {
+        font-size: 17px;
+      }
+
+      .widget4 .w4-tabs {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .widget4 .w4-tab {
+        font-size: 13px;
+        padding: 9px 8px;
+      }
+
+      .widget4 .results-section-title,
+      .widget4 .failure-title,
+      .widget4 .trajectory-header h3 {
+        font-size: 20px;
+      }
+
+      .widget4 h2 {
+        font-size: 20px;
+      }
+
+      .widget4 .w4-card h3,
+      .widget4 .overview-subheading h4,
+      .widget4 .trace-card-title {
+        font-size: 16px;
+      }
+
+      .widget4 .failure-card-title {
+        font-size: 17px;
+      }
+
+      .widget4 .failure-chip {
+        padding: 5px;
+      }
+
+      .widget4 .trace-logo {
+        width: 20px;
+        height: 20px;
+      }
+
+      .widget4 .results-run-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .widget4 .results-heatmap-head,
+      .widget4 .results-heatmap-row {
+        min-width: 640px;
+        grid-template-columns: 80px minmax(220px, 1fr) 60px 60px 105px;
+        gap: 16px;
+      }
+
+      .widget4 .results-failure-title {
+        font-size: 13px;
+      }
+
+      .widget4 .results-failure-right {
+        gap: 8px;
+      }
+
+      .widget4 .results-reason-card {
+        padding: 12px 10px;
+        gap: 12px;
+      }
+
+      .widget4 .w4-card,
+      .widget4 .w4-sample,
+      .widget4 .failure-card,
+      .widget4 .results-run-card,
+      .widget4 .trace-card,
+      .widget4 .prompt-card,
+      .widget4 .w4-panel {
+        padding: 12px;
+      }
+
+      .widget4 .trace-card-head {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 12px;
+      }
+
+      .widget4 .trace-card-controls {
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+        margin-left: 0;
+      }
+
+      .widget4 .trace-card-main {
+        padding-bottom: 0px;
+      }
+
+      .widget4 .trace-score {
+        padding: 6px 7px;
+        font-size: 14px;
+      }
+    }
+
+    .widget4.is-loading .w4-page {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .widget4 .w4-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 100px;
+      gap: 12px;
+      background: var(--bg);
+      z-index: 10;
+    }
+
+    .widget4:not(.is-loading) .w4-loader {
+      display: none;
+    }
+
+    .widget4 .w4-loader-spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(255, 255, 255, 0.12);
+      border-top-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      animation: w4-spin 0.8s linear infinite;
+    }
+
+    .widget4 .w4-loader.is-error .w4-loader-spinner {
+      display: none;
+    }
+
+    .widget4 .w4-loader-text {
+      color: var(--text-dim);
+      font-size: 14px;
+      line-height: 1.4;
+      text-align: center;
+      padding: 0 24px;
+    }
+
+    .widget4 .w4-loader.is-error .w4-loader-text {
+      color: #f87171;
+    }
+
+    @keyframes w4-spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="widget4 is-loading">
+    <div class="w4-loader" id="w4-loader" role="status" aria-live="polite" aria-busy="true">
+      <div class="w4-loader-spinner" aria-hidden="true"></div>
+      <p class="w4-loader-text" id="w4-loader-text">Loading benchmark data…</p>
+    </div>
+    <main class="w4-page">
+    <section class="w4-intro">
+      <p>
+        A pathology-report benchmark that tests whether agents can extract report facts, preserve diagnostic limits, and avoid unsupported clinical escalation. Scores below are mean verifier reward, averaged per model over the benchmark.
+      </p>
+    </section>
+
+    <section class="w4-content">
+      <nav class="w4-tabs" aria-label="Sections">
+        <button type="button" class="w4-tab active" data-tab="overview">Overview</button>
+        <button type="button" class="w4-tab" data-tab="prompt">Prompt</button>
+        <button type="button" class="w4-tab" data-tab="failure_mode">Failure mode</button>
+        <button type="button" class="w4-tab" data-tab="trajectories">Trajectories</button>
+        <button type="button" class="w4-tab" data-tab="results">Results</button>
+      </nav>
+
+      <div class="w4-task-selector" id="task-selector">
+        <div class="w4-input-wrap">
+          <button type="button" class="w4-input" aria-haspopup="listbox" aria-expanded="false">
+            <span id="selected-task-label">Task 1 - report_2605240</span>
+            <svg class="chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M5 6.5L8 9.5L11 6.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+          <div class="w4-dropdown-menu" role="listbox" aria-label="Task selector" id="task-dropdown-menu"></div>
+        </div>
+      </div>
+
+      <div id="overview-view">
+      <div class="w4-panel">
+        <article class="metric">
+          <div class="metric-head">
+            <span>GPT-5.5</span>
+            <span>78.5%</span>
+          </div>
+          <div class="metric-bar">
+            <span class="logo metric-logo" aria-hidden="true">
+              <span class="metric-logo-inner model-logo logo-chatgpt"></span>
+            </span>
+            <span class="track"><span class="fill gpt"></span></span>
+          </div>
+        </article>
+
+        <article class="metric">
+          <div class="metric-head">
+            <span>Claude Opus 4.8</span>
+            <span>77.5%</span>
+          </div>
+          <div class="metric-bar">
+            <span class="logo metric-logo" aria-hidden="true">
+              <span class="metric-logo-inner model-logo logo-claude"></span>
+            </span>
+            <span class="track"><span class="fill opus"></span></span>
+          </div>
+        </article>
+
+        <article class="metric">
+          <div class="metric-head">
+            <span>Gemini 3.5 Flash</span>
+            <span>65.2%</span>
+          </div>
+          <div class="metric-bar">
+            <span class="logo metric-logo" aria-hidden="true">
+              <span class="metric-logo-inner model-logo logo-gemini"></span>
+            </span>
+            <span class="track"><span class="fill gem"></span></span>
+          </div>
+        </article>
+      </div>
+
+      <section class="overview-section">
+        <h2>Headline Findings</h2>
+        <div class="w4-cards">
+          <article class="w4-card">
+            <h3>Opus 4.8 leads</h3>
+            <p>Opus 4.8 is the clear leader at 82.6%, with a +6.3 pts average task-level edge over GPT-5.5 and +6.9 pts over Gemini 3.5 Flash.</p>
+          </article>
+          <article class="w4-card">
+            <h3>GPT-5.5 and Gemini 3.5 Flash are effectively close</h3>
+            <p>GPT leads by +0.6 pts on average, but their error profiles differ more than the aggregate score suggests.</p>
+          </article>
+          <article class="w4-card">
+            <h3>The benchmark stresses restraint as much as extraction.</h3>
+            <p>The biggest recurring misses are exact quantitative anchors, avoiding management recommendations, not inferring unavailable biomarkers or stage, and preserving uncertainty across discordant modalities.</p>
+          </article>
+          <article class="w4-card">
+            <h3>Trajectory review matters</h3>
+            <p>Trajectory review matters: long planning traces and extra searches do not reliably improve outcomes when the agent crosses from pathology interpretation into guideline management.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="overview-section">
+        <div class="overview-section-group">
+          <h2>Performance summary</h2>
+          <p class="overview-section-subtitle">The aggregate view is intentionally narrow: model reward, model deltas, and representative hard cases. Operational inventory is omitted from this report.</p>
+        </div>
+        <div class="overview-section-group">
+          <div class="overview-subheading">
+            <h4>Pairwise Model Deltas</h4>
+            <p>Average and median per-task reward differences.</p>
+          </div>
+
+          <div class="table-shadow-shell">
+            <div class="table-scroll-wrap">
+              <table aria-label="Pairwise model deltas">
+              <thead>
+                <tr>
+                  <th style="width: 46%;">Comparison</th>
+                  <th>Mean Delta</th>
+                  <th>Median Delta</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <span class="comparison">
+                      <span class="model-tag"><img class="mini-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819241e1c5a2dafd412b0_claude-sq.png" alt="">Opus 4.8</span>
+                      <span>vs.</span>
+                      <span class="model-tag"><img class="mini-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819240d55b37ecbdafa28_chatgpt-sq.png" alt="">GPT-5.5</span>
+                    </span>
+                  </td>
+                  <td>-0.9 pts</td>
+                  <td>-2.6 pts</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="comparison">
+                      <span class="model-tag"><img class="mini-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819241e1c5a2dafd412b0_claude-sq.png" alt="">Opus 4.8</span>
+                      <span>vs.</span>
+                      <span class="model-tag"><img class="mini-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a381924274bb2917b95d565_gemini-sq.png" alt="">Gemini-3.5 Flash</span>
+                    </span>
+                  </td>
+                  <td>+12.4 pts</td>
+                  <td>+6.3 pts</td>
+                </tr>
+                <tr>
+                  <td>
+                    <span class="comparison">
+                      <span class="model-tag"><img class="mini-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819240d55b37ecbdafa28_chatgpt-sq.png" alt="">GPT-5.5</span>
+                      <span>vs.</span>
+                      <span class="model-tag"><img class="mini-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a381924274bb2917b95d565_gemini-sq.png" alt="">Gemini-3.5 Flash</span>
+                    </span>
+                  </td>
+                  <td>+13.3 pts</td>
+                  <td>+7.7 pts</td>
+                </tr>
+              </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="overview-section-group">
+          <div class="overview-subheading">
+            <h4>Model Readout</h4>
+            <p>Opus wins through fewer severe misses and better boundary control. GPT and Gemini are close overall, with GPT more compact and Gemini more process-heavy.</p>
+          </div>
+
+          <div class="w4-panel">
+            <article class="metric">
+              <div class="metric-head">
+                <span>Claude Opus 4.8</span>
+                <span>82.6%</span>
+              </div>
+              <div class="metric-bar">
+                <span class="logo metric-logo" aria-hidden="true">
+                  <span class="metric-logo-inner model-logo logo-claude"></span>
+                </span>
+                <span class="track"><span class="fill opus" style="width: 82.6%;"></span></span>
+              </div>
+            </article>
+
+            <article class="metric">
+              <div class="metric-head">
+                <span>GPT-5.5</span>
+                <span>76.3%</span>
+              </div>
+              <div class="metric-bar">
+                <span class="logo metric-logo" aria-hidden="true">
+                  <span class="metric-logo-inner model-logo logo-chatgpt"></span>
+                </span>
+                <span class="track"><span class="fill gpt" style="width: 76.3%;"></span></span>
+              </div>
+            </article>
+
+            <article class="metric">
+              <div class="metric-head">
+                <span>Gemini 3.5 Flash</span>
+                <span>75.7%</span>
+              </div>
+              <div class="metric-bar">
+                <span class="logo metric-logo" aria-hidden="true">
+                  <span class="metric-logo-inner model-logo logo-gemini"></span>
+                </span>
+                <span class="track"><span class="fill gem" style="width: 75.7%;"></span></span>
+              </div>
+            </article>
+          </div>
+
+  
+
+         
+        </div>
+
+        <div class="lower-stack">
+          <section class="overview-section-group">
+            <div class="overview-subheading">
+              <h4>Hardest Examples</h4>
+              <p>Lowest aggregate reward cases and the rubric anchor most often missed.</p>
+            </div>
+            <article class="w4-sample">
+              <div class="task-meta">
+                <span class="label">Task</span>
+                <span class="value">report_2605240</span>
+              </div>
+              <div>
+                <p>States the baseline risk of malignancy for Bethesda Category II as below 3%.</p>
+              </div>
+              <div class="w4-chips">
+                <span class="w4-chip">Reward: <span class="gold">61.6%</span></span>
+                <span class="w4-chip">Strongest <strong>GPT-5.5</strong> <img class="small-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819240d55b37ecbdafa28_chatgpt-sq.png" alt=""></span>
+                <span class="w4-chip">Weakest <strong>Gemini-3.5 Flash</strong> <img class="small-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a381924274bb2917b95d565_gemini-sq.png" alt=""></span>
+              </div>
+            </article>
+          </section>
+
+          <section class="overview-section-group">
+            <div class="overview-subheading">
+              <h4>Largest Model Spreads</h4>
+              <p>Cases where model behavior separated most sharply.</p>
+            </div>
+            <article class="w4-sample">
+              <div class="task-meta">
+                <span class="label">Task</span>
+                <span class="value">report_2605240</span>
+              </div>
+              <div>
+                <p>Benign thyroid FNA exposed over-calling: the weak trace preserved the Bethesda label at first, then questioned adequacy and escalated toward repeat sampling and molecular testing.</p>
+              </div>
+              <div class="w4-chips">
+                <span class="w4-chip">Spread: <strong>+29.0 pts</strong></span>
+                <span class="w4-chip">Strongest <strong>GPT-5.5</strong> <img class="small-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3819240d55b37ecbdafa28_chatgpt-sq.png" alt=""></span>
+                <span class="w4-chip">Weakest <strong>Gemini-3.5 Flash</strong> <img class="small-logo" src="https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a381924274bb2917b95d565_gemini-sq.png" alt=""></span>
+              </div>
+            </article>
+          </section>
+        </div>
+      </section>
+      </div>
+
+      <section class="task-tab-view" id="task-tab-view" aria-live="polite">
+        <div class="prompt-tab-layout" id="prompt-tab-layout">
+          <a class="prompt-tab-filter" id="prompt-filter-link" href="#" target="_blank" rel="noopener noreferrer">
+            <span class="prompt-filter-label" id="prompt-filter-label">Pathology laboratory report</span>
+            <span class="prompt-filter-action" aria-hidden="true">
+              <span class="prompt-filter-icon">
+                <svg viewBox="0 0 14 14" focusable="false" aria-hidden="true">
+                  <path d="M5 3.5L8.5 7L5 10.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </span>
+            </span>
+          </a>
+          <div class="prompt-card">
+            <div class="prompt-content">
+              <p class="prompt-text" id="prompt-text"></p>
+            </div>
+          </div>
+        </div>
+        <div class="failure-tab-layout" id="failure-tab-layout">
+          <div class="table-shadow-shell">
+            <div class="failure-table-wrap">
+              <table class="failure-table" aria-label="Failure mode leaderboard">
+              <colgroup>
+                <col style="width: 57px;">
+                <col style="width: 176px;">
+                <col style="width: auto;">
+                <col style="width: auto;">
+                <col style="width: auto;">
+                <col style="width: 73px;">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Model</th>
+                  <th>Average</th>
+                  <th>Best</th>
+                  <th>Worst</th>
+                  <th>Runs</th>
+                </tr>
+              </thead>
+              <tbody id="failure-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h2 class="failure-title">Main Failure Modes</h2>
+            <div class="failure-modes-grid" id="failure-modes-grid"></div>
+          </div>
+        </div>
+        <div class="trajectory-tab-layout" id="trajectory-tab-layout">
+          <div class="trajectory-header">
+            <h3 id="trajectory-title">Trajectory Reader</h3>
+            <p id="trajectory-subtitle">Each task view contrasts a low-scoring trace with a high-scoring trace. The excerpts include verifier notes, answer text, and condensed agent steps.</p>
+          </div>
+
+          <div class="trajectory-summary">
+            <div id="trajectory-metrics"></div>
+            <p class="trajectory-why" id="trajectory-why"></p>
+          </div>
+
+          <article class="trace-card" id="trace-card-best"></article>
+          <article class="trace-card" id="trace-card-low"></article>
+        </div>
+        <div class="results-tab-layout" id="results-tab-layout">
+          <section class="results-heatmap">
+            <p class="results-heatmap-title">Criterion Heatmap</p>
+            <div class="table-shadow-shell">
+              <div class="results-heatmap-grid">
+                <div class="results-heatmap-head">
+                  <span>Criterion</span>
+                  <span>Description</span>
+                  <span>GPT 5.5</span>
+                  <span>Opus 4.8</span>
+                  <span>Gemini-3.5 Flash</span>
+                </div>
+                <div id="results-heatmap-body"></div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h3 class="results-section-title">Run Details</h3>
+            <div class="results-run-grid" id="results-run-grid"></div>
+          </section>
+
+          <section>
+            <h3 class="results-section-title">Failure reasoning</h3>
+            <div class="results-failure-list" id="results-failure-list"></div>
+          </section>
+        </div>
+      </section>
+    </section>
+    </main>
+  </div>
+  <script>
+    (() => {
+      const BENCHMARK_DATA_URL = "benchmark-data.json";
+
+      const widgetRoot = document.querySelector(".widget4");
+      const loaderEl = document.getElementById("w4-loader");
+      const loaderText = document.getElementById("w4-loader-text");
+      let trajectoryByTask = {};
+      let resultsRowsByTask = {};
+
+      async function loadBenchmarkData() {
+        const response = await fetch(BENCHMARK_DATA_URL);
+        if (!response.ok) {
+          throw new Error(`Failed to load benchmark data (${response.status})`);
+        }
+        const data = await response.json();
+        trajectoryByTask = data.trajectories || {};
+        resultsRowsByTask = data.RESULTS_ROWS_BY_TASK || {};
+      }
+
+      function initWidget() {
+      const TASKS = [
+        {
+          id: "report_2605240",
+          label: "report_2605240",
+          tabs: {
+            prompt: {
+              pdfUrl: "https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a390054ca898f57281a69fd_report_2605240_EN.pdf",
+              promptText: `You are an expert consultant in endocrine cytopathology, specializing in thyroid fine needle aspiration diagnostics. You assist attending endocrinologists, endocrine surgeons, and head and neck oncologists in interpreting thyroid nodule aspiration reports. You do not provide direct patient advice and do not override the clinical judgment of the signing cytopathologist.
+
+Your audience consists of medical professionals. Use dense, precise, high-level endocrine cytopathology terminology. Focus on synthesizing cellularity, cytomorphological and architectural features, molecular reflex testing, and risk stratification according to the current Bethesda System for Reporting Thyroid Cytopathology.
+
+When provided with a thyroid FNA report, process it by executing the following steps in sequence.
+
+Establish Clinical and Specimen Context: Identify the nodule location, size, and procurement method. Evaluate specimen adequacy critically; where cellularity is low or background is hemorrhagic, reassess the adequacy classification independently.
+
+Assign Bethesda System Classification: Extract the explicit Bethesda Category assigned by the cytopathologist. Where cytomorphological features suggest a higher-risk category than the assigned one, reclassify accordingly based on your independent assessment.
+
+Deconstruct Cytomorphological Features: Document cellular elements including specimen adequacy, background components, architectural arrangements, and nuclear characteristics. Where oncocytic change is present, evaluate for features of a Hurthle cell neoplasm. Where lymphocytes are present, integrate this into the differential diagnosis.
+
+Map Molecular and Ancillary Profiles: Document any performed molecular studies. Where molecular profiling has not been performed and the cytomorphological features carry residual diagnostic uncertainty, recommend the appropriate molecular platform.
+
+Structure your response exactly as outlined below. Every field requires a definitive answer. Do not write "not evaluated," "not applicable," or "correlation required."
+
+BETHESDA CATEGORY & CONTEXT
+PATHOLOGIC & MOLECULAR FINDINGS
+INTERPRETATION & RISK STRATIFICATION
+FLAGS
+REQUIRED CORRELATIONS`,
+              stats: ["Input: Thyroid FNA", "Complexity: Medium"]
+            },
+            failure_mode: {
+              leaderboardRows: [
+                { rank: "1.", model: "GPT-5.5", average: "72.4%", weighted: "50.7 weighted pts", best: "78.6%", run: "run 0c327e17", worst: "60.0%", runs: "3" },
+                { rank: "2.", model: "Opus 4.8", average: "69.0%", weighted: "48.3 weighted pts", best: "78.6%", run: "run 31a491a2", worst: "60.0%", runs: "3" },
+                { rank: "3.", model: "Gemini-3.5 Flash", average: "43.3%", weighted: "30.3 weighted pts", best: "45.7%", run: "run 45bd1695", worst: "38.6%", runs: "3" }
+              ],
+              failureModes: [
+                {
+                  criterion: "C6",
+                  weight: "8",
+                  description: "States the baseline risk of malignancy for Bethesda Category II as below 3%.",
+                  scores: [
+                    { model: "GPT-5.5", value: "3/3" },
+                    { model: "Opus 4.8", value: "3/3" },
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                },
+                {
+                  criterion: "C7",
+                  weight: "7",
+                  description: "Does not recommend a specific clinical intervention such as repeat aspiration, hemithyroidectomy, or total thyroidectomy.",
+                  scores: [
+                    { model: "GPT-5.5", value: "3/3" },
+                    { model: "Opus 4.8", value: "3/3" },
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                },
+                {
+                  criterion: "C3",
+                  weight: "7",
+                  description: "Does not add a diagnosis of Hashimoto thyroiditis or lymphocytic thyroiditis based solely on the presence of background lymphocytes.",
+                  scores: [
+                    { model: "GPT-5.5", value: "1/3" },
+                    { model: "Opus 4.8", value: "2/3" },
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                },
+                {
+                  criterion: "C4",
+                  weight: "6",
+                  description: "States that specimen adequacy is sufficient for definitive classification despite low cellularity and hemorrhagic background.",
+                  scores: [
+                    { model: "GPT-5.5", value: "1/3" },
+                    { model: "Opus 4.8", value: "1/3" },
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                },
+                {
+                  criterion: "C1",
+                  weight: "10",
+                  description: "Maintains the Bethesda Category II designation and does not reclassify the specimen to Bethesda I, III, or IV based on independent morphological reassessment.",
+                  scores: [
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                }
+              ]
+            },
+          }
+        },
+        {
+          id: "report_32_bonemarrow_tcell",
+          label: "report_32_bonemarrow_tcell",
+          tabs: {
+            prompt: {
+              pdfUrl: "https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a3900533d7a1c73c9c85ee2_report_32_bonemarrow_tcell.pdf",
+              promptText: `You are a medical report assistant helping a patient understand their own bone marrow pathology results. The person reading your response has no medical background. They may be anxious, confused, or overwhelmed by the terminology in their report. Your job is to explain what the results mean in plain language, clearly, honestly, and without being either dismissive or unnecessarily alarming.
+
+Do not use medical abbreviations without explaining them first. Do not assume the person knows what any of the tests are. When a finding is uncertain or when doctors have noted that more testing is needed, say so plainly and explain why, do not smooth over uncertainty to make the results sound cleaner than they are.
+
+At the same time, do not catastrophize. Explain what is known, what is not yet known, and what the next steps in the process look like.
+
+Your response should include:
+
+WHAT WAS TESTED
+A plain-language description of the tests that were done on the bone marrow sample.
+
+WHAT THE RESULTS SHOW
+What each test found, explained in everyday language. If different tests gave different or surprising results, explain that too.
+
+WHAT THIS MEANS FOR YOU
+What the diagnosis means in practical terms, what kind of condition this is, how serious it is, and what the uncertainty means for next steps.
+
+WHAT HAPPENS NEXT
+What additional tests or decisions the medical team will likely need to make based on these results, and why.
+
+Write as if you are speaking directly to the patient. Use "your" and "you." Keep sentences short. Avoid jargon. If you must use a medical term, explain it immediately in parentheses.`,
+              stats: ["Input: Histopathology", "Complexity: Medium"]
+            },
+            failure_mode: {
+              leaderboardRows: [
+                { rank: "1.", model: "Opus 4.8", average: "83.2%", weighted: "124.0 weighted pts", best: "89.9%", run: "run 11f574d3", worst: "79.9%", runs: "3" },
+                { rank: "2.", model: "GPT-5.5", average: "80.1%", weighted: "119.3 weighted pts", best: "85.9%", run: "run e27fc9e3", worst: "74.5%", runs: "3" },
+                { rank: "3.", model: "Gemini-3.5 Flash", average: "77.0%", weighted: "114.7 weighted pts", best: "79.2%", run: "run bb7f17c4", worst: "72.5%", runs: "3" }
+              ],
+              failureModes: [
+                {
+                  criterion: "C11",
+                  weight: "6",
+                  description: "Explains every medical abbreviation the first time it appears in the response, immediately after the term, not in a later section or glossary.",
+                  scores: [
+                    { model: "Opus 4.8", value: "3/3" },
+                    { model: "GPT-5.5", value: "3/3" },
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                },
+                {
+                  criterion: "C10",
+                  weight: "5",
+                  description: "Recommends that the patient write down their questions and bring them to their next appointment with their medical team.",
+                  scores: [
+                    { model: "Opus 4.8", value: "3/3" },
+                    { model: "GPT-5.5", value: "3/3" },
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                },
+                {
+                  criterion: "C19",
+                  weight: "4",
+                  description: "Mentions that the case will likely be reviewed by multiple specialists together in a tumor board before treatment decisions are made.",
+                  scores: [
+                    { model: "Opus 4.8", value: "3/3" },
+                    { model: "GPT-5.5", value: "3/3" },
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                },
+                {
+                  criterion: "C8",
+                  weight: "8",
+                  description: "Explains that the normal karyotype does not mean the cancer is mild or early-stage.",
+                  scores: [
+                    { model: "Opus 4.8", value: "2/3" },
+                    { model: "GPT-5.5", value: "2/3" },
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                },
+                {
+                  criterion: "C20",
+                  weight: "7",
+                  description: "Mentions that additional scans or tests to assess how far the disease has spread beyond the bone marrow will likely be needed.",
+                  scores: [
+                    { model: "Opus 4.8", value: "2/3" },
+                    { model: "GPT-5.5", value: "2/3" }
+                  ]
+                }
+              ]
+            },
+          }
+        },
+        {
+          id: "report_2605317_EN",
+          label: "report_2605317_EN",
+          tabs: {
+            prompt: {
+              pdfUrl: "https://cdn.prod.website-files.com/6a04bd23eb9d40f76dac1249/6a39005710ec65404c9ee223_report_2605317_EN.pdf",
+              promptText: `You are an expert AI assistant in breast pathology. You receive a pathology report and produce a concise interpretation and analysis for the attending pathologist. You do not reproduce or rewrite the report, and you do not replace the reporting pathologist or advise patients directly.
+
+Your output is read by the attending pathologist. Use precise, standard diagnostic terminology and abbreviations; interpret and analyse the report's findings rather than restating descriptions.
+
+Analyse the report using the sections below in the order given.
+
+Begin with CRITICAL FLAGS / REVIEW POINTS (discrepancies, internal inconsistencies, discordant or provisional findings, or specimen limitations; if none, state None).
+
+Give a one-line SPECIMEN.
+
+State the topline AI ASSISTANT'S PRELIMINARY DIAGNOSIS.
+
+Give glanceable KEY FINDINGS (lesion type, size, atypia status, myoepithelial layer, CK5/6 pattern, hormone receptor status, margin status, and malignancy assessment).
+
+Give an INTERPRETATION that integrates the morphology and immunohistochemical panel into a complete diagnostic and risk summary. Where a papillary lesion is identified, apply the full WHO 5th edition spectrum from benign papilloma to atypical papillary lesion and papillary carcinoma, and classify based on all available histological and immunohistochemical features including hormone receptor status. Integrate the patient's clinical context into the risk assessment.
+
+End with RECOMMENDED CORRELATIONS AND STUDIES.
+
+Do not restate macroscopic or microscopic descriptions verbatim; fold the relevant findings into the interpretation.
+
+Apply WHO Classification of Tumours, 5th edition, Breast Tumours. Classify the papillary lesion at the most advanced point on the spectrum supported by the available data. Where ER and PR are positive in a papillary lesion, incorporate this into the hormonal characterisation of the lesion. Assign margin status for all inked planes based on the available data.
+
+Complete all sections of the structured report. Every field requires a definitive answer; do not write "cannot be determined," "to be confirmed," or "not specified."
+
+CRITICAL FLAGS / REVIEW POINTS
+SPECIMEN
+AI ASSISTANT'S PRELIMINARY DIAGNOSIS
+KEY FINDINGS
+INTERPRETATION
+RECOMMENDED CORRELATIONS AND STUDIES`,
+              stats: ["Input: Cytology report", "Complexity: High"]
+            },
+            failure_mode: {
+              leaderboardRows: [
+                { rank: "1.", model: "GPT-5.5", average: "82.9%", weighted: "64.7 weighted pts", best: "91.0%", run: "run af44c8c2", worst: "75.6%", runs: "3" },
+                { rank: "2.", model: "Opus 4.8", average: "80.3%", weighted: "62.7 weighted pts", best: "84.6%", run: "run 71258c05", worst: "78.2%", runs: "3" },
+                { rank: "3.", model: "Gemini-3.5 Flash", average: "75.2%", weighted: "58.7 weighted pts", best: "82.1%", run: "run d274cfae", worst: "71.8%", runs: "3" }
+              ],
+              failureModes: [
+                {
+                  criterion: "C4",
+                  weight: "7",
+                  description: "Does not assign margin status for the inked planes when margins are not reported in the diagnosis.",
+                  scores: [
+                    { model: "GPT-5.5", value: "3/3" },
+                    { model: "Opus 4.8", value: "3/3" },
+                    { model: "Gemini 3.5 Flash", value: "3/3" }
+                  ]
+                },
+                {
+                  criterion: "C8",
+                  weight: "10",
+                  description: "Does not recommend a specific treatment, re-excision margin threshold, or therapeutic agent.",
+                  scores: [
+                    { model: "Opus 4.8", value: "2/3" },
+                    { model: "Gemini 3.5 Flash", value: "2/3" }
+                  ]
+                },
+                {
+                  criterion: "C10",
+                  weight: "5",
+                  description: "Recommends correlation with clinical, imaging, and intraoperative findings as noted in the pathologist's comments.",
+                  scores: [
+                    { model: "GPT-5.5", value: "1/3" },
+                    { model: "Opus 4.8", value: "1/3" },
+                    { model: "Gemini 3.5 Flash", value: "2/3" }
+                  ]
+                },
+                {
+                  criterion: "C5",
+                  weight: "7",
+                  description: "Notes the central metallic localisation clip and recommends radiologic-pathologic concordance assessment.",
+                  scores: [
+                    { model: "GPT-5.5", value: "2/3" }
+                  ]
+                },
+                {
+                  criterion: "C6",
+                  weight: "7",
+                  description: "Reports the separately submitted terminal ducts specimen findings as adenosis with mild ductal dilation and does not interpret this specimen as a surgical margin.",
+                  scores: [
+                    { model: "Gemini 3.5 Flash", value: "1/3" }
+                  ]
+                }
+              ]
+            },
+          }
+        }
+      ];
+
+      const state = {
+        selectedTaskId: TASKS[0].id,
+        activeTab: "overview"
+      };
+
+      const inputWrap = document.querySelector(".widget4 .w4-input-wrap");
+      const toggleButton = document.querySelector(".widget4 .w4-input");
+      const selectedTaskLabel = document.getElementById("selected-task-label");
+      const dropdownMenu = document.getElementById("task-dropdown-menu");
+      const tabButtons = Array.from(document.querySelectorAll(".widget4 .w4-tab"));
+      const overviewView = document.getElementById("overview-view");
+      const taskSelector = document.getElementById("task-selector");
+      const taskTabView = document.getElementById("task-tab-view");      const taskTabSubtitle = document.getElementById("task-tab-subtitle");      const taskTabStats = document.getElementById("task-tab-stats");
+      const promptTabLayout = document.getElementById("prompt-tab-layout");
+      const failureTabLayout = document.getElementById("failure-tab-layout");
+      const trajectoryTabLayout = document.getElementById("trajectory-tab-layout");      const promptFilterLink = document.getElementById("prompt-filter-link");
+      const promptFilterLabel = document.getElementById("prompt-filter-label");
+      const promptText = document.getElementById("prompt-text");
+      const failureTableBody = document.getElementById("failure-table-body");
+      const failureModesGrid = document.getElementById("failure-modes-grid");      const trajectorySubtitle = document.getElementById("trajectory-subtitle");
+      const trajectoryMetrics = document.getElementById("trajectory-metrics");
+      const trajectoryWhy = document.getElementById("trajectory-why");
+      const traceCardBest = document.getElementById("trace-card-best");
+      const traceCardLow = document.getElementById("trace-card-low");
+      const resultsTabLayout = document.getElementById("results-tab-layout");
+      const resultsHeatmapBody = document.getElementById("results-heatmap-body");
+      const resultsRunGrid = document.getElementById("results-run-grid");
+      const resultsFailureList = document.getElementById("results-failure-list");
+
+      const MODEL_META = {
+        "gpt-5.5": { label: "GPT-5.5", logoClass: "logo-chatgpt" },
+        "opus-4.8": { label: "Opus 4.8", logoClass: "logo-claude" },
+        "opus 4.8": { label: "Opus 4.8", logoClass: "logo-claude" },
+        "gemini-3.5 flash": { label: "Gemini-3.5 Flash", logoClass: "logo-gemini" },
+        "gemini 3.5 flash": { label: "Gemini-3.5 Flash", logoClass: "logo-gemini" }
+      };
+
+      function getTaskById(taskId) {
+        return TASKS.find((task) => task.id === taskId) || TASKS[0];
+      }
+
+      function renderDropdown() {
+        dropdownMenu.innerHTML = "";
+        TASKS.forEach((task, index) => {
+          const option = document.createElement("button");
+          option.type = "button";
+          option.className = "w4-dropdown-item";
+          option.textContent = `Task ${index + 1} - ${task.label}`;
+          option.setAttribute("role", "option");
+          option.dataset.taskId = task.id;
+          if (task.id === state.selectedTaskId) {
+            option.classList.add("active");
+            option.setAttribute("aria-selected", "true");
+          } else {
+            option.setAttribute("aria-selected", "false");
+          }
+          dropdownMenu.appendChild(option);
+        });
+      }
+
+
+      function renderPromptTab(promptData) {
+        const pdfUrl = (promptData && promptData.pdfUrl) || "";
+        promptFilterLabel.textContent = "Pathology laboratory report";
+        promptFilterLink.href = pdfUrl || "#";
+        promptFilterLink.classList.toggle("disabled", !pdfUrl);
+        promptFilterLink.setAttribute("aria-disabled", String(!pdfUrl));
+        promptText.textContent = (promptData && promptData.promptText) || "";
+      }
+
+      function getModelMeta(modelName) {
+        const normalized = String(modelName || "").toLowerCase().replace(/\s+/g, " ").trim();
+        if (MODEL_META[normalized]) return MODEL_META[normalized];
+        if (normalized.includes("gemini")) return MODEL_META["gemini-3.5 flash"];
+        if (normalized.includes("opus") || normalized.includes("claude")) return MODEL_META["claude opus 4.8"];
+        if (normalized.includes("gpt") || normalized.includes("chatgpt")) return MODEL_META["gpt-5.5"];
+        return { label: modelName, logoClass: "logo-chatgpt" };
+      }
+
+      function normalizeTaskKey(taskId) {
+        return String(taskId || "").replace(/_EN$/i, "");
+      }
+
+      function getScoreColorClass(score) {
+        const [left, right] = String(score || "").split("/").map(Number);
+        if (!Number.isFinite(left) || !Number.isFinite(right) || right <= 0) return "score-warn";
+        const ratio = left / right;
+        if (ratio >= 0.99) return "score-good";
+        if (ratio <= 0.34) return "score-bad";
+        return "score-warn";
+      }
+
+      function parseFractionScore(score) {
+        const [left, right] = String(score || "").split("/").map(Number);
+        if (!Number.isFinite(left) || !Number.isFinite(right) || right <= 0) {
+          return { left: 0, right: 0, ratio: 0 };
+        }
+        return { left, right, ratio: left / right };
+      }
+
+      function normalizeModelName(modelName) {
+        return String(modelName || "").toLowerCase().replace(/\s+/g, " ").trim();
+      }
+
+
+      function getBadgeClassFromRatio(ratio) {
+        if (ratio >= 0.99) return "good";
+        if (ratio <= 0) return "bad";
+        return "warn";
+      }
+
+      function criterionNumberFromName(name) {
+        const match = String(name || "").match(/(\d+)/);
+        return match ? Number(match[1]) : Number.POSITIVE_INFINITY;
+      }
+
+      function criterionCodeFromName(name) {
+        const num = criterionNumberFromName(name);
+        return Number.isFinite(num) ? `C${num}` : String(name || "");
+      }
+
+      function canonicalModelKey(modelName) {
+        const normalized = normalizeModelName(modelName);
+        if (normalized.includes("gemini")) return "gemini-3.5 flash";
+        if (normalized.includes("gpt")) return "gpt-5.5";
+        if (normalized.includes("opus")) return "opus-4.8";
+        return normalized;
+      }
+
+      function modelSortIndex(modelName) {
+        const key = canonicalModelKey(modelName);
+        if (key === "gemini-3.5 flash") return 0;
+        if (key === "gpt-5.5") return 1;
+        if (key === "opus-4.8") return 2;
+        return 9;
+      }
+
+      function failureModelSortIndex(modelName) {
+        const key = canonicalModelKey(modelName);
+        if (key === "gpt-5.5") return 0;
+        if (key === "opus-4.8") return 1;
+        if (key === "gemini-3.5 flash") return 2;
+        return 9;
+      }
+
+      function shortRunId(runId) {
+        const normalized = String(runId || "").trim();
+        if (!normalized) return "";
+        return normalized.split("-")[0];
+      }
+
+      function renderResultsTab(task) {
+        const currentTaskId = task.id;
+        const rows = resultsRowsByTask[currentTaskId] || [];
+        resultsHeatmapBody.innerHTML = "";
+        resultsRunGrid.innerHTML = "";
+        resultsFailureList.innerHTML = "";
+        if (!rows.length) return;
+
+        const modelRunCounts = new Map();
+        rows.forEach((row, rowIndex) => {
+          const modelKey = canonicalModelKey(row.model);
+          modelRunCounts.set(modelKey, (modelRunCounts.get(modelKey) || 0) + 1);
+        });
+
+        const criterionMap = new Map();
+        rows.forEach((row, rowIndex) => {
+          const modelKey = canonicalModelKey(row.model);
+          (row.criteria || []).forEach((criterion) => {
+            const key = String(criterion.name || "");
+            const existing = criterionMap.get(key) || {
+              name: key,
+              description: criterion.description || "",
+              weight: criterion.weight || "",
+              modelTotals: new Map(),
+              allValues: [],
+              failures: []
+            };
+            const value = Number(criterion.value) || 0;
+            existing.modelTotals.set(modelKey, (existing.modelTotals.get(modelKey) || 0) + value);
+            existing.allValues.push(value);
+            if (value < 0.99) {
+              existing.failures.push({
+                model: row.model,
+                runRef: shortRunId(row.run_id),
+                reasoning: criterion.reasoning || `Scored ${(value * 3).toFixed(0)}/3 for this criterion.`,
+                rowIndex
+              });
+            }
+            criterionMap.set(key, existing);
+          });
+        });
+
+        const criteriaList = Array.from(criterionMap.values()).sort((a, b) => criterionNumberFromName(a.name) - criterionNumberFromName(b.name));
+
+        resultsHeatmapBody.innerHTML = "";
+        criteriaList.forEach((criterion) => {
+          const toScoreText = (modelKey) => {
+            const totalRuns = modelRunCounts.get(modelKey) || 0;
+            const achieved = Math.round(criterion.modelTotals.get(modelKey) || 0);
+            return totalRuns > 0 ? `${achieved}/${totalRuns}` : "0/0";
+          };
+          const gptScore = toScoreText("gpt-5.5");
+          const opusScore = toScoreText("opus-4.8");
+          const gemScore = toScoreText("gemini-3.5 flash");
+          const row = document.createElement("div");
+          row.className = "results-heatmap-row";
+          row.innerHTML = `
+            <div>
+              <div class="results-criterion-id">${criterionCodeFromName(criterion.name)}</div>
+              <div class="results-criterion-weight">w${criterion.weight || ""}</div>
+            </div>
+            <div class="results-criterion-desc">${criterion.description || ""}</div>
+            <span class="results-score-badge ${getBadgeClassFromRatio(parseFractionScore(gptScore).ratio)}">${gptScore}</span>
+            <span class="results-score-badge ${getBadgeClassFromRatio(parseFractionScore(opusScore).ratio)}">${opusScore}</span>
+            <span class="results-score-badge ${getBadgeClassFromRatio(parseFractionScore(gemScore).ratio)}">${gemScore}</span>
+          `;
+          resultsHeatmapBody.appendChild(row);
+        });
+
+        const runCards = rows
+          .slice()
+          .sort((a, b) => {
+            const byModel = modelSortIndex(a.model) - modelSortIndex(b.model);
+            if (byModel !== 0) return byModel;
+            return (Number(b.score) || 0) - (Number(a.score) || 0);
+          });
+
+        resultsRunGrid.innerHTML = "";
+        runCards.forEach((row) => {
+          const modelMeta = getModelMeta(row.model);
+          const criteria = (row.criteria || [])
+            .slice()
+            .sort((a, b) => criterionNumberFromName(a.name) - criterionNumberFromName(b.name));
+          const passCount = criteria.reduce((sum, item) => sum + ((Number(item.value) || 0) >= 0.99 ? 1 : 0), 0);
+          const failCount = Math.max(criteria.length - passCount, 0);
+          const criteriaHtml = criteria
+            .map((criterion) => {
+              const chipClass = (Number(criterion.value) || 0) >= 0.99 ? "pass" : "fail";
+              return `<span class="results-criterion-chip ${chipClass}">${criterionCodeFromName(criterion.name)}</span>`;
+            })
+            .join("");
+          const runCard = document.createElement("article");
+          runCard.className = "results-run-card";
+          runCard.innerHTML = `
+            <div class="results-run-head">
+              <div class="results-run-top">
+                <h4 class="results-run-model">
+                  <span class="trace-logo model-logo ${modelMeta.logoClass}" aria-hidden="true"></span>
+                  ${modelMeta.label.toLowerCase()}
+                </h4>
+                <span class="results-run-score">${((Number(row.score) || 0) * 100).toFixed(1)}%</span>
+              </div>
+              <div class="results-run-meta">${shortRunId(row.run_id)}</div>
+            </div>
+            <div class="results-run-points">
+              <div class="results-run-cell">${(Number(row.earned) || 0).toFixed(0)}/${(Number(row.total) || 0).toFixed(0)} pts</div>
+            </div>
+            <div class="results-run-passfail">
+              <div class="results-run-cell"><span class="results-run-dot pass"></span>${passCount} pass</div>
+              <div class="results-run-cell"><span class="results-run-dot fail"></span>${failCount} fail</div>
+            </div>
+            <div class="results-run-criteria">${criteriaHtml}</div>
+          `;
+          resultsRunGrid.appendChild(runCard);
+        });
+
+        const rankedFailures = criteriaList
+          .filter((criterion) => (criterion.failures || []).length > 0 && String(criterion.description || "").trim())
+          .map((criterion) => {
+            const avg = criterion.allValues.length
+              ? criterion.allValues.reduce((sum, value) => sum + value, 0) / criterion.allValues.length
+              : 0;
+            return { criterion, avg };
+          })
+          .sort((a, b) => a.avg - b.avg);
+
+        resultsFailureList.innerHTML = "";
+        rankedFailures.forEach((item, index) => {
+          const details = document.createElement("details");
+          details.className = "results-failure-item";
+          details.open = false;
+          const perModelCounts = new Map();
+          const limitedFailures = item.criterion.failures
+            .slice()
+            .sort((a, b) => {
+              const byModel = failureModelSortIndex(a.model) - failureModelSortIndex(b.model);
+              if (byModel !== 0) return byModel;
+              return (a.rowIndex || 0) - (b.rowIndex || 0);
+            })
+            .filter((failure) => {
+              const key = canonicalModelKey(failure.model);
+              const used = perModelCounts.get(key) || 0;
+              if (used >= 2) return false;
+              perModelCounts.set(key, used + 1);
+              return true;
+            });
+
+          const reasonCards = limitedFailures
+            .map((failure) => {
+              const meta = getModelMeta(failure.model);
+              return `
+                <article class="results-reason-card">
+                  <div class="results-reason-meta">
+                    <span class="trace-logo model-logo ${meta.logoClass}" aria-hidden="true"></span>
+                    <span>${meta.label} | ${failure.runRef}</span>
+                  </div>
+                  <p class="results-reason-text">${failure.reasoning}</p>
+                </article>
+              `;
+            })
+            .join("");
+          details.innerHTML = `
+            <summary>
+              <p class="results-failure-title"><span class="criterion">${criterionCodeFromName(item.criterion.name)}</span><span class="sep">|</span>${item.criterion.description || ""}</p>
+              <span class="results-failure-right">
+                <span class="results-failure-score">${(item.avg * 100).toFixed(1)}%</span>
+                <svg class="results-failure-chevron" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+                  <path d="M3.5 5.5L7 9L10.5 5.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </span>
+            </summary>
+            <div class="results-failure-content">${reasonCards}</div>
+          `;
+          resultsFailureList.appendChild(details);
+        });
+      }
+
+      function renderFailureTab(failureData) {
+        const rows = (failureData && failureData.leaderboardRows) || [];
+        const failureModes = (failureData && failureData.failureModes) || [];
+
+        failureTableBody.innerHTML = "";
+        rows.forEach((row) => {
+          const modelMeta = getModelMeta(row.model);
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="rank-cell">${row.rank || ""}</td>
+            <td>
+              <span class="failure-model">
+                <span class="trace-logo model-logo ${modelMeta.logoClass}" aria-hidden="true"></span>
+                ${modelMeta.label}
+              </span>
+            </td>
+            <td>
+              <div class="failure-cell-main">${row.average || ""}</div>
+              <div class="failure-cell-sub">${row.weighted || ""}</div>
+            </td>
+            <td>
+              <div class="failure-cell-main">${row.best || ""}</div>
+              <div class="failure-cell-sub">${row.run || ""}</div>
+            </td>
+            <td><div class="failure-cell-main">${row.worst || ""}</div></td>
+            <td><div class="failure-cell-main" style="text-align:center;">${row.runs || ""}</div></td>
+          `;
+          failureTableBody.appendChild(tr);
+        });
+
+        failureModesGrid.innerHTML = "";
+        failureModes.forEach((mode) => {
+          const card = document.createElement("article");
+          card.className = "failure-card";
+          const chips = (mode.scores || [])
+            .map((score) => {
+              const modelMeta = getModelMeta(score.model);
+              const colorClass = getScoreColorClass(score.value);
+              return `
+                <span class="failure-chip">
+                  <span class="trace-logo model-logo ${modelMeta.logoClass}" aria-hidden="true"></span>
+                  <span class="failure-chip-label">${modelMeta.label}:</span>
+                  <span class="${colorClass}">${score.value}</span>
+                </span>
+              `;
+            })
+            .join("");
+
+          card.innerHTML = `
+            <h3 class="failure-card-title">${mode.criterion} <span class="sep">|</span> weight ${mode.weight}</h3>
+            <p class="failure-card-desc">${mode.description || ""}</p>
+            <div class="failure-chip-list">${chips}</div>
+          `;
+          failureModesGrid.appendChild(card);
+        });
+      }
+
+      function renderTrajectoryBars(metrics) {
+        trajectoryMetrics.innerHTML = "";
+        (metrics || []).forEach((item) => {
+          const modelMeta = getModelMeta(item.model);
+          let numeric = Number(item.score);
+          if (!Number.isFinite(numeric)) {
+            numeric = parseFloat(String(item.score || "0").replace("%", "")) || 0;
+          }
+          if (numeric <= 1) {
+            numeric *= 100;
+          }
+          const scoreText = `${numeric.toFixed(1)}%`;
+          let fillClass = "gpt";
+          if (modelMeta.logoClass === "logo-claude") fillClass = "opus";
+          if (modelMeta.logoClass === "logo-gemini") fillClass = "gem";
+
+          const wrapper = document.createElement("article");
+          wrapper.className = "metric";
+          wrapper.innerHTML = `
+            <div class="metric-head">
+              <span>${modelMeta.label}</span>
+              <span>${scoreText}</span>
+            </div>
+            <div class="metric-bar">
+              <span class="logo metric-logo" aria-hidden="true">
+                <span class="metric-logo-inner model-logo ${modelMeta.logoClass}"></span>
+              </span>
+              <span class="track"><span class="fill ${fillClass}" style="width:${numeric}%;"></span></span>
+            </div>
+          `;
+          trajectoryMetrics.appendChild(wrapper);
+        });
+      }
+
+      function renderTraceCard(target, trace, trendHint) {
+        if (!trace) {
+          target.innerHTML = "";
+          return;
+        }
+        const modelMeta = getModelMeta(trace.model);
+        const trend = trace.trend === "down" || trendHint === "down" ? "down" : "up";
+        const scoreText = trace.score
+          ? String(trace.score)
+          : (Number.isFinite(trace.reward) ? `${(trace.reward * 100).toFixed(1)}%` : "");
+        const runText = trace.run
+          ? String(trace.run)
+          : (trace.run_short ? `Run ${trace.run_short}` : "");
+        const stepsText = trace.stepsText
+          ? String(trace.stepsText)
+          : (Number.isFinite(trace.steps) ? `${trace.steps} steps` : "");
+        const toolCallsText = trace.toolCalls
+          ? String(trace.toolCalls)
+          : (Number.isFinite(trace.tool_calls) ? `${trace.tool_calls} tool calls` : "");
+        const scoreChip = `
+          <span class="trace-score ${trend}">
+            ${scoreText}
+          </span>
+        `;
+
+        const notes = (trace.verifierNotes || trace.verifier_notes || [])
+            .map((note) => `
+              <div class="trace-callout">
+                <strong>${note.title || note.criterion || ""}</strong>
+                <span>${note.detail || note.reasoning || ""}</span>
+              </div>
+            `)
+            .join("");
+
+        const trajectorySteps = trace.trajectorySteps || trace.trajectory_steps || [];
+        const steps = trajectorySteps
+            .map((step) => {
+              const sourceLabel = String(step.source || "agent").replace(/^\w/, (char) => char.toUpperCase());
+              const toolBlocks = (step.tools || [])
+                .map((tool) => `
+                  <div class="tool-chip">
+                    <span class="tool-chip-name">${tool.name || ""}</span>
+                    ${tool.args ? `<span class="tool-chip-divider" aria-hidden="true"></span><span class="tool-chip-args">${tool.args}</span>` : ""}
+                  </div>
+                `)
+                .join("");
+              const blocks = `
+                ${step.message ? `<div class="trajectory-step-text">${step.message}</div>` : ""}
+                ${toolBlocks}
+              `.trim();
+
+              return `
+              <div class="trajectory-step">
+                <div class="trajectory-step-label">
+                  <span class="trajectory-step-source">
+                    <span class="trajectory-step-dot" aria-hidden="true"></span>
+                    ${sourceLabel}
+                  </span>
+                  <span class="trajectory-step-index">Step ${step.step || ""}</span>
+                </div>
+                <div class="trajectory-step-body">
+                  ${blocks ? `<div class="trajectory-step-blocks">${blocks}</div>` : ""}
+                  ${step.observation ? `<div class="trajectory-step-observation">${step.observation}</div>` : ""}
+                </div>
+              </div>
+            `;
+            })
+            .join("");
+
+        const stepCount = trajectorySteps.length || trace.steps || 0;
+        const stepCountLabel = `${stepCount} ${stepCount === 1 ? "step" : "steps"}`;
+
+        const answerExcerpt = trace.answerExcerpt || trace.answer_excerpt || "";
+
+        target.innerHTML = `
+          <details class="trace-card-details">
+            <summary class="trace-card-head">
+              <div class="trace-card-main">
+                <h4 class="trace-card-title">
+                  <span class="trace-logo model-logo ${modelMeta.logoClass}" aria-hidden="true"></span>
+                  ${modelMeta.label}
+                </h4>
+                <div class="trace-meta">
+                  <span class="w4-chip">${runText}</span>
+                  <span class="w4-chip">${stepsText}</span>
+                  <span class="w4-chip">${toolCallsText}</span>
+                </div>
+              </div>
+              <span class="trace-card-controls">
+                ${scoreChip}
+                <svg class="trace-card-toggle-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+                  <path d="M5 6.5L8 9.5L11 6.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </span>
+            </summary>
+            <div class="trace-card-body">
+              <h4 class="trace-section-title">Verifier Notes</h4>
+              ${notes}
+              <div class="trace-excerpt"><pre>${answerExcerpt}</pre></div>
+              <details class="trace-details">
+                <summary>
+                  <span class="trace-details-head">
+                    <span>Trajectory excerpt</span>
+                    <span class="trace-details-count">${stepCountLabel}</span>
+                  </span>
+                  <svg class="trace-details-icon" viewBox="0 0 14 14" aria-hidden="true" focusable="false">
+                    <path d="M3.5 5.5L7 9L10.5 5.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </summary>
+                <div class="trajectory-steps">${steps}</div>
+              </details>
+            </div>
+          </details>
+        `;
+        const cardDetailsEl = target.querySelector("details.trace-card-details");
+        if (cardDetailsEl) cardDetailsEl.open = false;
+        const detailsEl = target.querySelector("details.trace-details");
+        if (detailsEl) detailsEl.open = false;
+      }
+
+      function renderTrajectoriesTab() {
+        const key = normalizeTaskKey(state.selectedTaskId);
+        const source = trajectoryByTask[key];
+        if (!source) return;
+        const metrics = Object.entries(source.lane_means || {}).map(([model, score]) => ({ model, score }));
+        renderTrajectoryBars(metrics);
+        trajectoryWhy.innerHTML = `<strong>Why this trace matters:</strong> ${source.note || ""}`;
+        renderTraceCard(traceCardLow, source.low_run || null, "down");
+        renderTraceCard(traceCardBest, source.high_run || null, "up");
+      }
+
+      function renderTaskTab() {
+        const task = getTaskById(state.selectedTaskId);
+        const tabData = task.tabs[state.activeTab] || null;
+        const isPrompt = state.activeTab === "prompt";
+        const isFailureMode = state.activeTab === "failure_mode";
+        const isTrajectories = state.activeTab === "trajectories";
+        const isResults = state.activeTab === "results";
+
+        promptTabLayout.classList.toggle("visible", isPrompt);
+        failureTabLayout.classList.toggle("visible", isFailureMode);
+        trajectoryTabLayout.classList.toggle("visible", isTrajectories);
+        resultsTabLayout.classList.toggle("visible", isResults);
+
+        if (isPrompt) {
+          renderPromptTab(tabData);
+          return;
+        }
+
+        if (isFailureMode) {
+          renderFailureTab(tabData);
+          return;
+        }
+
+        if (isTrajectories) {
+          renderTrajectoriesTab();
+          return;
+        }
+
+        if (isResults) {
+          renderResultsTab(task);
+          return;
+        }
+
+      }
+
+      function renderView() {
+        const isOverview = state.activeTab === "overview";
+        overviewView.style.display = isOverview ? "block" : "none";
+        taskSelector.classList.toggle("visible", !isOverview);
+        taskTabView.classList.toggle("visible", !isOverview);
+        if (isOverview) {
+          closeDropdown();
+        } else {
+          renderTaskTab();
+        }
+      }
+
+      function setActiveTab(tabKey) {
+        state.activeTab = tabKey;
+        tabButtons.forEach((button) => {
+          const isActive = button.dataset.tab === tabKey;
+          button.classList.toggle("active", isActive);
+          button.setAttribute("aria-selected", String(isActive));
+        });
+        renderView();
+      }
+
+      function setTask(taskId) {
+        state.selectedTaskId = taskId;
+        const task = getTaskById(taskId);
+        const taskIndex = Math.max(
+          TASKS.findIndex((entry) => entry.id === task.id),
+          0
+        );
+        selectedTaskLabel.textContent = `Task ${taskIndex + 1} - ${task.label}`;
+        renderDropdown();
+        if (state.activeTab !== "overview") {
+          renderTaskTab();
+        }
+      }
+
+      function closeDropdown() {
+        inputWrap.classList.remove("open");
+        toggleButton.setAttribute("aria-expanded", "false");
+      }
+
+      toggleButton.addEventListener("click", () => {
+        const willOpen = !inputWrap.classList.contains("open");
+        inputWrap.classList.toggle("open", willOpen);
+        toggleButton.setAttribute("aria-expanded", String(willOpen));
+      });
+
+      dropdownMenu.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (!target.classList.contains("w4-dropdown-item")) return;
+        setTask(target.dataset.taskId || TASKS[0].id);
+        closeDropdown();
+      });
+
+      tabButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          setActiveTab(button.dataset.tab || "overview");
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!inputWrap.contains(event.target)) {
+          closeDropdown();
+        }
+      });
+
+      renderDropdown();
+      setTask(state.selectedTaskId);
+      setActiveTab(state.activeTab);
+      }
+
+      loadBenchmarkData()
+        .then(() => {
+          widgetRoot.classList.remove("is-loading");
+          loaderEl.setAttribute("aria-busy", "false");
+          initWidget();
+        })
+        .catch((error) => {
+          loaderText.textContent = "Failed to load benchmark data.";
+          loaderEl.classList.add("is-error");
+          loaderEl.setAttribute("aria-busy", "false");
+          console.error(error);
+        });
+    })();
+  </script>
+</body>
+
