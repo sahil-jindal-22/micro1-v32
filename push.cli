@@ -1,7 +1,7 @@
 git add . && \
 git commit -m "new medical bench" && \
 git push origin main && \
-git tag -a v32.4.2 -m "v32.4.2 release" && \
-git push origin v32.4.2 && \
-gh release create v32.4.2 --generate-notes
+git tag -a v41.1.2 -m "v41.1.2 release" && \
+git push origin v41.1.2 && \
+gh release create v41.1.2 --generate-notes
 
